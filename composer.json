@@ -1,0 +1,23 @@
+{
+    "name": "bkwld/laravel-pug",
+    "description": "Pug view adapter for Laravel",
+    "type": "library",
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4 - 5",
+        "illuminate/view": "4 - 5",
+        "pug-php/pug": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bkwld\\LaravelPug\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Reinhard",
+            "email": "info@bukwild.com"
+        }
+    ]
+}
