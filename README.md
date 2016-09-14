@@ -34,6 +34,10 @@ In other words, just put your Pug files in the regular views directory and name 
 The Pug view files can work side-by-side with regular PHP views.  To use Blade templating within your Pug, just name the files with ".pug.blade" or ".pug.blade.php" extensions.
 
 
+## Extending Layouts
+
+Layout extension requires a leading slash for the view name, where `extends /layouts/main` would parse `resources/views/layouts/main.(pug|jade)`. The `basedir` option is required and defaults to `resources/views`.
+
 
 ## Histoy
 
