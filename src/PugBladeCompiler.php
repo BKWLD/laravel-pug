@@ -40,7 +40,7 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface {
 
 		if (is_null($this->cachePath)) return;
 
-		// First compile the Haml
+		// First compile the Pug syntax
 		$contents = $this->pug->compile($this->files->get($path));
 
 		// Then the Blade syntax
