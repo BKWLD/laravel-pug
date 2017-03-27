@@ -36,7 +36,7 @@ The Pug view files can work side-by-side with regular PHP views.  To use Blade t
 
 ## Extending Layouts
 
-Layout extension requires a leading slash for the view name, where `extends /layouts/main` would parse `resources/views/layouts/main.(pug|jade)`. The `basedir` option is required and defaults to `resources/views`.
+You may use an absolute path (`/layouts/main`) or relative path `layouts/main` when extending a layout.  When using an absolute path, you must specify a `basedir` in the config file (it defaults to `resources/views`).  For example: both `extends /layouts/main` and `extends layouts/main` would parse `resources/views/layouts/main.(pug|jade)`, given the default `basedir` value.
 
 
 ## Histoy
