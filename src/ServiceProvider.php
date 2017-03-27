@@ -93,7 +93,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	 */
 	public function bootLaravel5() {
 		$this->publishes([
-			__DIR__.'/../config/config.php' => config_path('pug.php')
+			__DIR__.'/../config/config.php' => config_path('laravel-pug.php')
 		], 'laravel-pug');
 	}
 
