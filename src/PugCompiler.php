@@ -35,7 +35,7 @@ class PugCompiler extends Compiler implements CompilerInterface {
 	 */
 	public function compile($path) {
 		if (is_null($this->cachePath)) return;
-		$contents = $this->pug->compile($this->files->get($path));
+		$contents = $this->pug->compile($this->files->get($path), $path);
 		$this->files->put($this->getCompiledPath($path), $contents);
 	}
 
