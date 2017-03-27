@@ -9,8 +9,6 @@ use Pug\Pug;
 class PugCompiler extends Compiler implements CompilerInterface {
 
 	/**
-	 * The MtHaml instance.
-	 *
 	 * @var Pug
 	 */
 	protected $pug;
