@@ -34,9 +34,9 @@ In other words, just put your Pug files in the regular views directory and name 
 The Pug view files can work side-by-side with regular PHP views.  To use Blade templating within your Pug, just name the files with ".pug.blade" or ".pug.blade.php" extensions.
 
 
-## Extending Layouts
+## Extending Layouts / Include Sub-views
 
-You may use an absolute path (`/layouts/main`) or relative path `layouts/main` when extending a layout.  When using an absolute path, you must specify a `basedir` in the config file (it defaults to `resources/views`).  For example: both `extends /layouts/main` and `extends layouts/main` would parse `resources/views/layouts/main.(pug|jade)`, given the default `basedir` value.
+Default root directory for templates is `resources/views`, so from any template any deep in the directory, you can use absolute paths to get other pug files from the root: `extends /layouts/main` will extends the file `resources/views/layouts/main.(pug|jade)`, `include /partial/foo/bar`, will include `resources/views/partial/foo/bar.(pug|jade)`. You can use the `basedir` option to set the root to an other directory. Paths that does not start with a slash will be resolved relatively to the current template file.
 
 
 ## Histoy
