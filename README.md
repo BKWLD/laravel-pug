@@ -18,7 +18,7 @@ A small package that adds support for compiling Pug (Jade) templates to Laravel 
 All [Pug.php](https://github.com/pug-php/pug) config options are passed through via a Laravel config array.
 
 * **Laravel 4** : Publish the config file with `php artisan config:publish bkwld/laravel-pug` and edit at /app/config/packages/bkwld/laravel-pug/config.php
-* **Laravel 5** : Publish the config file with `php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"` and edit it at /config/pug.php.  
+* **Laravel 5** : Publish the config file with `php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"` and edit it at /config/laravel-pug.php.  
 
 
 
