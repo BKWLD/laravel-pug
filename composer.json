@@ -19,5 +19,12 @@
             "name": "Robert Reinhard",
             "email": "info@bukwild.com"
         }
-    ]
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bkwld\\LaravelPug\\ServiceProvider"
+            ]
+        }
+    }
 }
