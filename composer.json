@@ -21,6 +21,14 @@
             "email": "info@bukwild.com"
         }
     ],
+    "scripts": {
+        "post-install-cmd": [
+            "Pug\\Installer\\Installer::onAutoloadDump"
+        ],
+        "post-update-cmd": [
+            "Pug\\Installer\\Installer::onAutoloadDump"
+        ]
+    },
     "extra": {
         "installer": "Bkwld\\LaravelPug\\Install::publishVendor",
         "laravel": {
