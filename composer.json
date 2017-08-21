@@ -6,7 +6,8 @@
         "php": ">=5.4.0",
         "illuminate/support": "4 - 5",
         "illuminate/view": "4 - 5",
-        "pug-php/pug": "1 - 2"
+        "pug-php/pug": "1 - 2",
+        "pug/installer": "^0.1.3"
     },
     "autoload": {
         "psr-4": {
@@ -20,14 +21,8 @@
             "email": "info@bukwild.com"
         }
     ],
-    "scripts": {
-        "post-update-cmd": "Bkwld\\LaravelPug\\Install::publishVendor",
-        "post-package-install": "Bkwld\\LaravelPug\\Install::publishVendor",
-        "post-install-cmd": "Bkwld\\LaravelPug\\Install::publishVendor",
-        "post-autoload-dump": "Bkwld\\LaravelPug\\Install::publishVendor",
-        "post-create-project-cmd": "Bkwld\\LaravelPug\\Install::publishVendor"
-    },
     "extra": {
+        "installer": "Bkwld\\LaravelPug\\Install::publishVendor",
         "laravel": {
             "providers": [
                 "Bkwld\\LaravelPug\\ServiceProvider"
