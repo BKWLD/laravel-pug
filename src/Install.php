@@ -21,6 +21,7 @@ class Install
             chdir('..');
         }
         if ($version = static::getVersion()) {
+            $laravel4 = version_compare($version, '5.0-dev') < 0;
             $appFile = 'config/app.php';
             if (version_compare($version, '5.5-dev') < 0) {
                 if (file_exists($appFile)) {
@@ -28,15 +29,18 @@ class Install
                     if (mb_strpos($contents, 'Bkwld\LaravelPug\ServiceProvider::class') === false) {
                         $newContents = preg_replace_callback(
                             '/(["\']providers["\']\s*=>\s*(?:\[|array\s*\())([\s\S]*?)(\]|\])/',
-                            function ($match) {
+                            function ($match) use ($laravel4) {
                                 $providers = rtrim($match[2]);
                                 if (mb_substr($providers, -1) !== ',') {
                                     $providers .= ',';
                                 }
+                                $provider = $laravel4
+                                    ? "'Bkwld\\\\LaravelPug\\\\ServiceProvider'"
+                                    : 'Bkwld\\LaravelPug\\ServiceProvider::class';
 
                                 return $match[1] .
                                     $providers .
-                                    "\n        Bkwld\LaravelPug\ServiceProvider::class," .
+                                    "\n        $provider," .
                                     "\n\n    " .
                                     $match[3];
                             },
@@ -57,7 +61,7 @@ class Install
                 }
             }
 
-            $cmd = 'php artisan ' . (version_compare($version, '5.0-dev')
+            $cmd = 'php artisan ' . ($laravel4
                     ? 'vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"'
                     : 'config:publish bkwld/laravel-pug'
                 );
