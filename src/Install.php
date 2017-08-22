@@ -27,7 +27,7 @@ class Install
                     $contents = file_get_contents($appFile);
                     if (mb_strpos($contents, 'Bkwld\LaravelPug\ServiceProvider::class') === false) {
                         $newContents = preg_replace_callback(
-                            '/(["\']providers["\']\s*=>\s*\[)([\s\S]*?)\]/',
+                            '/(["\']providers["\']\s*=>\s*(?:\[|array\s*\())([\s\S]*?)(\]|\])/',
                             function ($match) {
                                 $providers = rtrim($match[2]);
                                 if (mb_substr($providers, -1) !== ',') {
@@ -37,7 +37,8 @@ class Install
                                 return $match[1] .
                                     $providers .
                                     "\n        Bkwld\LaravelPug\ServiceProvider::class," .
-                                    "\n\n    ]";
+                                    "\n\n    " .
+                                    $match[3];
                             },
                             $contents
                         );
