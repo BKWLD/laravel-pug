@@ -1,7 +1,7 @@
-<?php return [
+<?php return array(
 
 	/**
-     * Pug options for Laravel >= 5
+     * Pug options for Laravel < 5
 	 * Passthrough php-pug config options
 	 * https://github.com/pug-php/pug/blob/master/src/Jade/Jade.php
 	 */
@@ -13,13 +13,13 @@
     //'allowMixinOverride' => true,
     //'cache'              => null,
     //'classAttribute'     => null,
-    //'customKeywords'     => [],
+    //'customKeywords'     => array(),
     //'expressionLanguage' => 'auto',
-    //'extension'          => ['.pug', '.jade'],
+    //'extension'          => array('.pug', '.jade'),
     //'filterAutoLoad'     => true,
     //'indentChar'         => ' ',
     //'indentSize'         => 2,
-    //'jsLanguage'         => [],
+    //'jsLanguage'         => array(),
     //'keepBaseName'       => false,
     //'keepNullAttributes' => false,
     //'nodePath'           => null,
@@ -34,4 +34,4 @@
     //'stream'             => null,
     //'upToDateCheck'      => true,
     //'localsJsonFile'     => false,
-];
+);
