@@ -22,20 +22,20 @@ class Install
         }
         if ($version = static::getVersion()) {
             $laravel4 = version_compare($version, '5.0-dev') < 0;
-            $appFile = 'config/app.php';
+            $appFile = ($laravel4 ? 'app/' : '') . 'config/app.php';
             if (version_compare($version, '5.5-dev') < 0) {
                 if (file_exists($appFile)) {
                     $contents = file_get_contents($appFile);
-                    if (mb_strpos($contents, 'Bkwld\LaravelPug\ServiceProvider::class') === false) {
+                    if (mb_strpos($contents, 'Bkwld\LaravelPug\ServiceProvider') === false) {
                         $newContents = preg_replace_callback(
-                            '/(["\']providers["\']\s*=>\s*(?:\[|array\s*\())([\s\S]*?)(\]|\])/',
+                            '/(["\']providers["\']\s*=>\s*(?:\[|array\s*\())([\s\S]*?)(\]|\))/',
                             function ($match) use ($laravel4) {
                                 $providers = rtrim($match[2]);
                                 if (mb_substr($providers, -1) !== ',') {
                                     $providers .= ',';
                                 }
                                 $provider = $laravel4
-                                    ? "'Bkwld\\\\LaravelPug\\\\ServiceProvider'"
+                                    ? "'Bkwld\\LaravelPug\\ServiceProvider'"
                                     : 'Bkwld\\LaravelPug\\ServiceProvider::class';
 
                                 return $match[1] .
@@ -57,13 +57,13 @@ class Install
                         }
                     }
                 } else {
-                    $io->write('config/app.php not found, please add Bkwld\\LaravelPug\\ServiceProvider::class, in it in your providers.');
+                    $io->write("$appFile not found, please add Bkwld\\LaravelPug\\ServiceProvider::class, in it in your providers.");
                 }
             }
 
             $cmd = 'php artisan ' . ($laravel4
-                    ? 'vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"'
-                    : 'config:publish bkwld/laravel-pug'
+                    ? 'config:publish bkwld/laravel-pug'
+                    : 'vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"'
                 );
             $io->write("> $cmd\n" . @shell_exec($cmd));
         }
