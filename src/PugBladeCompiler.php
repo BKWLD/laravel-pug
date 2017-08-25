@@ -1,9 +1,12 @@
-<?php namespace Bkwld\LaravelPug;
+<?php
+
+namespace Bkwld\LaravelPug;
 
 // Dependencies
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Compilers\CompilerInterface;
-use Illuminate\Filesystem\Filesystem;
+use InvalidArgumentException;
 use Pug\Pug;
 
 class PugBladeCompiler extends BladeCompiler implements CompilerInterface
@@ -18,25 +21,25 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     /**
      * Create a new compiler instance.
      *
-     * @param  Pug $pug
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  string  $cachePath
-     * @return void
+     * @param Pug        $pug
+     * @param Filesystem $files
+     * @param string     $cachePath
      */
     public function __construct(Pug $pug, Filesystem $files)
     {
         $this->pug = $pug;
-        $this->files = $files;
-        $this->cachePath = $pug->getOption('cache');
-        if (!is_string($this->cachePath)) {
-            $this->cachePath = $pug->getOption('defaultCache');
+        $cachePath = $pug->getOption('cache');
+        if (!is_string($cachePath)) {
+            $cachePath = $pug->getOption('defaultCache');
         }
+        parent::__construct($files, $cachePath);
     }
 
     /**
      * Determine if the view at the given path is expired.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return bool
      */
     public function isExpired($path)
@@ -47,11 +50,22 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     /**
      * Compile the view at the given path.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return void
      */
-    public function compile($path)
+    public function compile($path = null)
     {
+        if ($path && method_exists($this, 'setPath')) {
+            $this->setPath($path);
+        }
+        if (!$path && method_exists($this, 'getPath')) {
+            $path = $this->getPath();
+        }
+        if (!$path) {
+            throw new InvalidArgumentException('Missing path argument.');
+        }
+
         $this->footer = array();
 
         if ($this->cachePath) {
@@ -65,5 +79,4 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
             $this->files->put($this->getCompiledPath($path), $contents);
         }
     }
-
 }

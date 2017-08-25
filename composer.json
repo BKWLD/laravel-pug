@@ -4,16 +4,17 @@
     "type": "library",
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4 - 5",
-        "illuminate/view": "4 - 5",
+        "illuminate/support": "4",
+        "illuminate/view": "4",
         "pug-php/pug": "1 - 2",
         "pug/installer": "^0.1.3"
     },
-    "autoload": {
-        "psr-4": {
-            "Bkwld\\LaravelPug\\": "src/"
-        }
+    "require-dev": {
+        "phpunit/phpunit": "^4.8 || ^5.7",
+        "phpunit/php-code-coverage": "^2.2 || ^4.0 || ^5.2",
+        "codeclimate/php-test-reporter": "^0.4.0"
     },
+    "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
         {
@@ -21,6 +22,11 @@
             "email": "info@bukwild.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Bkwld\\LaravelPug\\": "src/"
+        }
+    },
     "scripts": {
         "post-install-cmd": [
             "Pug\\Installer\\Installer::onAutoloadDump"

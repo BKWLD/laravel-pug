@@ -1,0 +1,61 @@
+language: php
+
+git:
+  depth: 5
+
+matrix:
+  include:
+    - php: 5.4
+      env: LARAVEL_VERSION='4.2.*'
+    - php: 5.5
+      env: LARAVEL_VERSION='4.2.*'
+    - php: 5.5
+      env: LARAVEL_VERSION='5.2.*'
+    - php: 5.6
+      env: LARAVEL_VERSION='4.2.*'
+    - php: 5.6
+      env: LARAVEL_VERSION='5.4.*'
+    - php: 7.0
+      env: LARAVEL_VERSION='4.2.*'
+    - php: 7.0
+      env: LARAVEL_VERSION='5.4.*'
+    - php: 7.0
+      env: LARAVEL_VERSION='5.5.*'
+    - php: 7.1
+      env: LARAVEL_VERSION='4.2.*'
+    - php: 7.1
+      env: LARAVEL_VERSION='5.4.*'
+    - php: 7.1
+      env: LARAVEL_VERSION='5.5.*'
+    - php: 7.2
+      env: LARAVEL_VERSION='4.2.*'
+    - php: 7.2
+      env: LARAVEL_VERSION='5.4.*'
+    - php: 7.2
+      env: LARAVEL_VERSION='5.5.*'
+    - php: hhvm
+      env: LARAVEL_VERSION='4.2.*'
+      dist: trusty
+      sudo: required
+    - php: hhvm
+      env: LARAVEL_VERSION='5.4.*'
+      dist: trusty
+      sudo: required
+
+install:
+  - travis_retry composer self-update
+  - if [ "LARAVEL_VERSION" != "" ]; then travis_retry php tests/setLaravelVersion.php $LARAVEL_VERSION; fi;
+  - travis_retry composer update --no-interaction --prefer-stable
+
+script:
+  - vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml
+
+after_script:
+  - vendor/bin/test-reporter --coverage-report coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+addons:
+  code_climate:
+    repo_token: 05f616e90b94493bc288f4ce6f5f32c0e10a029754ec08c38ebb3da035c5a089
