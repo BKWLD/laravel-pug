@@ -77,7 +77,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         switch ($this->version()) {
             case 4: $this->bootLaravel4(); break;
             case 5: $this->bootLaravel5(); break;
-            default: throw new Exception('Unsupported Laravel version');
+            default: throw new Exception('Unsupported Laravel version.');
         }
 
         // Register compilers

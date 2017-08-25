@@ -82,7 +82,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame('artisan config:publish bkwld/laravel-pug', $argv);
 
-        self::assertEquals([
+        self::assertSame([
             'app/config/app.php not found, please add Bkwld\LaravelPug\ServiceProvider::class, in it in your providers.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -109,7 +109,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         unlink('app/config/app.php');
 
-        self::assertEquals([
+        self::assertSame([
             'Pug service provided added to your app.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -146,7 +146,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         unlink('app/config/app.php');
 
-        self::assertEquals([
+        self::assertSame([
             'Pug service provided added to your app.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -190,7 +190,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
             str_replace('"', '', $argv)
         );
 
-        self::assertEquals([
+        self::assertSame([
             'config/app.php not found, please add Bkwld\LaravelPug\ServiceProvider::class, in it in your providers.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' . "\nOK",
         ], $io->getMessages());
@@ -217,7 +217,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         unlink('config/app.php');
 
-        self::assertEquals([
+        self::assertSame([
             'Pug service provided added to your app.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' . "\nOK",
         ], $io->getMessages());
@@ -249,7 +249,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
             str_replace('"', '', $argv)
         );
 
-        self::assertEquals([
+        self::assertSame([
             "config/app.php does not contain 'providers' => [], " .
             'please add a providers list with Bkwld\LaravelPug\ServiceProvider::class in it.',
 
