@@ -1,15 +1,17 @@
-<?php namespace Bkwld\LaravelPug;
+<?php
+
+namespace Bkwld\LaravelPug;
 
 // Dependencies
-use Pug\Pug;
 use Illuminate\View\Engines\CompilerEngine;
+use Pug\Pug;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Get the major Laravel version number
+     * Get the major Laravel version number.
      *
-     * @return integer
+     * @return int
      */
     public function version()
     {
@@ -26,42 +28,42 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         // Version specific registering
-        if ($this->version() == 5) {
+        if ($this->version() >= 5) {
             $this->registerLaravel5();
         }
 
         // Bind the package-configued Pug instance
-        $this->app->singleton('laravel-pug.pug', function($app) {
+        $this->app->singleton('laravel-pug.pug', function () {
             $config = $this->getConfig();
             $pug = new Pug($config);
             // Determine the cache dir if not configured
             $pug->setCustomOption(
                 'defaultCache',
-                storage_path($this->version() == 5 ? '/framework/views' : '/views')
+                storage_path($this->version() >= 5 ? '/framework/views' : '/views')
             );
 
             return $pug;
         });
 
         // Bind the Pug compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugCompiler', function($app) {
+        $this->app->singleton('Bkwld\LaravelPug\PugCompiler', function ($app) {
             return new PugCompiler($app['laravel-pug.pug'], $app['files']);
         });
 
         // Bind the Pug Blade compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', function($app) {
+        $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', function ($app) {
             return new PugBladeCompiler($app['laravel-pug.pug'], $app['files']);
         });
     }
 
     /**
-     * Register specific logic for Laravel 5. Merges package config with user config
+     * Register specific logic for Laravel 5. Merges package config with user config.
      *
      * @return void
      */
     public function registerLaravel5()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-pug');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravel-pug');
     }
 
     /**
@@ -72,7 +74,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         // Version specific booting
-        switch($this->version()) {
+        switch ($this->version()) {
             case 4: $this->bootLaravel4(); break;
             case 5: $this->bootLaravel5(); break;
             default: throw new Exception('Unsupported Laravel version');
@@ -85,7 +87,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Boot specific logic for Laravel 4. Tells Laravel about the package for auto
-     * namespacing of config files
+     * namespacing of config files.
      *
      * @return void
      */
@@ -96,26 +98,26 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Boot specific logic for Laravel 5. Registers the config file for publishing
-     * to app directory
+     * to app directory.
      *
      * @return void
      */
     public function bootLaravel5()
     {
         $this->publishes([
-            __DIR__.'/../config/config.php' => config_path('laravel-pug.php')
+            __DIR__ . '/../config/config.php' => config_path('laravel-pug.php'),
         ], 'laravel-pug');
     }
 
     /**
-     * Register the regular Pug compiler
+     * Register the regular Pug compiler.
      *
      * @return void
      */
     public function registerPugCompiler()
     {
         // Add resolver
-        $this->app['view.engine.resolver']->register('pug', function() {
+        $this->app['view.engine.resolver']->register('pug', function () {
             return new CompilerEngine($this->app['Bkwld\LaravelPug\PugCompiler']);
         });
 
@@ -127,14 +129,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Register the blade compiler compiler
+     * Register the blade compiler compiler.
      *
      * @return void
      */
     public function registerPugBladeCompiler()
     {
         // Add resolver
-        $this->app['view.engine.resolver']->register('pug.blade', function() {
+        $this->app['view.engine.resolver']->register('pug.blade', function () {
             return new CompilerEngine($this->app['Bkwld\LaravelPug\PugBladeCompiler']);
         });
 
@@ -146,13 +148,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Get the configuration, which is keyed differently in L5 vs l4
+     * Get the configuration, which is keyed differently in L5 vs l4.
      *
      * @return array
      */
     public function getConfig()
     {
-        $key = $this->version() == 5 ? 'laravel-pug' : 'laravel-pug::config';
+        $key = $this->version() >= 5 ? 'laravel-pug' : 'laravel-pug::config';
 
         return $this->app->make('config')->get($key);
     }
@@ -170,5 +172,4 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'laravel-pug.pug',
         );
     }
-
 }
