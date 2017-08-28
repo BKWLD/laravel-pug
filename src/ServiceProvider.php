@@ -4,6 +4,7 @@ namespace Bkwld\LaravelPug;
 
 // Dependencies
 use Illuminate\View\Engines\CompilerEngine;
+use Pug\Assets;
 use Pug\Pug;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -36,11 +37,20 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->singleton('laravel-pug.pug', function () {
             $config = $this->getConfig();
             $pug = new Pug($config);
-            // Determine the cache dir if not configured
-            $pug->setCustomOption(
-                'defaultCache',
-                storage_path($this->version() >= 5 ? '/framework/views' : '/views')
-            );
+            $assets = new Assets($pug);
+            $this->app->singleton('laravel-pug.pug-assets', function () use ($assets) {
+                return $assets;
+            });
+
+            try {
+                $pug->getOption('defaultCache');
+            } catch (\InvalidArgumentException $exception) {
+                // Determine the cache dir if not configured
+                $pug->setCustomOption(
+                    'defaultCache',
+                    storage_path($this->version() >= 5 ? '/framework/views' : '/views')
+                );
+            }
 
             return $pug;
         });
