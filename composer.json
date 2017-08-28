@@ -6,7 +6,7 @@
         "php": ">=5.4.0",
         "illuminate/support": "4 - 5",
         "illuminate/view": "4 - 5",
-        "pug-php/pug": "1 - 2",
+        "pug-php/pug-assets": "^1.0.1",
         "pug/installer": "^0.1.3"
     },
     "require-dev": {
