@@ -3,7 +3,7 @@
 [![Packagist](https://img.shields.io/packagist/v/bkwld/laravel-pug.svg)](https://packagist.org/packages/bkwld/laravel-pug)
 [![Build Status](https://travis-ci.org/bkwld/laravel-pug.svg?branch=master)](https://travis-ci.org/bkwld/laravel-pug)
 [![StyleCI](https://styleci.io/repos/84180086/shield?style=flat)](https://styleci.io/repos/84180086)
-[![Test Coverage](https://codeclimate.com/github/bkwld/laravel-pug/badges/coverage.svg)](https://codecov.io/github/bkwld/laravel-pug?branch=master)
+[![Test Coverage](https://codeclimate.com/github/BKWLD/laravel-pug/badges/coverage.svg)](https://codecov.io/github/BKWLD/laravel-pug?branch=master)
 [![Code Climate](https://codeclimate.com/github/BKWLD/laravel-pug/badges/gpa.svg)](https://codeclimate.com/github/BKWLD/laravel-pug)
 [![License](https://poser.pugx.org/bkwld/laravel-pug/license)](https://packagist.org/packages/bkwld/laravel-pug)
 
