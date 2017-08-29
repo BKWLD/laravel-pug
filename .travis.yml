@@ -7,6 +7,3 @@ php:
 
 install:
   - composer install
-
-script:
-  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-text
