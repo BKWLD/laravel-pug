@@ -1,6 +1,6 @@
 # Laravel Pug
 
-[![Packagist](https://img.shields.io/packagist/v/bkwld/laravel-pug.svg)](https://packagist.org/packages/bkwld/laravel-pug)
+[![Packagist](https://img.shields.io/packagist/v/bkwld/laravel-pug.svg)](https://packagist.org/packages/bkwld/laravel-pug) [![Build Status](https://travis-ci.org/BKWLD/laravel-pug.svg?branch=master)](https://travis-ci.org/BKWLD/laravel-pug) [![Code Climate](https://codeclimate.com/github/BKWLD/laravel-pug/badges/gpa.svg)](https://codeclimate.com/github/BKWLD/laravel-pug) [![StyleCI](https://styleci.io/repos/63732751/shield?branch=master)](https://styleci.io/repos/63732751)
 
 A small package that adds support for compiling Pug (Jade) templates
 to Laravel via [Pug.php](https://github.com/pug-php/pug).
