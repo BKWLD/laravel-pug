@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+if ($argv[1] === '--version') {
+    echo file_get_contents('command');
+
+    exit;
+}
+
+file_put_contents('argv', implode(' ', $argv));
+
+echo 'OK';
