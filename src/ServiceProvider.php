@@ -9,6 +9,15 @@ use Pug\Pug;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
+    protected function setDefaultOption(Pug $pug, $name, $value)
+    {
+        try {
+            $pug->getOption($name);
+        } catch (\InvalidArgumentException $exception) {
+            $pug->setCustomOption($name, call_user_func($value));
+        }
+    }
+
     /**
      * Get the major Laravel version number.
      *
@@ -38,19 +47,40 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $config = $this->getConfig();
             $pug = new Pug($config);
             $assets = new Assets($pug);
+            $assets->setEnvironment(method_exists('App', 'environment')
+                ? App::environment() // @codeCoverageIgnore
+                : 'production'
+            );
+
             $this->app->singleton('laravel-pug.pug-assets', function () use ($assets) {
                 return $assets;
             });
 
-            try {
-                $pug->getOption('defaultCache');
-            } catch (\InvalidArgumentException $exception) {
-                // Determine the cache dir if not configured
-                $pug->setCustomOption(
-                    'defaultCache',
-                    storage_path($this->version() >= 5 ? '/framework/views' : '/views')
-                );
-            }
+            // Determine the cache dir if not configured
+            $this->setDefaultOption($pug, 'defaultCache', function () {
+                return storage_path($this->version() >= 5 ? '/framework/views' : '/views');
+            });
+
+            // Determine assets input directory
+            $this->setDefaultOption($pug, 'assetDirectory', function () {
+                return array_map(function ($params) {
+                    list($function, $arg) = $params;
+
+                    return function_exists($function) ? call_user_func($function, $arg) : null;
+                }, array(
+                    array('resource_path', 'assets'),
+                    array('app_path', 'views/assets'),
+                    array('app_path', 'assets'),
+                    array('app_path', 'views'),
+                    array('app_path', ''),
+                    array('base_path', ''),
+                ));
+            });
+
+            // Determine assets output directory
+            $this->setDefaultOption($pug, 'outputDirectory', function () {
+                return function_exists('public_path') ? public_path() : null;
+            });
 
             return $pug;
         });
@@ -114,9 +144,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function bootLaravel5()
     {
-        $this->publishes([
+        $this->publishes(array(
             __DIR__ . '/../config/config.php' => config_path('laravel-pug.php'),
-        ], 'laravel-pug');
+        ), 'laravel-pug');
     }
 
     /**

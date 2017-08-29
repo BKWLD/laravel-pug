@@ -8,6 +8,8 @@ use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\View\Engines\CompilerEngine;
+use Pug\Assets;
 
 include_once __DIR__ . '/helpers.php';
 
@@ -378,6 +380,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::register
+     * @covers ::setDefaultOption
      */
     public function testRegister()
     {
@@ -540,7 +543,8 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group i
+     * @covers ::register
+     * @covers ::setDefaultOption
      */
     public function testView()
     {
@@ -551,13 +555,17 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->app['view'] = $view;
         $this->provider->register();
         $this->provider->boot();
+        $path = __DIR__ . '/assets.pug';
+
+        /** @var CompilerEngine $pug */
+        $pug = $resolver->get('pug');
 
         self::assertSame(
             '<head><script src="js/app.min.js"></script></head>',
             preg_replace(
                 '/\s{2,}/',
                 '',
-                $this->app['view.engine.resolver']->get('pug')->get(__DIR__ . '/assets.pug')
+                $this->app['view.engine.resolver']->get('pug')->get($path)
             )
         );
 
@@ -566,16 +574,42 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         self::assertSame('a();b();', trim($contents));
 
         unlink(sys_get_temp_dir() . '/js/app.min.js');
+        unlink($pug->getCompiler()->getCompiledPath($path));
 
-//        $this->app->getSingleton('laravel-pug.pug-assets')->unsetMinify();
-//
-//        self::assertSame(
-//            '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
-//            preg_replace(
-//                '/\s{2,}/',
-//                '',
-//                $this->app['view.engine.resolver']->get('pug')->get(__DIR__ . '/assets.pug')
-//            )
-//        );
+        /** @var Assets $assets */
+        $assets = $this->app->getSingleton('laravel-pug.pug-assets');
+        $assets->setEnvironment('dev');
+
+        self::assertSame(
+            '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
+            preg_replace('/\s{2,}/', '', $pug->get($path))
+        );
+
+        unlink($pug->getCompiler()->getCompiledPath($path));
+
+        $assets->setEnvironment('production');
+
+        self::assertSame(
+            '<head><script src="js/app.min.js"></script></head>',
+            preg_replace(
+                '/\s{2,}/',
+                '',
+                $this->app['view.engine.resolver']->get('pug')->get($path)
+            )
+        );
+
+        self::assertSame('a();b();', trim($contents));
+
+        unlink(sys_get_temp_dir() . '/js/app.min.js');
+        unlink($pug->getCompiler()->getCompiledPath($path));
+
+        $assets->unsetMinify();
+
+        self::assertSame(
+            '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
+            preg_replace('/\s{2,}/', '', $pug->get($path))
+        );
+
+        unlink($pug->getCompiler()->getCompiledPath($path));
     }
 }
