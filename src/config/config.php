@@ -1,13 +1,15 @@
-<?php return array(
+<?php
 
-	/**
+return [
+
+    /*
      * Pug options for Laravel < 5
-	 * Passthrough php-pug config options
-	 * https://github.com/pug-php/pug/blob/master/src/Jade/Jade.php
-	 */
+     * Passthrough php-pug config options
+     * https://github.com/pug-php/pug/blob/master/src/Jade/Jade.php
+     */
 
-	// Required for extending layouts
-	'basedir' => resource_path('views'),
+    // Required for extending layouts
+    'basedir' => resource_path('views'),
 
     //'allowMixedIndent'   => true,
     //'allowMixinOverride' => true,
@@ -34,4 +36,4 @@
     //'stream'             => null,
     //'upToDateCheck'      => true,
     //'localsJsonFile'     => false,
-);
+];
