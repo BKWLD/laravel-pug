@@ -15,7 +15,9 @@ is supported within the view.
 
 ## Installation
 
-Just run `composer require bkwld/laravel-pug` and all is ready to work.
+First you need composer if you have'nt yet: https://getcomposer.org/download/
+
+Then run `composer require bkwld/laravel-pug` and all is ready to work.
 
 
 ## Usage
