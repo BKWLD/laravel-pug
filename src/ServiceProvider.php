@@ -47,8 +47,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $config = $this->getConfig();
             $pug = new Pug($config);
             $assets = new Assets($pug);
-            $assets->setEnvironment(method_exists('App', 'environment')
-                ? App::environment() // @codeCoverageIgnore
+            $assets->setEnvironment(is_callable(array('App', 'environment'))
+                ? call_user_func(array('App', 'environment')) // @codeCoverageIgnore
                 : 'production'
             );
 
