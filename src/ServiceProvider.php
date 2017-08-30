@@ -47,10 +47,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $config = $this->getConfig();
             $pug = new Pug($config);
             $assets = new Assets($pug);
-            $assets->setEnvironment(is_callable(array('App', 'environment'))
-                ? call_user_func(array('App', 'environment')) // @codeCoverageIgnore
-                : 'production'
-            );
+            $getEnv = array('App', 'environment');
+            $assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
 
             $this->app->singleton('laravel-pug.pug-assets', function () use ($assets) {
                 return $assets;
