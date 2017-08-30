@@ -5,6 +5,7 @@ finder:
     - "src/config"
 
 enabled:
+  - long_array_syntax
   - concat_with_spaces
 
 disabled:

@@ -8,11 +8,15 @@ use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\View\Engines\CompilerEngine;
+use Pug\Assets;
 
 include_once __DIR__ . '/helpers.php';
 
 class Config implements ArrayAccess
 {
+    protected $useSysTempDir = false;
+
     protected $data = array();
 
     public function __construct($source = null)
@@ -20,8 +24,21 @@ class Config implements ArrayAccess
         $this->data['source'] = $source;
     }
 
+    public function setUseSysTempDir($useSysTempDir)
+    {
+        $this->useSysTempDir = $useSysTempDir;
+    }
+
     public function get($input)
     {
+        if ($this->useSysTempDir && in_array($input, ['laravel-pug', 'laravel-pug::config'])) {
+            return [
+                'assetDirectory'  => __DIR__ . '/assets',
+                'outputDirectory' => sys_get_temp_dir(),
+                'defaultCache'    => sys_get_temp_dir(),
+            ];
+        }
+
         return isset($this->data[$input]) ? $this->data[$input] :array(
             'input' => $input,
         );
@@ -55,6 +72,8 @@ class Config implements ArrayAccess
 
 class LaravelTestApp implements Application, ArrayAccess
 {
+    protected $useSysTempDir = false;
+
     protected $singletons = array();
 
     const VERSION = '4.0.0';
@@ -62,6 +81,11 @@ class LaravelTestApp implements Application, ArrayAccess
     public function version()
     {
         return static::VERSION;
+    }
+
+    public function setUseSysTempDir($useSysTempDir)
+    {
+        $this->useSysTempDir = $useSysTempDir;
     }
 
     public function basePath()
@@ -180,7 +204,10 @@ class LaravelTestApp implements Application, ArrayAccess
 
     public function make($abstract, array $parameters = [])
     {
-        return new Config($abstract);
+        $config = new Config($abstract);
+        $config->setUseSysTempDir($this->useSysTempDir);
+
+        return $config;
     }
 
     public function call($callback, array $parameters = [], $defaultMethod = null)
@@ -353,6 +380,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::register
+     * @covers ::setDefaultOption
      */
     public function testRegister()
     {
@@ -512,5 +540,76 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Laravel3TestApp();
         $provider = new ServiceProvider($app);
         $provider->boot();
+    }
+
+    /**
+     * @covers ::register
+     * @covers ::setDefaultOption
+     */
+    public function testView()
+    {
+        $this->app->setUseSysTempDir(true);
+        $view = new View();
+        $resolver = new Resolver();
+        $this->app['view.engine.resolver'] = $resolver;
+        $this->app['view'] = $view;
+        $this->provider->register();
+        $this->provider->boot();
+        $path = __DIR__ . '/assets.pug';
+
+        /** @var CompilerEngine $pug */
+        $pug = $resolver->get('pug');
+
+        self::assertSame(
+            '<head><script src="js/app.min.js"></script></head>',
+            preg_replace(
+                '/\s{2,}/',
+                '',
+                $this->app['view.engine.resolver']->get('pug')->get($path)
+            )
+        );
+
+        $contents = file_get_contents(sys_get_temp_dir() . '/js/app.min.js');
+
+        self::assertSame('a();b();', trim($contents));
+
+        unlink(sys_get_temp_dir() . '/js/app.min.js');
+        unlink($pug->getCompiler()->getCompiledPath($path));
+
+        /** @var Assets $assets */
+        $assets = $this->app->getSingleton('laravel-pug.pug-assets');
+        $assets->setEnvironment('dev');
+
+        self::assertSame(
+            '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
+            preg_replace('/\s{2,}/', '', $pug->get($path))
+        );
+
+        unlink($pug->getCompiler()->getCompiledPath($path));
+
+        $assets->setEnvironment('production');
+
+        self::assertSame(
+            '<head><script src="js/app.min.js"></script></head>',
+            preg_replace(
+                '/\s{2,}/',
+                '',
+                $this->app['view.engine.resolver']->get('pug')->get($path)
+            )
+        );
+
+        self::assertSame('a();b();', trim($contents));
+
+        unlink(sys_get_temp_dir() . '/js/app.min.js');
+        unlink($pug->getCompiler()->getCompiledPath($path));
+
+        $assets->unsetMinify();
+
+        self::assertSame(
+            '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
+            preg_replace('/\s{2,}/', '', $pug->get($path))
+        );
+
+        unlink($pug->getCompiler()->getCompiledPath($path));
     }
 }
