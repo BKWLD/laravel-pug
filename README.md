@@ -17,6 +17,11 @@ is supported within the view.
 
 First you need composer if you have'nt yet: https://getcomposer.org/download/
 
+Now open a terminal at the root of your laravel project. If it's a new project,
+create it with: `composer create-project --prefer-dist laravel/laravel my-new-project`
+(replace *my-new-project* with your own project name,
+[see the documentation for further information](https://laravel.com/docs/5.5#installing-laravel))
+
 Then run `composer require bkwld/laravel-pug` and all is ready to work.
 
 
