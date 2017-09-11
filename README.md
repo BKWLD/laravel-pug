@@ -31,7 +31,7 @@ Any file with the extension `.pug` will be compiled as a pug template.
 Laravel Pug also registers the `.pug.php`, `.pug.blade`, and `.pug.blade.php`
 as well as the `.jade`, `.jade.php`, `.jade.blade`, and `.jade.blade.php`
 extensions with Laravel and forwards compile requests on to Pug.php but
-we highly recommand you to use the clean and standard extension `.pug`
+we highly recommend you to use the clean and standard extension `.pug`
 that will be recognized by most systems. It compiles your Pug templates
 in the same way as Blade templates; the compiled template is put in your
 storage directory. Thus, you don't suffer compile times on every page load.
@@ -46,7 +46,29 @@ The Pug view files can work side-by-side with regular PHP views. To use Blade
 templating within your Pug, just name the files with `.pug.blade` or
 `.pug.blade.php` extensions. This feature is designed for transition
 purpose, since every blade features are available in pug, you would not
-need both.
+need both. And be aware that this mode will first render your template with
+pug, then give the output to render to blade, it means your template must
+have a valid pug syntax and must render a valid blade template. This also
+means blade directives are only available through pug text output, see the
+example below:
+```pug
+| @if ($one === 1)
+div $one = 1
+| @endif
+p {{ $two }}
+```
+If you render this with the following values: `['one' => 1, 'two' => 2]`, you
+will get:
+```html
+<div>$one = 1</div>
+<p>2</p>
+```
+PS: note that you would get the same output with the following pure pug code:
+```pug
+if one === 1
+  div $one = 1
+p=two
+```
 
 
 ## Troubleshooting

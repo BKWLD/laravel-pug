@@ -93,7 +93,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<h1>Pug is there</h1><p>{{ $sentence }}</p>', $contents);
+        self::assertSame('<h1>Pug is there</h1><p>{{ $sentence }}</p>@if (1 === 1)<div>Go</div>@endif', $contents);
 
         // Cleanup
         if (file_exists($compiledPath)) {
@@ -138,7 +138,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<h1>Pug is there</h1><p>{{ $sentence }}</p>', $contents);
+        self::assertSame('<h1>Pug is there</h1><p>{{ $sentence }}</p>@if (1 === 1)<div>Go</div>@endif', $contents);
 
         // Cleanup
         if (file_exists($compiledPath)) {

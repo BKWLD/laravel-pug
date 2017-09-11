@@ -92,7 +92,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p>', $contents);
+        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p><div>Go</div>', $contents);
 
         // Cleanup
         if (file_exists($compiledPath)) {
@@ -137,7 +137,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p>', $contents);
+        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p><div>Go</div>', $contents);
 
         // Cleanup
         if (file_exists($compiledPath)) {
