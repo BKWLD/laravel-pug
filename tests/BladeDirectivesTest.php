@@ -328,6 +328,8 @@ class BladeDirectivesTest extends \PHPUnit_Framework_TestCase
         $this->provider->register();
         $this->provider->boot();
         Blade::directive('greet', function ($person) {
+            $person = eval("return $person;");
+
             return "Hello $person!";
         });
         $extensions = $view->getExtensions();
