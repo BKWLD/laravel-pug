@@ -330,6 +330,10 @@ class BladeDirectivesTest extends \PHPUnit_Framework_TestCase
         Blade::directive('greet', function ($person) {
             return "Hello $person!";
         });
+        $extensions = $view->getExtensions();
+        if (isset($extensions['css'])) {
+            unset($extensions['css']);
+        }
 
         self::assertSame(
             [
@@ -343,9 +347,8 @@ class BladeDirectivesTest extends \PHPUnit_Framework_TestCase
                 'pug' => 'pug',
                 'blade.php' => 'blade',
                 'php' => 'php',
-                'css' => 'file',
             ],
-            $view->getExtensions()
+            $extensions
         );
 
         /** @var CompilerEngine $engine */
