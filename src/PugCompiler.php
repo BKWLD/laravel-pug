@@ -34,6 +34,15 @@ class PugCompiler extends Compiler implements CompilerInterface
     }
 
     /**
+     * @param string $cachePath
+     */
+    public function setCachePath($cachePath)
+    {
+        $this->cachePath = $cachePath;
+        $this->pug->setOption('cache', $cachePath);
+    }
+
+    /**
      * Determine if the view at the given path is expired.
      *
      * @param string $path

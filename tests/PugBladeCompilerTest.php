@@ -147,6 +147,21 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::setCachePath
+     */
+    public function testSetCachePath()
+    {
+        $pug = new Pug([
+            'defaultCache' => sys_get_temp_dir(),
+        ]);
+        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $compiler->setCachePath('foo');
+
+        self::assertStringStartsWith('foo/', $compiler->getCompiledPath('bar.pug'));
+        self::assertSame('foo', $pug->getOption('cache'));
+    }
+
+    /**
      * @covers                   ::compile
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage Missing path argument.

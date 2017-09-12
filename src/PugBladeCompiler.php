@@ -4,6 +4,7 @@ namespace Bkwld\LaravelPug;
 
 // Dependencies
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Compilers\CompilerInterface;
 use InvalidArgumentException;
@@ -36,6 +37,15 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     }
 
     /**
+     * @param string $cachePath
+     */
+    public function setCachePath($cachePath)
+    {
+        $this->cachePath = $cachePath;
+        $this->pug->setOption('cache', $cachePath);
+    }
+
+    /**
      * Determine if the view at the given path is expired.
      *
      * @param string $path
@@ -56,6 +66,13 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
      */
     public function compile($path = null)
     {
+        $app = Blade::getFacadeApplication();
+        if (isset($app['view'])) {
+            $blade = Blade::getFacadeRoot();
+            foreach ($blade->getCustomDirectives() as $name => $directive) {
+                $this->directive($name, $directive);
+            }
+        }
         if ($path && method_exists($this, 'setPath')) {
             $this->setPath($path);
         }
