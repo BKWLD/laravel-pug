@@ -303,11 +303,13 @@ class BladeDirectivesTest extends \PHPUnit_Framework_TestCase
         $this->provider = new Laravel4ServiceProvider($this->app);
     }
 
-    /**
-     * @group i
-     */
-    public function testBoot()
+    public function testCustomDirective()
     {
+        if (!is_callable(['Blade', 'directive'])) {
+            self::markTestSkipped('Blade::directive only available since Laravel 5.0.');
+
+            return;
+        }
         $resolver = new EngineResolver();
         $fileSystem = new Filesystem();
         $this->app->singleton('Illuminate\View\Compilers\BladeCompiler', function () use ($fileSystem) {
