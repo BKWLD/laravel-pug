@@ -29,11 +29,28 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     public function __construct(Pug $pug, Filesystem $files)
     {
         $this->pug = $pug;
-        $cachePath = $pug->getOption('cache');
+        $cachePath = $this->getOption('cache');
         if (!is_string($cachePath)) {
-            $cachePath = $pug->getOption('defaultCache');
+            $cachePath = $this->getOption('defaultCache');
         }
         parent::__construct($files, $cachePath);
+    }
+
+    /**
+     * Get an option from pug engine or default value.
+     *
+     * @param string $name
+     * @param null   $default
+     *
+     * @return mixed|null
+     */
+    public function getOption($name, $default = null)
+    {
+        if (method_exists($this->pug, 'hasOption') && !$this->pug->hasOption($name)) {
+            return $default;
+        }
+
+        return $this->pug->getOption($name);
     }
 
     /**
@@ -54,7 +71,7 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
      */
     public function isExpired($path)
     {
-        return !$this->pug->getOption('cache') || parent::isExpired($path);
+        return !$this->getOption('cache') || parent::isExpired($path);
     }
 
     /**

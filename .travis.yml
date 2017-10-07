@@ -6,39 +6,135 @@ git:
 matrix:
   include:
     - php: 5.4
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7.1'
     - php: 5.5
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7.1'
     - php: 5.5
-      env: LARAVEL_VERSION='5.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^3.0.0@beta'
+    - php: 5.5
+      env:
+        - LARAVEL_VERSION='5.2.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 5.5
+      env:
+        - LARAVEL_VERSION='5.2.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 5.6
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7.1'
     - php: 5.6
-      env: LARAVEL_VERSION='5.4.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^3.0.0@beta'
+    - php: 5.6
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 5.6
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 7.0
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7.1'
     - php: 7.0
-      env: LARAVEL_VERSION='5.4.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 7.0
-      env: LARAVEL_VERSION='5.5.*'
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 7.0
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^3.0.0@beta'
+    - php: 7.0
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 7.0
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 7.1
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7.1'
     - php: 7.1
-      env: LARAVEL_VERSION='5.4.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 7.1
-      env: LARAVEL_VERSION='5.5.*'
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 7.1
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^3.0.0@beta'
+    - php: 7.1
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 7.1
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 7.2
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7.1'
     - php: 7.2
-      env: LARAVEL_VERSION='5.4.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: 7.2
-      env: LARAVEL_VERSION='5.5.*'
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^2.7.1'
+    - php: 7.2
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^3.0.0@beta'
+    - php: 7.2
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='2.7.1'
+    - php: 7.2
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='^3.0.0@beta'
     - php: hhvm
-      env: LARAVEL_VERSION='4.2.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='2.7.1'
       dist: trusty
       sudo: required
     - php: hhvm
-      env: LARAVEL_VERSION='5.4.*'
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^3.0.0@beta'
+      dist: trusty
+      sudo: required
+    - php: hhvm
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^2.7.1'
+      dist: trusty
+      sudo: required
+    - php: hhvm
+      env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^3.0.0@beta'
       dist: trusty
       sudo: required
 
