@@ -148,6 +148,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getOption
      * @covers ::setCachePath
      */
     public function testSetCachePath()

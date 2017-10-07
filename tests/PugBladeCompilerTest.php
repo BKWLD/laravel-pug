@@ -102,6 +102,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getOption
      * @covers ::compile
      */
     public function testGetAndSetPath()
