@@ -16,6 +16,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
             return;
         }
+
         try {
             $pug->getOption($name);
         } catch (\InvalidArgumentException $exception) {
