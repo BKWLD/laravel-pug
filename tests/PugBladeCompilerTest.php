@@ -27,6 +27,7 @@ class PugBladeCompilerGetAndSetPath extends PugBladeCompiler
 class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @covers ::getOption
      * @covers ::isExpired
      * @covers ::__construct
      */
@@ -75,6 +76,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getOption
      * @covers ::compile
      */
     public function testCompile()
@@ -102,6 +104,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getOption
      * @covers ::compile
      */
     public function testGetAndSetPath()
@@ -147,6 +150,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getOption
      * @covers ::setCachePath
      */
     public function testSetCachePath()

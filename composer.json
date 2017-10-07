@@ -20,6 +20,10 @@
         {
             "name": "Robert Reinhard",
             "email": "info@bukwild.com"
+        },
+        {
+            "name": "Kyle Katarn",
+            "email": "kylekatarnls@gmail.com"
         }
     ],
     "autoload": {

@@ -11,6 +11,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     protected function setDefaultOption(Pug $pug, $name, $value)
     {
+        if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
+            $pug->setCustomOption($name, call_user_func($value));
+
+            return;
+        }
+
         try {
             $pug->getOption($name);
         } catch (\InvalidArgumentException $exception) {

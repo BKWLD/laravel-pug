@@ -1,6 +1,6 @@
 <?php
 
-$version = implode(' ', array_slice($argv, 1));
+list($laravelVersion, $pugVersion) = array_slice($argv, 1);
 
 $composerFile = __DIR__ . '/../composer.json';
 $composer = file_get_contents($composerFile);
@@ -9,10 +9,16 @@ $newContent = $composer;
 foreach (array('illuminate/support', 'illuminate/view') as $package) {
     $newContent = preg_replace(
         '/"' . preg_quote($package, '/') . '"\s*:\s*"[^"]+"/',
-        '"' . $package . '": "' . $version . '"',
+        '"' . $package . '": "' . $laravelVersion . '"',
         $newContent
     );
 }
+
+$newContent = preg_replace(
+    '/' . preg_quote('"php": ">=5.4.0",') . '/',
+    '$0"pug-php/pug": "' . $pugVersion . '",',
+    $newContent
+);
 
 if ($newContent === $composer) {
     echo 'illuminate/support and illuminate/view not found in ./composer.json';
