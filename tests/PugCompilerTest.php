@@ -176,4 +176,23 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
         $compiler = new PugCompiler($pug, new Filesystem());
         $compiler->compile(null);
     }
+
+    /**
+     * @covers ::compile
+     */
+    public function testRender()
+    {
+        $pug = new Pug([
+            'defaultCache' => sys_get_temp_dir(),
+        ]);
+        $compiler = new PugCompiler($pug, new Filesystem());
+        $path = __DIR__ . '/js-expression.pug';
+        $items = ['a', 'b', 'c'];
+        ob_start();
+        include $compiler->getCompiledPath($path);
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame('<a href="?item=a">a</a><a href="?item=b">b</a><a href="?item=c">c</a>', $html);
+    }
 }
