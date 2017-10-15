@@ -187,6 +187,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
         ]);
         $compiler = new PugCompiler($pug, new Filesystem());
         $path = __DIR__ . '/js-expression.pug';
+        $php = $compiler->compile($path);
         $items = ['a', 'b', 'c'];
         ob_start();
         include $compiler->getCompiledPath($path);
