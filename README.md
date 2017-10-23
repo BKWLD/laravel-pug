@@ -108,7 +108,7 @@ template any deep in the directory, you can use absolute paths to get
 other pug files from the root: `extends /layouts/main` will extends the file `resources/views/layouts/main.(pug|jade)`, `include /partial/foo/bar`, will include `resources/views/partial/foo/bar.(pug|jade)`. You can use the `basedir` option to set the root to an other directory. Paths that does not start with a slash will be resolved relatively to the current template file.
 
 
-## Histoy
+## History
 
 Read the Github [project releases](https://github.com/BKWLD/laravel-pug/releases)
 for release notes.
