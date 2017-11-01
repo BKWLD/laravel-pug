@@ -15,7 +15,7 @@ class UpdateCheck
 
         try {
             $dependencyConfig = $json->read();
-        } catch (\RuntimeException $e) {
+        } catch (\Exception $e) {
             $dependencyConfig = array();
         }
 
@@ -23,12 +23,18 @@ class UpdateCheck
             isset($dependencyConfig['require-dev']) ? $dependencyConfig['require-dev'] : array(),
             isset($dependencyConfig['require']) ? $dependencyConfig['require'] : array()
         );
-        $version = isset($dependencies['laravel-pug']) ? $dependencies['laravel-pug'] : '';
+        $version = '';
+        foreach ($dependencies as $key => $value) {
+            if (preg_match('/\/laravel-pug$/i', $key)) {
+                $version = $value;
+                break;
+            }
+        }
         if (empty($version) ||
             preg_match('/(?<!\.|\d)[01]\.\*/', $version) ||
-            preg_match('/~1\.[0-4](?!\.|\d)/', $version) ||
-            preg_match('/^1\.[0-4](?!\d)/', $version) ||
-            preg_match('/>=?(0\.|1\.[0-4](?!\d))/', $version) ||
+            preg_match('/~\s*1\.[0-4](?!\.|\d)/', $version) ||
+            preg_match('/\^\s*1\.[0-4](?!\d)/', $version) ||
+            preg_match('/>=?\s*(0\.|1\.[0-4](?!\d))/', $version) ||
             strpos($version, 'dev-') !== false
         ) {
             $event->getIO()->write('Pug-php have been installed/updated and have possibly upgrade from ' .

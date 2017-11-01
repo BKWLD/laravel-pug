@@ -260,6 +260,10 @@ class LaravelTestApp implements Application, ArrayAccess
         $this->singleton($offset, function () {
         });
     }
+
+    public function runningUnitTests()
+    {
+    }
 }
 
 class Laravel4ServiceProvider extends ServiceProvider
