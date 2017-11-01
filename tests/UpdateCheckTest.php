@@ -33,7 +33,7 @@ class CaptureIO extends NullIO
 */
 class UpdateCheckTest extends \PHPUnit_Framework_TestCase
 {
-    private static function testComposerSettings($directory, $touched)
+    private static function assertComposerSettingsTouchIO($directory, $touched)
     {
         $composer = new Composer();
         $config = new ComposerConfig();
@@ -57,11 +57,11 @@ class UpdateCheckTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckForPugUpgrade()
     {
-        self::testComposerSettings('broken', true);
-        self::testComposerSettings('up-to-date', false);
-        self::testComposerSettings('range', true);
-        self::testComposerSettings('future', false);
-        self::testComposerSettings('old', false);
-        self::testComposerSettings('very-old', false);
+        self::assertComposerSettingsTouchIO('broken', true);
+        self::assertComposerSettingsTouchIO('up-to-date', false);
+        self::assertComposerSettingsTouchIO('range', true);
+        self::assertComposerSettingsTouchIO('future', false);
+        self::assertComposerSettingsTouchIO('old', false);
+        self::assertComposerSettingsTouchIO('very-old', false);
     }
 }
