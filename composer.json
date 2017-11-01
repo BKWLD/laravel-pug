@@ -40,6 +40,14 @@
         "post-update-cmd": [
             "Pug\\Installer\\Installer::onAutoloadDump",
             "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+        ],
+        "post-package-install-cmd": [
+            "Pug\\Installer\\Installer::onAutoloadDump",
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+        ],
+        "post-package-update-cmd": [
+            "Pug\\Installer\\Installer::onAutoloadDump",
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
         ]
     },
     "extra": {
