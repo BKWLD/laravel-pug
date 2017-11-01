@@ -51,6 +51,8 @@ class UpdateCheckTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getDependencies
+     * @covers ::getLaravelPugVersion
      * @covers ::checkForPugUpgrade
      */
     public function testCheckForPugUpgrade()
