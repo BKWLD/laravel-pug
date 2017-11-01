@@ -7,7 +7,7 @@ use Composer\Script\Event;
 
 class UpdateCheck
 {
-    public static function checkForPugUpgrade(Event $event)
+    private static function getDependencies(Event $event)
     {
         $composer = $event->getComposer();
         $directory = dirname(realpath($composer->getConfig()->get('vendor-dir')));
@@ -19,17 +19,27 @@ class UpdateCheck
             $dependencyConfig = array();
         }
 
-        $dependencies = array_merge(
+        return array_merge(
             isset($dependencyConfig['require-dev']) ? $dependencyConfig['require-dev'] : array(),
             isset($dependencyConfig['require']) ? $dependencyConfig['require'] : array()
         );
-        $version = '';
+    }
+
+    public static function getLaravelPugVersion(array $dependencies)
+    {
         foreach ($dependencies as $key => $value) {
             if (preg_match('/\/laravel-pug$/i', $key)) {
-                $version = $value;
-                break;
+                return $value;
             }
         }
+
+        return '';
+    }
+
+    public static function checkForPugUpgrade(Event $event)
+    {
+        $version = static::getLaravelPugVersion(static::getDependencies($event));
+
         if (empty($version) ||
             preg_match('/(?<!\.|\d)[01]\.\*/', $version) ||
             preg_match('/~\s*1\.[0-4](?!\.|\d)/', $version) ||
