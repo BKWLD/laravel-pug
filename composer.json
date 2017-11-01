@@ -1,7 +1,7 @@
 {
     "name": "bkwld/laravel-pug",
     "description": "Pug view adapter for Laravel",
-    "type": "library",
+    "type": "composer-plugin",
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4 - 5",
@@ -35,10 +35,18 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "Pug\\Installer\\Installer::onAutoloadDump"
+            "Pug\\Installer\\Installer::onAutoloadDump",
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
         ],
         "post-update-cmd": [
-            "Pug\\Installer\\Installer::onAutoloadDump"
+            "Pug\\Installer\\Installer::onAutoloadDump",
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+        ],
+        "post-package-install": [
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+        ],
+        "post-package-update": [
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
         ]
     },
     "extra": {

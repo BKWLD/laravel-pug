@@ -12,11 +12,14 @@ use Composer\Script\Event;
 class UpdateCheck implements PluginInterface, EventSubscriberInterface
 {
     protected $io;
+    protected $composer;
 
     // @codeCoverageIgnoreStart
+
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->io = $io;
+        $this->composer = $composer;
     }
 
     public static function getSubscribedEvents()
@@ -32,6 +35,7 @@ class UpdateCheck implements PluginInterface, EventSubscriberInterface
     {
         static::checkForPugUpgrade($event);
     }
+
     // @codeCoverageIgnoreEnd
 
     private static function getDependencies(Event $event)
