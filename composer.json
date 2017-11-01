@@ -1,15 +1,17 @@
 {
     "name": "bkwld/laravel-pug",
     "description": "Pug view adapter for Laravel",
-    "type": "library",
+    "type": "composer-plugin",
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4 - 5",
         "illuminate/view": "4 - 5",
         "pug-php/pug-assets": "^1.0.1",
-        "pug/installer": "^0.1.3"
+        "pug/installer": "^0.1.3",
+        "composer-plugin-api": "^1.0"
     },
     "require-dev": {
+        "composer/composer": "^1.2",
         "phpunit/phpunit": "^4.8 || ^5.7",
         "phpunit/php-code-coverage": "^2.2 || ^4.0 || ^5.2",
         "codeclimate/php-test-reporter": "^0.4.0"
@@ -33,10 +35,18 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "Pug\\Installer\\Installer::onAutoloadDump"
+            "Pug\\Installer\\Installer::onAutoloadDump",
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
         ],
         "post-update-cmd": [
-            "Pug\\Installer\\Installer::onAutoloadDump"
+            "Pug\\Installer\\Installer::onAutoloadDump",
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+        ],
+        "post-package-install": [
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+        ],
+        "post-package-update": [
+            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
         ]
     },
     "extra": {
@@ -45,6 +55,7 @@
             "providers": [
                 "Bkwld\\LaravelPug\\ServiceProvider"
             ]
-        }
+        },
+        "class": "Bkwld\\LaravelPug\\UpdateCheck"
     }
 }

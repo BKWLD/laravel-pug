@@ -253,6 +253,10 @@ class LaravelTestApp implements Application, ArrayAccess
     {
         $this->singleton($offset, function () {});
     }
+
+    public function runningUnitTests()
+    {
+    }
 }
 
 class Laravel5TestApp extends LaravelTestApp

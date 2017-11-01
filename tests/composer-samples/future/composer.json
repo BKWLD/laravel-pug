@@ -1,0 +1,5 @@
+{
+  "require": {
+    "bkwld/laravel-pug": "^1.13"
+  }
+}
