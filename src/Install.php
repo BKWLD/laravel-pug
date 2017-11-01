@@ -71,7 +71,7 @@ class Install
             chdir('..');
         }
 
-        if ($version = static::getVersion()) {
+        if (file_exists('artisan') && ($version = static::getVersion())) {
             /** @var \Composer\Script\Event $event */
             $io = $event->getIO();
 
