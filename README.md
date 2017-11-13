@@ -9,7 +9,7 @@
 
 A small package that adds support for compiling Pug (Jade) templates
 to Laravel via [Pug.php](https://github.com/pug-php/pug).
-Both vanilla php and [Blade syntax](http://laravel.com/docs/5.2/templates#blade-templating)
+Both vanilla php and [Blade syntax](https://laravel.com/docs/5.5/blade)
 is supported within the view.
 
 
