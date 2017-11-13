@@ -89,27 +89,27 @@ matrix:
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^3.0.0@beta'
-    - php: 7.2
+    - php: 7.2.0RC5
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^2.7.1'
-    - php: 7.2
+    - php: 7.2.0RC5
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^3.0.0@beta'
-    - php: 7.2
+    - php: 7.2.0RC5
       env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^2.7.1'
-    - php: 7.2
+    - php: 7.2.0RC5
       env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^3.0.0@beta'
-    - php: 7.2
+    - php: 7.2.0RC5
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='2.7.1'
-    - php: 7.2
+    - php: 7.2.0RC5
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^3.0.0@beta'
