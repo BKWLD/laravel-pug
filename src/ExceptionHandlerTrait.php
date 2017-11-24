@@ -1,6 +1,7 @@
 <?php
 
 // @codeCoverageIgnoreStart
+
 namespace Bkwld\LaravelPug;
 
 use Exception;
@@ -14,6 +15,7 @@ trait ExceptionHandlerTrait
         if ($this->container->has('laravel-pug.pug')) {
             /** @var Pug $pug */
             $pug = $this->container->get('laravel-pug.pug');
+
             try {
                 $compiler = $pug->getCompiler();
                 $exception = $compiler->getFormatter()->getDebugError(
@@ -74,7 +76,7 @@ trait ExceptionHandlerTrait
                     ([^<]+)
                 (<\/pre>)
             /x', function ($match) use ($path, $line) {
-                $code = [];
+                $code = array();
                 $source = explode("\n", file_get_contents($path));
                 $before = 19;
                 $after = 7;
