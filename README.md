@@ -22,8 +22,44 @@ create it with: `composer create-project --prefer-dist laravel/laravel my-new-pr
 (replace *my-new-project* with your own project name,
 [see the documentation for further information](https://laravel.com/docs/5.5#installing-laravel))
 
-Then run `composer require bkwld/laravel-pug` and all is ready to work.
+Then run `composer require bkwld/laravel-pug`.
 
+To get a line and offset in pug source files well formatted in standard
+Laravel error display to debug errors, we recommend
+you to implement the following in your **app/Exceptions/ExceptionHandler**:
+
+```php
+<?php
+
+namespace App\Exceptions;
+
+use Bkwld\LaravelPug\ExceptionHandlerTrait;
+use Exception;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+
+class Handler extends ExceptionHandler
+{
+    use ExceptionHandlerTrait;
+    
+    /* ... */
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $exception
+     * @return \Illuminate\Http\Response
+     */
+    public function render($request, Exception $exception)
+    {
+        return $this->filterErrorResponse($exception, $request, parent::render($request, $exception));
+    }
+    
+}
+```
+
+Note: this will works for pure `.pug` file, not `.pug.blade` since the
+error will happen in the blade engine.
 
 ## Usage
 
