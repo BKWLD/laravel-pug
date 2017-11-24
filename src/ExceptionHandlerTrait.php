@@ -4,13 +4,12 @@
 
 namespace Bkwld\LaravelPug;
 
-use Exception;
 use Phug\Util\Exception\LocatedException;
 use Pug\Pug;
 
 trait ExceptionHandlerTrait
 {
-    public function filterErrorResponse(Exception $exception, $request, $response)
+    public function filterErrorResponse(\Exception $exception, $request, $response)
     {
         if ($this->container->has('laravel-pug.pug')) {
             /** @var Pug $pug */
