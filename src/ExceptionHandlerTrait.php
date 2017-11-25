@@ -30,8 +30,10 @@ trait ExceptionHandlerTrait
         }
         if (!$request->expectsJson() && $exception instanceof LocatedException) {
             $className = get_class($exception->getPrevious());
-            $line = $exception->getLocation()->getLine();
-            $path = realpath($exception->getLocation()->getPath());
+            $location = $exception->getLocation();
+            $line = $location->getLine();
+            $offset = $location->getOffset();
+            $path = realpath($location->getPath());
             $content = $response->getContent();
             $content = str_replace('Phug\\Util\\Exception\\LocatedException', $className, $content);
             $posNamespace = max(0, strrpos($className, '\\'));
@@ -60,14 +62,14 @@ trait ExceptionHandlerTrait
                     <div\s+class="delimiter">)([^<]+)(<\/div><!--\s*
                     --><span\s+class="frame-line">)(\d+)(<\/span>)(\s*
                 <\/div>)
-            /x', function ($match) use ($exception, $line, $path) {
+            /x', function ($match) use ($line, $offset, $path) {
                 $base = realpath(__DIR__ . '/../..');
                 if (strpos($path, $base) === 0) {
                     $path = '&hellip;' . mb_substr($path, mb_strlen($base));
                 }
 
                 return $match[1] . $path . $match[3] .
-                    $line . $match[5] . ' offset ' . $exception->getLocation()->getOffset() .
+                    $line . $match[5] . ' offset <strong class="line-offset">' . $offset . ' </strong>' .
                     $match[6];
             }, $content, 1);
             $content = preg_replace_callback('/
@@ -89,6 +91,28 @@ trait ExceptionHandlerTrait
 
                 return $match[1] . ($start + 1) . $match[3] . $code . $match[5];
             }, $content);
+            if ($offset) {
+                $content = str_replace('</body>', '<script type="text/javascript">
+                    function highlightOffset() {
+                        setTimeout(function () {
+                            if (!$(".frame.active .line-offset").length) {
+                                $(".line-offset-cursor").remove();
+    
+                                return;
+                            }
+                            $(".linenums li.current.active").css("position", "relative")
+                                .append("<span class=\\"line-offset-cursor\\" style=\\"position: absolute; top: 0; left: 0; pointer-events: none;\\">' .
+                    str_repeat('&nbsp;', $offset) .
+                    '<span style=\\"border: 1px dotted red;\\">' .
+                    str_repeat('&nbsp;', max(1, $location->getOffsetLength() - 1)) .
+                    '</span>' .
+                    '</span>");
+                        }, 1);
+                    }
+                    $(highlightOffset);
+                    $(".frame").click(highlightOffset);
+                </script></body>', $content);
+            }
             $response->setContent($content);
         }
 
