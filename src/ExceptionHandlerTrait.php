@@ -63,7 +63,7 @@ trait ExceptionHandlerTrait
                     --><span\s+class="frame-line">)(\d+)(<\/span>)(\s*
                 <\/div>)
             /x', function ($match) use ($line, $offset, $path) {
-                $base = realpath(__DIR__ . '/../..');
+                $base = realpath(base_path());
                 if (strpos($path, $base) === 0) {
                     $path = '&hellip;' . mb_substr($path, mb_strlen($base));
                 }
