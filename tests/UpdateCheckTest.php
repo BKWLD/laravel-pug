@@ -7,6 +7,7 @@ use Composer\Config as ComposerConfig;
 use Composer\Composer;
 use Composer\IO\NullIO;
 use Composer\Script\Event as ComposerEvent;
+use PHPUnit\Framework\TestCase;
 
 class CaptureIO extends NullIO
 {
@@ -31,7 +32,7 @@ class CaptureIO extends NullIO
 /**
 * @coversDefaultClass \Bkwld\LaravelPug\UpdateCheck
 */
-class UpdateCheckTest extends \PHPUnit_Framework_TestCase
+class UpdateCheckTest extends TestCase
 {
     private static function assertComposerSettingsTouchIO($directory, $touched)
     {

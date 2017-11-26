@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Bkwld\LaravelPug\Install;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 use Pug\Pug;
 
 class Io
@@ -57,7 +58,7 @@ class Event
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\Install
  */
-class InstallTest extends \PHPUnit_Framework_TestCase
+class InstallTest extends TestCase
 {
     /**
      * @covers ::getVersion
@@ -82,7 +83,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame('artisan config:publish bkwld/laravel-pug', $argv);
 
-        self::assertSame([
+        self::assertArraySubset([
             'app/config/app.php not found, please add Bkwld\LaravelPug\ServiceProvider::class, in it in your providers.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -99,9 +100,9 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         $diff = '';
         try {
-            self::assertSame(
-                file_get_contents('app/config/laravel-4-app-config.php'),
-                file_get_contents('app/config/app.php')
+            self::assertFileEquals(
+                'app/config/laravel-4-app-config.php',
+                'app/config/app.php'
             );
         } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
@@ -109,7 +110,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         unlink('app/config/app.php');
 
-        self::assertSame([
+        self::assertArraySubset([
             'Pug service provided added to your app.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -136,9 +137,9 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         $diff = '';
         try {
-            self::assertSame(
-                file_get_contents('app/config/missing-comma-config.php'),
-                file_get_contents('app/config/app.php')
+            self::assertFileEquals(
+                'app/config/missing-comma-config.php',
+                'app/config/app.php'
             );
         } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
@@ -146,7 +147,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         unlink('app/config/app.php');
 
-        self::assertSame([
+        self::assertArraySubset([
             'Pug service provided added to your app.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -190,7 +191,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
             str_replace('"', '', $argv)
         );
 
-        self::assertSame([
+        self::assertArraySubset([
             'config/app.php not found, please add Bkwld\LaravelPug\ServiceProvider::class, in it in your providers.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' . "\nOK",
         ], $io->getMessages());
@@ -207,9 +208,9 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         $diff = '';
         try {
-            self::assertSame(
-                file_get_contents('config/laravel-5-app-config.php'),
-                file_get_contents('config/app.php')
+            self::assertFileEquals(
+                'config/laravel-5-app-config.php',
+                'config/app.php'
             );
         } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
@@ -217,7 +218,7 @@ class InstallTest extends \PHPUnit_Framework_TestCase
 
         unlink('config/app.php');
 
-        self::assertSame([
+        self::assertArraySubset([
             'Pug service provided added to your app.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' . "\nOK",
         ], $io->getMessages());
@@ -249,10 +250,9 @@ class InstallTest extends \PHPUnit_Framework_TestCase
             str_replace('"', '', $argv)
         );
 
-        self::assertSame([
+        self::assertArraySubset([
             "config/app.php does not contain 'providers' => [], " .
             'please add a providers list with Bkwld\LaravelPug\ServiceProvider::class in it.',
-
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' .
             "\nOK",
         ], $io->getMessages());

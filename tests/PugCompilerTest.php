@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Bkwld\LaravelPug\PugCompiler;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 use Pug\Pug;
 
 class PugCompilerGetAndSetPath extends PugCompiler
@@ -24,7 +25,7 @@ class PugCompilerGetAndSetPath extends PugCompiler
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\PugCompiler
  */
-class PugCompilerTest extends \PHPUnit_Framework_TestCase
+class PugCompilerTest extends TestCase
 {
     /**
      * @covers ::isExpired

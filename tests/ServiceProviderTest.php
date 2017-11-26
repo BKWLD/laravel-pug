@@ -9,6 +9,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\View\Engines\CompilerEngine;
+use PHPUnit\Framework\TestCase;
 use Pug\Assets;
 
 include_once __DIR__ . '/helpers.php';
@@ -344,7 +345,7 @@ class Resolver
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\ServiceProvider
  */
-class ServiceProviderTest extends \PHPUnit_Framework_TestCase
+class ServiceProviderTest extends TestCase
 {
     /**
      * @var LaravelTestApp
@@ -388,9 +389,9 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegister()
     {
-        self::assertSame(null, $this->app->getSingleton('laravel-pug.pug'));
-        self::assertSame(null, $this->app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
-        self::assertSame(null, $this->app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
+        self::assertNull($this->app->getSingleton('laravel-pug.pug'));
+        self::assertNull($this->app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
+        self::assertNull($this->app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
 
         $this->provider->register();
         /** @var \Pug\Pug $pug */
@@ -427,9 +428,9 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         });
         $provider = new Laravel5ServiceProvider($app);
 
-        self::assertSame(null, $app->getSingleton('laravel-pug.pug'));
-        self::assertSame(null, $app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
-        self::assertSame(null, $app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
+        self::assertNull($app->getSingleton('laravel-pug.pug'));
+        self::assertNull($app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
+        self::assertNull($app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
 
         $provider->register();
         /** @var \Pug\Pug $pug */
@@ -479,7 +480,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvides()
     {
-        self::assertSame([
+        self::assertArraySubset([
             'Bkwld\LaravelPug\PugCompiler',
             'Bkwld\LaravelPug\PugBladeCompiler',
             'laravel-pug.pug',
@@ -502,7 +503,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->provider->register();
         $this->provider->boot();
 
-        self::assertSame(
+        self::assertArraySubset(
             ["pug","pug.php","jade","jade.php","pug.blade","pug.blade.php","jade.blade","jade.blade.php"],
             $view->getExtensions()
         );
@@ -523,7 +524,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $provider->register();
         $provider->boot();
 
-        self::assertSame(
+        self::assertArraySubset(
             ["pug","pug.php","jade","jade.php","pug.blade","pug.blade.php","jade.blade","jade.blade.php"],
             $view->getExtensions()
         );

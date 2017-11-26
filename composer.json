@@ -12,7 +12,7 @@
     },
     "require-dev": {
         "composer/composer": "^1.2",
-        "phpunit/phpunit": "^4.8 || ^5.7",
+        "phpunit/phpunit": "^4.8.35 || ^5.7",
         "phpunit/php-code-coverage": "^2.2 || ^4.0 || ^5.2",
         "codeclimate/php-test-reporter": "^0.4.0"
     },
