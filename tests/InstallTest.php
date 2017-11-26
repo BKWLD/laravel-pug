@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Bkwld\LaravelPug\Install;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 use Pug\Pug;
 
 class Io
@@ -57,7 +58,7 @@ class Event
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\Install
  */
-class InstallTest extends \PHPUnit_Framework_TestCase
+class InstallTest extends TestCase
 {
     /**
      * @covers ::getVersion

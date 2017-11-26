@@ -9,6 +9,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\View\Engines\CompilerEngine;
+use PHPUnit\Framework\TestCase;
 use Pug\Assets;
 
 include_once __DIR__ . '/helpers.php';
@@ -344,7 +345,7 @@ class Resolver
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\ServiceProvider
  */
-class ServiceProviderTest extends \PHPUnit_Framework_TestCase
+class ServiceProviderTest extends TestCase
 {
     /**
      * @var LaravelTestApp

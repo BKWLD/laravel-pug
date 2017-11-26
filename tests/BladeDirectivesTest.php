@@ -16,6 +16,7 @@ use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory;
 use Illuminate\View\FileViewFinder;
+use PHPUnit\Framework\TestCase;
 
 include_once __DIR__ . '/helpers.php';
 
@@ -284,7 +285,7 @@ class Laravel4ServiceProvider extends ServiceProvider
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\ServiceProvider
  */
-class BladeDirectivesTest extends \PHPUnit_Framework_TestCase
+class BladeDirectivesTest extends TestCase
 {
     /**
      * @var LaravelTestApp
