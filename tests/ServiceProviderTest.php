@@ -389,9 +389,9 @@ class ServiceProviderTest extends TestCase
      */
     public function testRegister()
     {
-        self::assertSame(null, $this->app->getSingleton('laravel-pug.pug'));
-        self::assertSame(null, $this->app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
-        self::assertSame(null, $this->app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
+        self::assertNull($this->app->getSingleton('laravel-pug.pug'));
+        self::assertNull($this->app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
+        self::assertNull($this->app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
 
         $this->provider->register();
         /** @var \Pug\Pug $pug */
@@ -428,9 +428,9 @@ class ServiceProviderTest extends TestCase
         });
         $provider = new Laravel5ServiceProvider($app);
 
-        self::assertSame(null, $app->getSingleton('laravel-pug.pug'));
-        self::assertSame(null, $app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
-        self::assertSame(null, $app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
+        self::assertNull($app->getSingleton('laravel-pug.pug'));
+        self::assertNull($app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
+        self::assertNull($app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
 
         $provider->register();
         /** @var \Pug\Pug $pug */
