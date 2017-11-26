@@ -480,7 +480,7 @@ class ServiceProviderTest extends TestCase
      */
     public function testProvides()
     {
-        self::assertSame([
+        self::assertArraySubset([
             'Bkwld\LaravelPug\PugCompiler',
             'Bkwld\LaravelPug\PugBladeCompiler',
             'laravel-pug.pug',
@@ -503,7 +503,7 @@ class ServiceProviderTest extends TestCase
         $this->provider->register();
         $this->provider->boot();
 
-        self::assertSame(
+        self::assertArraySubset(
             ["pug","pug.php","jade","jade.php","pug.blade","pug.blade.php","jade.blade","jade.blade.php"],
             $view->getExtensions()
         );
@@ -524,7 +524,7 @@ class ServiceProviderTest extends TestCase
         $provider->register();
         $provider->boot();
 
-        self::assertSame(
+        self::assertArraySubset(
             ["pug","pug.php","jade","jade.php","pug.blade","pug.blade.php","jade.blade","jade.blade.php"],
             $view->getExtensions()
         );
