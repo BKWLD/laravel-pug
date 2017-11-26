@@ -154,9 +154,24 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPhpDirective()
     {
+        $laravelVersion = intval(getenv('LARAVEL_VERSION'));
+
+        if ($laravelVersion && $laravelVersion < 5) {
+            self::markTestSkipped('@php directive test need Laravel 5+.');
+
+            return;
+        }
+
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
+
+        if (!($pug instanceof \Phug\Renderer)) {
+            self::markTestSkipped('@php directive test need pug-php 3+.');
+
+            return;
+        }
+
         $compiler = new PugBladeCompiler($pug, new Filesystem());
         $path = realpath(__DIR__ . '/php-directive.pug');
         $compiledPath = $compiler->getCompiledPath($path);
