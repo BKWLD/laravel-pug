@@ -100,9 +100,9 @@ class InstallTest extends TestCase
 
         $diff = '';
         try {
-            self::assertSame(
-                file_get_contents('app/config/laravel-4-app-config.php'),
-                file_get_contents('app/config/app.php')
+            self::assertFileEquals(
+                'app/config/laravel-4-app-config.php',
+                'app/config/app.php'
             );
         } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
@@ -137,9 +137,9 @@ class InstallTest extends TestCase
 
         $diff = '';
         try {
-            self::assertSame(
-                file_get_contents('app/config/missing-comma-config.php'),
-                file_get_contents('app/config/app.php')
+            self::assertFileEquals(
+                'app/config/missing-comma-config.php',
+                'app/config/app.php'
             );
         } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
@@ -208,9 +208,9 @@ class InstallTest extends TestCase
 
         $diff = '';
         try {
-            self::assertSame(
-                file_get_contents('config/laravel-5-app-config.php'),
-                file_get_contents('config/app.php')
+            self::assertFileEquals(
+                'config/laravel-5-app-config.php',
+                'config/app.php'
             );
         } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
