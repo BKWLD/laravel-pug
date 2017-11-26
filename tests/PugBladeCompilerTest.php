@@ -150,6 +150,33 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::compile
+     */
+    public function testPhpDirective()
+    {
+        $pug = new Pug([
+            'defaultCache' => sys_get_temp_dir(),
+        ]);
+        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $path = realpath(__DIR__ . '/php-directive.pug');
+        $compiledPath = $compiler->getCompiledPath($path);
+        $compiler->compile($path);
+
+        ob_start();
+        include $compiledPath;
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame('<div><p>12</p><p>24</p></div>', $contents);
+
+        // Cleanup
+        if (file_exists($compiledPath)) {
+            unlink($compiledPath);
+            clearstatcache();
+        }
+    }
+
+    /**
      * @covers ::getOption
      * @covers ::setCachePath
      */
