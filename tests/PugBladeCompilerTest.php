@@ -50,6 +50,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($compiler->isExpired($path));
 
         $compiler->compile($path);
+        touch(__DIR__ . '/example.pug', time() - 3600);
         clearstatcache();
 
         self::assertFalse($compiler->isExpired($path));
@@ -73,6 +74,28 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));
+
+        $pug->setOption('cache', true);
+        $path = realpath(__DIR__ . '/include.pug');
+        $compiledPath = $compiler->getCompiledPath($path);
+
+        touch(__DIR__ . '/example.pug', time() - 3600);
+        clearstatcache();
+
+        self::assertFalse($compiler->isExpired($path));
+
+        touch(__DIR__ . '/example.pug', time() + 3600);
+        clearstatcache();
+
+        self::assertTrue($compiler->isExpired($path));
+
+        touch(__DIR__ . '/example.pug', time() - 3600);
+
+        // Cleanup
+        if (file_exists($compiledPath)) {
+            unlink($compiledPath);
+            clearstatcache();
+        }
     }
 
     /**

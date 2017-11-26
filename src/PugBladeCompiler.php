@@ -71,7 +71,31 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
      */
     public function isExpired($path)
     {
-        return !$this->getOption('cache') || parent::isExpired($path);
+        if (!$this->getOption('cache') || parent::isExpired($path)) {
+            return true;
+        }
+
+        $compiled = $this->getCompiledPath($path);
+        $importsMap = $compiled . '.imports.serialize.txt';
+        $files = $this->files;
+
+        if (!$files->exists($importsMap)) {
+            return true;
+        }
+
+        $files = unserialize($files->get($importsMap));
+
+        if (empty($files)) {
+            return false;
+        }
+
+        $time = max(array_map(function ($path) use ($files) {
+            return $files->exists($path)
+                ? $files->lastModified($path)
+                : 0;
+        }, $files));
+
+        return $time >= $this->files->lastModified($compiled);
     }
 
     /**
@@ -108,9 +132,14 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
 
             // Then the Blade syntax
             $contents = $this->compileString($contents);
+            $compiled = $this->getCompiledPath($path);
+            $this->files->put(
+                $compiled . '.imports.serialize.txt',
+                serialize($this->pug->getCompiler()->getCurrentImportPaths())
+            );
 
             // Save
-            $this->files->put($this->getCompiledPath($path), $contents);
+            $this->files->put($compiled, $contents);
         }
     }
 }
