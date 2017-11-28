@@ -27,6 +27,7 @@ class PugBladeCompilerGetAndSetPath extends PugBladeCompiler
 class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @group i
      * @covers ::getOption
      * @covers ::isExpired
      * @covers ::__construct
@@ -79,8 +80,12 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
         $path = realpath(__DIR__ . '/include.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
+        touch(__DIR__ . '/include.pug', time() - 3600);
         touch(__DIR__ . '/example.pug', time() - 3600);
+        $compiler->compile($path);
         clearstatcache();
+
+        self::assertFileExists($compiledPath);
 
         self::assertFalse($compiler->isExpired($path));
 

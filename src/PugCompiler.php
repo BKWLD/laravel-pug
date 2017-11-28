@@ -80,19 +80,15 @@ class PugCompiler extends Compiler implements CompilerInterface
             return true;
         }
 
-        $files = unserialize($files->get($importsMap));
-
-        if (empty($files)) {
-            return false;
+        $importPaths = unserialize($files->get($importsMap));
+        $time = $files->lastModified($compiled);
+        foreach ($importPaths as $importPath) {
+            if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
+                return true;
+            }
         }
 
-        $time = max(array_map(function ($path) use ($files) {
-            return $files->exists($path)
-                ? $files->lastModified($path)
-                : 0;
-        }, $files));
-
-        return $time >= $this->files->lastModified($compiled);
+        return false;
     }
 
     /**

@@ -80,7 +80,9 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
         $path = realpath(__DIR__ . '/include.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
+        touch(__DIR__ . '/include.pug', time() - 3600);
         touch(__DIR__ . '/example.pug', time() - 3600);
+        $compiler->compile($path);
         clearstatcache();
 
         self::assertFalse($compiler->isExpired($path));
