@@ -54,6 +54,34 @@ trait PugHandlerTrait
     }
 
     /**
+     * Returns true if the path has an expired imports linked.
+     *
+     * @param $path
+     *
+     * @return bool
+     */
+    private function hasExpiredImport($path)
+    {
+        $compiled = $this->getCompiledPath($path);
+        $importsMap = $compiled . '.imports.serialize.txt';
+        $files = $this->files;
+
+        if (!$files->exists($importsMap)) {
+            return true;
+        }
+
+        $importPaths = unserialize($files->get($importsMap));
+        $time = $files->lastModified($compiled);
+        foreach ($importPaths as $importPath) {
+            if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Determine if the view at the given path is expired.
      *
      * @param string $path
@@ -66,25 +94,7 @@ trait PugHandlerTrait
             return true;
         }
 
-        if ($this->pug instanceof \Phug\Renderer) {
-            $compiled = $this->getCompiledPath($path);
-            $importsMap = $compiled . '.imports.serialize.txt';
-            $files = $this->files;
-
-            if (!$files->exists($importsMap)) {
-                return true;
-            }
-
-            $importPaths = unserialize($files->get($importsMap));
-            $time = $files->lastModified($compiled);
-            foreach ($importPaths as $importPath) {
-                if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->pug instanceof \Phug\Renderer && $this->hasExpiredImport($path);
     }
 
     /**

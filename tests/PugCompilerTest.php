@@ -29,6 +29,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      */
     public function testIsExpired()
@@ -71,6 +72,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      */
     public function testIncludeIsExpired()

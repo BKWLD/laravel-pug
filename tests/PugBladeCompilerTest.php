@@ -29,6 +29,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      */
@@ -70,6 +71,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      */
