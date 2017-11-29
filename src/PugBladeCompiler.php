@@ -29,6 +29,6 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
             }
         }
         $this->footer = array();
-        $this->compileWith($path, [$this, 'compileString']);
+        $this->compileWith($path, array($this, 'compileString'));
     }
 }
