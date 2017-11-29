@@ -131,12 +131,14 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
             // Then the Blade syntax
             $contents = $this->compileString($contents);
             $compiled = $this->getCompiledPath($path);
-            $this->files->put(
-                $compiled . '.imports.serialize.txt',
-                serialize($this->pug->getCompiler()->getCurrentImportPaths())
-            );
 
             // Save
+            if ($this->pug instanceof \Phug\Renderer) {
+                $this->files->put(
+                    $compiled . '.imports.serialize.txt',
+                    serialize($this->pug->getCompiler()->getCurrentImportPaths())
+                );
+            }
             $this->files->put($compiled, $contents);
         }
     }
