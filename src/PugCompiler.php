@@ -72,19 +72,21 @@ class PugCompiler extends Compiler implements CompilerInterface
             return true;
         }
 
-        $compiled = $this->getCompiledPath($path);
-        $importsMap = $compiled . '.imports.serialize.txt';
-        $files = $this->files;
+        if ($this->pug instanceof \Phug\Renderer) {
+            $compiled = $this->getCompiledPath($path);
+            $importsMap = $compiled . '.imports.serialize.txt';
+            $files = $this->files;
 
-        if (!$files->exists($importsMap)) {
-            return true;
-        }
-
-        $importPaths = unserialize($files->get($importsMap));
-        $time = $files->lastModified($compiled);
-        foreach ($importPaths as $importPath) {
-            if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
+            if (!$files->exists($importsMap)) {
                 return true;
+            }
+
+            $importPaths = unserialize($files->get($importsMap));
+            $time = $files->lastModified($compiled);
+            foreach ($importPaths as $importPath) {
+                if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
+                    return true;
+                }
             }
         }
 
@@ -112,10 +114,12 @@ class PugCompiler extends Compiler implements CompilerInterface
         if ($this->cachePath) {
             $compiled = $this->getCompiledPath($path);
             $contents = $this->pug->compile($this->files->get($path), $path);
-            $this->files->put(
-                $compiled . '.imports.serialize.txt',
-                serialize($this->pug->getCompiler()->getCurrentImportPaths())
-            );
+            if ($this->pug instanceof \Phug\Renderer) {
+                $this->files->put(
+                    $compiled . '.imports.serialize.txt',
+                    serialize($this->pug->getCompiler()->getCurrentImportPaths())
+                );
+            }
             $this->files->put($compiled, $contents);
         }
     }

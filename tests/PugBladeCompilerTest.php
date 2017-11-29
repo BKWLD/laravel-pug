@@ -27,7 +27,6 @@ class PugBladeCompilerGetAndSetPath extends PugBladeCompiler
 class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @group i
      * @covers ::getOption
      * @covers ::isExpired
      * @covers ::__construct
@@ -65,13 +64,31 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
             unlink($compiledPath);
             clearstatcache();
         }
+    }
 
+    /**
+     * @covers ::getOption
+     * @covers ::isExpired
+     * @covers ::__construct
+     */
+    public function testIncludeIsExpired()
+    {
         $cache = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'foo';
         $pug = new Pug([
             'cache'        => $cache,
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+
+        if (!($pug instanceof \Phug\Renderer)) {
+            self::markTestSkipped('Include cache expiration only available since pug-php 3.');
+        }
+
+        $files = new Filesystem();
+        if (!$files->exists($cache)) {
+            $files->makeDirectory($cache);
+        }
+        $path = realpath(__DIR__ . '/example.pug');
+        $compiler = new PugBladeCompiler($pug, $files);
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));

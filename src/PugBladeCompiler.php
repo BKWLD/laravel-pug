@@ -75,19 +75,21 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
             return true;
         }
 
-        $compiled = $this->getCompiledPath($path);
-        $importsMap = $compiled . '.imports.serialize.txt';
-        $files = $this->files;
+        if ($this->pug instanceof \Phug\Renderer) {
+            $compiled = $this->getCompiledPath($path);
+            $importsMap = $compiled . '.imports.serialize.txt';
+            $files = $this->files;
 
-        if (!$files->exists($importsMap)) {
-            return true;
-        }
-
-        $importPaths = unserialize($files->get($importsMap));
-        $time = $files->lastModified($compiled);
-        foreach ($importPaths as $importPath) {
-            if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
+            if (!$files->exists($importsMap)) {
                 return true;
+            }
+
+            $importPaths = unserialize($files->get($importsMap));
+            $time = $files->lastModified($compiled);
+            foreach ($importPaths as $importPath) {
+                if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
+                    return true;
+                }
             }
         }
 
