@@ -27,9 +27,9 @@ class PugBladeCompilerGetAndSetPath extends PugBladeCompiler
 class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::getOption
-     * @covers ::isExpired
-     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      */
     public function testIsExpired()
     {
@@ -67,9 +67,9 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getOption
-     * @covers ::isExpired
-     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      */
     public function testIncludeIsExpired()
     {
@@ -121,7 +121,9 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testCompile()
@@ -149,7 +151,9 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testGetAndSetPath()
@@ -195,6 +199,8 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testPhpDirective()
@@ -237,8 +243,8 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getOption
-     * @covers ::setCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
      */
     public function testSetCachePath()
     {
@@ -253,7 +259,7 @@ class PugBladeCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers                   ::compile
+     * @covers                   \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage Missing path argument.
      */

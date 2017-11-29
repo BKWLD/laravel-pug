@@ -27,8 +27,8 @@ class PugCompilerGetAndSetPath extends PugCompiler
 class PugCompilerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::isExpired
-     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      */
     public function testIsExpired()
     {
@@ -68,8 +68,8 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::isExpired
-     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      */
     public function testIncludeIsExpired()
     {
@@ -119,6 +119,8 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testCompile()
@@ -145,6 +147,8 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testGetAndSetPath()
@@ -190,8 +194,8 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getOption
-     * @covers ::setCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
      */
     public function testSetCachePath()
     {
@@ -206,7 +210,7 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers                   ::compile
+     * @covers                   \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage Missing path argument.
      */
@@ -220,6 +224,8 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testRender()
