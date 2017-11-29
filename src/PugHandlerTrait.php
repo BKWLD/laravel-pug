@@ -2,7 +2,6 @@
 
 namespace Bkwld\LaravelPug;
 
-use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
 use Pug\Pug;
 
@@ -14,20 +13,18 @@ trait PugHandlerTrait
     protected $pug;
 
     /**
-     * Create a new compiler instance.
+     * Set pug instance and returns cache path.
      *
-     * @param Pug        $pug
-     * @param Filesystem $files
-     * @param string     $cachePath
+     * @param Pug $pug
+     *
+     * @return string $cachePath
      */
-    public function __construct(Pug $pug, Filesystem $files)
+    public function getCachePath(Pug $pug)
     {
         $this->pug = $pug;
         $cachePath = $this->getOption('cache');
-        if (!is_string($cachePath)) {
-            $cachePath = $this->getOption('defaultCache');
-        }
-        parent::__construct($files, $cachePath);
+
+        return is_string($cachePath) ? $cachePath : $this->getOption('defaultCache');
     }
 
     /**

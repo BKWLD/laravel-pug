@@ -27,7 +27,8 @@ class PugCompilerGetAndSetPath extends PugCompiler
 class PugCompilerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \Bkwld\LaravelPug\PugHandlerTrait::__construct
+     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      */
     public function testIsExpired()
@@ -68,7 +69,8 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Bkwld\LaravelPug\PugHandlerTrait::__construct
+     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
      */
     public function testIncludeIsExpired()
@@ -110,6 +112,10 @@ class PugCompilerTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($compiler->isExpired($path));
 
         touch(__DIR__ . '/example.pug', time() - 3600);
+        unlink($compiledPath . '.imports.serialize.txt');
+        clearstatcache();
+
+        self::assertTrue($compiler->isExpired($path));
 
         // Cleanup
         if (file_exists($compiledPath)) {
