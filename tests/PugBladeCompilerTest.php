@@ -28,9 +28,11 @@ class PugBladeCompilerGetAndSetPath extends PugBladeCompiler
 class PugBladeCompilerTest extends TestCase
 {
     /**
-     * @covers ::getOption
-     * @covers ::isExpired
      * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      */
     public function testIsExpired()
     {
@@ -51,6 +53,7 @@ class PugBladeCompilerTest extends TestCase
         self::assertTrue($compiler->isExpired($path));
 
         $compiler->compile($path);
+        touch(__DIR__ . '/example.pug', time() - 3600);
         clearstatcache();
 
         self::assertFalse($compiler->isExpired($path));
@@ -64,20 +67,72 @@ class PugBladeCompilerTest extends TestCase
             unlink($compiledPath);
             clearstatcache();
         }
+    }
 
+    /**
+     * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     */
+    public function testIncludeIsExpired()
+    {
         $cache = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'foo';
         $pug = new Pug([
             'cache'        => $cache,
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+
+        if (!($pug instanceof \Phug\Renderer)) {
+            self::markTestSkipped('Include cache expiration only available since pug-php 3.');
+        }
+
+        $files = new Filesystem();
+        if (!$files->exists($cache)) {
+            $files->makeDirectory($cache);
+        }
+        $path = realpath(__DIR__ . '/example.pug');
+        $compiler = new PugBladeCompiler($pug, $files);
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));
+
+        $pug->setOption('cache', true);
+        $path = realpath(__DIR__ . '/include.pug');
+        $compiledPath = $compiler->getCompiledPath($path);
+
+        touch(__DIR__ . '/include.pug', time() - 3600);
+        touch(__DIR__ . '/example.pug', time() - 3600);
+        $compiler->compile($path);
+        clearstatcache();
+
+        self::assertFileExists($compiledPath);
+
+        self::assertFalse($compiler->isExpired($path));
+
+        touch(__DIR__ . '/example.pug', time() + 3600);
+        clearstatcache();
+
+        self::assertTrue($compiler->isExpired($path));
+
+        touch(__DIR__ . '/example.pug', time() - 3600);
+        unlink($compiledPath . '.imports.serialize.txt');
+        clearstatcache();
+
+        self::assertTrue($compiler->isExpired($path));
+
+        // Cleanup
+        if (file_exists($compiledPath)) {
+            unlink($compiledPath);
+            clearstatcache();
+        }
     }
 
     /**
-     * @covers ::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testCompile()
@@ -105,7 +160,9 @@ class PugBladeCompilerTest extends TestCase
     }
 
     /**
-     * @covers ::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testGetAndSetPath()
@@ -151,6 +208,8 @@ class PugBladeCompilerTest extends TestCase
     }
 
     /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
     public function testPhpDirective()
@@ -193,8 +252,8 @@ class PugBladeCompilerTest extends TestCase
     }
 
     /**
-     * @covers ::getOption
-     * @covers ::setCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
      */
     public function testSetCachePath()
     {
@@ -209,7 +268,7 @@ class PugBladeCompilerTest extends TestCase
     }
 
     /**
-     * @covers                   ::compile
+     * @covers                   \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage Missing path argument.
      */

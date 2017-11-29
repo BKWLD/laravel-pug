@@ -17,11 +17,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return;
         }
 
+        // @codeCoverageIgnoreStart
         try {
             $pug->getOption($name);
         } catch (\InvalidArgumentException $exception) {
             $pug->setCustomOption($name, call_user_func($value));
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
