@@ -144,6 +144,46 @@ template any deep in the directory, you can use absolute paths to get
 other pug files from the root: `extends /layouts/main` will extends the file `resources/views/layouts/main.(pug|jade)`, `include /partial/foo/bar`, will include `resources/views/partial/foo/bar.(pug|jade)`. You can use the `basedir` option to set the root to an other directory. Paths that does not start with a slash will be resolved relatively to the current template file.
 
 
+## Assets management
+
+**Laravel Pug** embed the [pug-minify](https://github.com/pug-php/pug-minify)
+extension that allow you to handle a lot of assets types (JS, CSS, Stylus,
+Less, Coffee, React) directly inside your templates then concat and minify
+them in production.
+
+**Installation**: you will need to install **node** on your machine, then
+when you install/update laravel-pug with some
+`composer require bkwld/laravel-pug`, you will be asked for install
+node packages, coffee, stylus, etc. Enter [Y] or run the command
+with the `--non-interactive` option.
+
+**Usage**:
+```html
+doctype html
+html
+  head
+    ...
+    minify styles
+      link(rel="stylesheet" href="foo/test.css")
+      link(rel="stylesheet" href="less/test.less")
+      link(rel="stylesheet" href="stylus/test.styl")
+  body
+    ...
+    minify scripts
+      script(src="react/test.jsx" type="text/babel")
+      script(src="coffee/test.coffee")
+```  
+
+In development, you can run the following command to get each file
+converted into CSS or JS (without minify/concat):
+```shell
+APP_ENV=development php artisan serve
+```
+
+And in production, by default, all scripts will be converted,
+minified and concatenated.
+
+
 ## History
 
 Read the Github [project releases](https://github.com/BKWLD/laravel-pug/releases)
