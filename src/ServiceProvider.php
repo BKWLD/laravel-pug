@@ -34,8 +34,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function version()
     {
         $app = $this->app;
+        $tab = explode('Laravel Components ', $app->version());
 
-        return intval($app::VERSION);
+        return intval(empty($tab[1]) ? $app::VERSION : $tab[1]);
     }
 
     /**
@@ -156,6 +157,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
+     * Returns the view engine resolver according to current framework (laravel/lumen).
+     *
+     * @return \Illuminate\View\Engines\EngineResolver
+     */
+    public function getEngineResolver()
+    {
+        return isset($this->app['view.engine.resolver'])
+            ? $this->app['view.engine.resolver']
+            : $this->app['view']->getEngineResolver();
+    }
+
+    /**
      * Register the regular Pug compiler.
      *
      * @return void
@@ -163,7 +176,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function registerPugCompiler()
     {
         // Add resolver
-        $this->app['view.engine.resolver']->register('pug', function () {
+        $this->getEngineResolver()->register('pug', function () {
             return new CompilerEngine($this->app['Bkwld\LaravelPug\PugCompiler']);
         });
 
@@ -182,7 +195,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function registerPugBladeCompiler()
     {
         // Add resolver
-        $this->app['view.engine.resolver']->register('pug.blade', function () {
+        $this->getEngineResolver()->register('pug.blade', function () {
             return new CompilerEngine($this->app['Bkwld\LaravelPug\PugBladeCompiler']);
         });
 
