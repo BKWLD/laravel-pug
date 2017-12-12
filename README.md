@@ -106,6 +106,24 @@ if one === 1
 p=two
 ```
 
+### Use in Lumen
+
+Register the service in `bootstrap/app.php`
+(**Register Service Providers** section is the dedicated place):
+
+```php
+$app->register(Bkwld\LaravelPug\ServiceProvider::class);
+```
+
+Then you can use it with `view()`:
+```
+$router->get('/', function () use ($router) {
+    // will render resources/views/test.pug
+    return view('test', [
+        'name' => 'Bob',
+    ]);
+});
+```
 
 ## Troubleshooting
 
