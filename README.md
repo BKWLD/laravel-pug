@@ -116,7 +116,7 @@ $app->register(Bkwld\LaravelPug\ServiceProvider::class);
 ```
 
 Then you can use it with `view()`:
-```
+```php
 $router->get('/', function () use ($router) {
     // will render resources/views/test.pug
     return view('test', [
