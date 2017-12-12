@@ -151,9 +151,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function bootLaravel5()
     {
-        $this->publishes(array(
-            __DIR__ . '/../config/config.php' => config_path('laravel-pug.php'),
-        ), 'laravel-pug');
+        if (function_exists('config_path')) {
+            $this->publishes(array(
+                __DIR__ . '/../config/config.php' => config_path('laravel-pug.php'),
+            ), 'laravel-pug');
+        }
     }
 
     /**
