@@ -29,7 +29,7 @@ trait ExceptionHandlerTrait
             }
         }
         if (!$request->expectsJson() && $exception instanceof LocatedException) {
-            $className = get_class($exception->getPrevious());
+            $className = get_class($exception->getPrevious() ?: $exception);
             $location = $exception->getLocation();
             $line = $location->getLine();
             $offset = $location->getOffset();
@@ -78,7 +78,7 @@ trait ExceptionHandlerTrait
                 (<\/pre>)
             /x', function ($match) use ($path, $line) {
                 $code = array();
-                $source = explode("\n", file_get_contents($path));
+                $source = explode("\n", @file_get_contents($path));
                 $before = 19;
                 $after = 7;
                 $start = max(0, $line - $before);
