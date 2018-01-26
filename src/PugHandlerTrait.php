@@ -133,11 +133,11 @@ trait PugHandlerTrait
      */
     public function isExpired($path)
     {
-        if (!$this->getOption('cache') || parent::isExpired($path)) {
+        if (!$this->cachePath || parent::isExpired($path)) {
             return true;
         }
 
-        return $this->getPug() instanceof \Phug\Renderer && $this->hasExpiredImport($path);
+        return is_subclass_of('\Pug\Pug', '\Phug\Renderer') && $this->hasExpiredImport($path);
     }
 
     /**

@@ -59,7 +59,7 @@ class PugBladeCompilerTest extends TestCase
 
         self::assertFalse($compiler->isExpired($path));
 
-        $pug->setOption('cache', false);
+        $compiler->setCachePath(null);
 
         self::assertTrue($compiler->isExpired($path));
 
@@ -100,7 +100,6 @@ class PugBladeCompilerTest extends TestCase
 
         self::assertSame($cache, dirname($compiledPath));
 
-        $pug->setOption('cache', true);
         $path = realpath(__DIR__ . '/include.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 

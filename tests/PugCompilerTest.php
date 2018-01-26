@@ -60,7 +60,7 @@ class PugCompilerTest extends TestCase
 
         self::assertFalse($compiler->isExpired($path));
 
-        $pug->setOption('cache', false);
+        $compiler->setCachePath(null);
 
         self::assertTrue($compiler->isExpired($path));
 
