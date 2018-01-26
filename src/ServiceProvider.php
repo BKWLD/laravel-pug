@@ -51,17 +51,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->registerLaravel5();
         }
 
+        $assets = null;
+
+        $this->app->singleton('laravel-pug.pug-assets', function () use (&$assets) {
+            return $this->app['laravel-pug.pug'] ? $assets : null;
+        });
+
         // Bind the package-configued Pug instance
-        $this->app->singleton('laravel-pug.pug', function () {
+        $this->app->singleton('laravel-pug.pug', function () use (&$assets) {
             $config = $this->getConfig();
             $pug = new Pug($config);
             $assets = new Assets($pug);
             $getEnv = array('App', 'environment');
             $assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
-
-            $this->app->singleton('laravel-pug.pug-assets', function () use ($assets) {
-                return $assets;
-            });
 
             // Determine the cache dir if not configured
             $this->setDefaultOption($pug, 'defaultCache', function () {
@@ -94,12 +96,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Bind the Pug compiler
         $this->app->singleton('Bkwld\LaravelPug\PugCompiler', function ($app) {
-            return new PugCompiler($app['laravel-pug.pug'], $app['files']);
+            return new PugCompiler([$app, 'laravel-pug.pug'], $app['files'], $this->getConfig());
         });
 
         // Bind the Pug Blade compiler
         $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', function ($app) {
-            return new PugBladeCompiler($app['laravel-pug.pug'], $app['files']);
+            return new PugBladeCompiler([$app, 'laravel-pug.pug'], $app['files'], $this->getConfig());
         });
     }
 

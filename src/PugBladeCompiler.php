@@ -15,12 +15,13 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     /**
      * Create a new compiler instance.
      *
-     * @param Pug        $pug
+     * @param array      $pugTarget
      * @param Filesystem $files
+     * @param array      $config
      */
-    public function __construct(Pug $pug, Filesystem $files)
+    public function __construct(array $pugTarget, Filesystem $files, array $config)
     {
-        parent::__construct($files, $this->getCachePath($pug));
+        $this->construct($pugTarget, $files, $config);
     }
 
     /**
