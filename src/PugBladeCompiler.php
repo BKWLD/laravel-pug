@@ -6,7 +6,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Compilers\CompilerInterface;
-use Pug\Pug;
 
 class PugBladeCompiler extends BladeCompiler implements CompilerInterface
 {

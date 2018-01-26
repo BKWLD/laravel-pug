@@ -96,12 +96,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Bind the Pug compiler
         $this->app->singleton('Bkwld\LaravelPug\PugCompiler', function ($app) {
-            return new PugCompiler([$app, 'laravel-pug.pug'], $app['files'], $this->getConfig());
+            return new PugCompiler(array($app, 'laravel-pug.pug'), $app['files'], $this->getConfig());
         });
 
         // Bind the Pug Blade compiler
         $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', function ($app) {
-            return new PugBladeCompiler([$app, 'laravel-pug.pug'], $app['files'], $this->getConfig());
+            return new PugBladeCompiler(array($app, 'laravel-pug.pug'), $app['files'], $this->getConfig());
         });
     }
 

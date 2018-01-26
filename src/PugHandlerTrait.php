@@ -29,7 +29,7 @@ trait PugHandlerTrait
     {
         $this->pugTarget = $pugTarget;
         $cachePath = null;
-        foreach (['cache_dir', 'cache', 'defaultCache'] as $name) {
+        foreach (array('cache_dir', 'cache', 'defaultCache') as $name) {
             if (isset($config[$name])) {
                 $cachePath = $config[$name];
                 break;

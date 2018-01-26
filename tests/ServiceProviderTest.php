@@ -584,14 +584,15 @@ class ServiceProviderTest extends TestCase
 
         /** @var Pug $pugEngine */
         $pugEngine = $this->app['laravel-pug.pug'];
+        $method = method_exists($pugEngine, 'renderFile') ? [$pugEngine, 'renderFile'] : [$pugEngine, 'render'];
 
         /** @var Assets $assets */
         $assets = $this->app['laravel-pug.pug-assets'];
         $assets->setEnvironment('dev');
 
-        self::assertRegExp(
-            '/<head><script src="foo\.js\?\d+"><\/script><script src="bar\.js\?\d+"><\/script><\/head>/',
-            preg_replace('/\s{2,}/', '', $pugEngine->renderFile($path))
+        self::assertSame(
+            '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
+            preg_replace('/\s{2,}/', '', call_user_func($method, $path))
         );
 
         @unlink($pug->getCompiler()->getCompiledPath($path));
@@ -616,7 +617,7 @@ class ServiceProviderTest extends TestCase
 
         self::assertSame(
             '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
-            preg_replace('/\s{2,}/', '', $pugEngine->renderFile($path))
+            preg_replace('/\s{2,}/', '', call_user_func($method, $path))
         );
 
         @unlink($pug->getCompiler()->getCompiledPath($path));
