@@ -61,13 +61,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
 
         // Determine the cache dir if not configured
-        $this->setDefaultOption($pug, 'defaultCache', [$this, 'getDefaultCache']);
+        $this->setDefaultOption($pug, 'defaultCache', array($this, 'getDefaultCache'));
 
         // Determine assets input directory
-        $this->setDefaultOption($pug, 'assetDirectory', [$this, 'getAssetsDirectories']);
+        $this->setDefaultOption($pug, 'assetDirectory', array($this, 'getAssetsDirectories'));
 
         // Determine assets output directory
-        $this->setDefaultOption($pug, 'outputDirectory', [$this, 'getOutputDirectory']);
+        $this->setDefaultOption($pug, 'outputDirectory', array($this, 'getOutputDirectory'));
 
         return $pug;
     }
@@ -85,7 +85,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function getCompilerCreator($compilerClass)
     {
         return function ($app) use ($compilerClass) {
-            return new $compilerClass(array($app, 'laravel-pug.pug'), $app['files'], $this->getConfig(), $this->getDefaultCache());
+            return new $compilerClass(
+                array($app, 'laravel-pug.pug'),
+                $app['files'],
+                $this->getConfig(),
+                $this->getDefaultCache()
+            );
         };
     }
 
@@ -114,20 +119,27 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->registerLaravel5();
         }
 
+        // Bind the pug assets module
         $this->app->singleton('laravel-pug.pug-assets', function () {
             return $this->getPugAssets();
         });
 
-        // Bind the package-configued Pug instance
+        // Bind the package-configured Pug instance
         $this->app->singleton('laravel-pug.pug', function () {
             return $this->getPugEngine();
         });
 
         // Bind the Pug compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugCompiler', $this->getCompilerCreator('\Bkwld\LaravelPug\PugCompiler'));
+        $this->app->singleton(
+            'Bkwld\LaravelPug\PugCompiler',
+            $this->getCompilerCreator('\Bkwld\LaravelPug\PugCompiler')
+        );
 
         // Bind the Pug Blade compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', $this->getCompilerCreator('\Bkwld\LaravelPug\PugBladeCompiler'));
+        $this->app->singleton(
+            'Bkwld\LaravelPug\PugBladeCompiler',
+            $this->getCompilerCreator('\Bkwld\LaravelPug\PugBladeCompiler')
+        );
     }
 
     /**
