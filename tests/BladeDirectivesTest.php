@@ -315,6 +315,11 @@ class BladeDirectivesTest extends TestCase
      * @covers ::getDefaultCache
      * @covers ::getAssetsDirectories
      * @covers ::getOutputDirectory
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getPug
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      */
     public function testCustomDirective()
     {

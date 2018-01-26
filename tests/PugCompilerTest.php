@@ -206,6 +206,50 @@ class PugCompilerTest extends TestCase
 
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     */
+    public function testGetCachePath()
+    {
+        $compiler = new PugCompiler([[new Pug()], 0], new Filesystem(), [], sys_get_temp_dir() . '/foo');
+
+        self::assertSame(sys_get_temp_dir() . '/foo', $compiler->getCachePath());
+
+        $compiler = new PugCompiler([[new Pug([
+            'cache'        => sys_get_temp_dir() . '/foo',
+            'defaultCache' => sys_get_temp_dir() . '/bar',
+        ])], 0], new Filesystem(), []);
+
+        self::assertSame(sys_get_temp_dir() . '/foo', $compiler->getCachePath());
+
+        $compiler = new PugCompiler([[new Pug([
+            'cache'        => sys_get_temp_dir() . '/foo',
+            'defaultCache' => sys_get_temp_dir() . '/bar',
+        ])], 0], new Filesystem(), [], sys_get_temp_dir() . '/biz');
+
+        self::assertSame(sys_get_temp_dir() . '/biz', $compiler->getCachePath());
+
+        $compiler = new PugCompiler([[new Pug([
+            'defaultCache' => sys_get_temp_dir() . '/bar',
+        ])], 0], new Filesystem(), []);
+
+        self::assertSame(sys_get_temp_dir() . '/bar', $compiler->getCachePath());
+    }
+
+    /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     */
+    public function testGetOption()
+    {
+        $compiler = new PugCompiler([[new Pug([
+            'foo' => 'bar',
+        ])], 0], new Filesystem(), [], 'i');
+
+        self::assertSame('bar', $compiler->getOption('foo', 'bop'));
+        self::assertSame('bidoup', $compiler->getOption('biz', 'bidoup'));
+    }
+
+    /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
      */
     public function testSetCachePath()

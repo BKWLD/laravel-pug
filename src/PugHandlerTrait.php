@@ -63,6 +63,10 @@ trait PugHandlerTrait
      */
     public function getCachePath()
     {
+        if ($this->cachePath) {
+            return $this->cachePath;
+        }
+
         $cachePath = $this->getOption('cache');
 
         return is_string($cachePath) ? $cachePath : $this->getOption('defaultCache');
@@ -119,6 +123,7 @@ trait PugHandlerTrait
             if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
                 return true;
             }
+
         }
 
         return false;
