@@ -98,7 +98,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $createCompiler = function ($compilerClass) use ($getDefaultCache) {
             return function ($app) use ($compilerClass, $getDefaultCache) {
-                return new $compilerClass([$app, 'laravel-pug.pug'], $app['files'], $this->getConfig(), $getDefaultCache());
+                return new $compilerClass(array($app, 'laravel-pug.pug'), $app['files'], $this->getConfig(), $getDefaultCache());
             };
         };
 
