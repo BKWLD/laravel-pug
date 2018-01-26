@@ -84,11 +84,15 @@ trait PugHandlerTrait
     {
         $pug = $this->getPug();
 
-        if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
+        try {
+            if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
+                throw new \InvalidArgumentException('invalid option');
+            }
+
+            return $pug->getOption($name);
+        } catch (\InvalidArgumentException $exception) {
             return $default;
         }
-
-        return $pug->getOption($name);
     }
 
     /**
