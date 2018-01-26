@@ -141,7 +141,7 @@ matrix:
 install:
   - travis_retry composer self-update
   - travis_retry php tests/setDependenciesVersions.php $LARAVEL_VERSION $PUG_VERSION
-  - travis_retry composer update --no-interaction --prefer-stable
+  - travis_wait 30 travis_retry composer update --no-interaction
 
 script:
   - vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml
