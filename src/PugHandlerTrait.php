@@ -25,18 +25,18 @@ trait PugHandlerTrait
      * @param Filesystem $files
      * @param array      $config
      */
-    public function construct(array $pugTarget, Filesystem $files, array $config)
+    public function construct(array $pugTarget, Filesystem $files, array $config, $defaultCachePath = null)
     {
         $this->pugTarget = $pugTarget;
         $cachePath = null;
-        foreach (array('cache_dir', 'cache', 'defaultCache') as $name) {
+        foreach (['cache_dir', 'cache', 'defaultCache'] as $name) {
             if (isset($config[$name])) {
                 $cachePath = $config[$name];
                 break;
             }
         }
         if (!$cachePath) {
-            $cachePath = $this->getCachePath();
+            $cachePath = $defaultCachePath;
         }
 
         parent::__construct($files, $cachePath);

@@ -57,8 +57,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return $this->app['laravel-pug.pug'] ? $assets : null;
         });
 
+        $getDefaultCache = function () {
+            return storage_path($this->version() >= 5 ? '/framework/views' : '/views');
+        };
+
         // Bind the package-configued Pug instance
-        $this->app->singleton('laravel-pug.pug', function () use (&$assets) {
+        $this->app->singleton('laravel-pug.pug', function () use (&$assets, $getDefaultCache) {
             $config = $this->getConfig();
             $pug = new Pug($config);
             $assets = new Assets($pug);
@@ -66,9 +70,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
 
             // Determine the cache dir if not configured
-            $this->setDefaultOption($pug, 'defaultCache', function () {
-                return storage_path($this->version() >= 5 ? '/framework/views' : '/views');
-            });
+            $this->setDefaultOption($pug, 'defaultCache', $getDefaultCache);
 
             // Determine assets input directory
             $this->setDefaultOption($pug, 'assetDirectory', function () {
@@ -94,15 +96,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return $pug;
         });
 
+        $createCompiler = function ($compilerClass) use ($getDefaultCache) {
+            return function ($app) use ($compilerClass, $getDefaultCache) {
+                return new $compilerClass([$app, 'laravel-pug.pug'], $app['files'], $this->getConfig(), $getDefaultCache());
+            };
+        };
+
         // Bind the Pug compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugCompiler', function ($app) {
-            return new PugCompiler(array($app, 'laravel-pug.pug'), $app['files'], $this->getConfig());
-        });
+        $this->app->singleton('Bkwld\LaravelPug\PugCompiler', $createCompiler('\Bkwld\LaravelPug\PugCompiler'));
 
         // Bind the Pug Blade compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', function ($app) {
-            return new PugBladeCompiler(array($app, 'laravel-pug.pug'), $app['files'], $this->getConfig());
-        });
+        $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', $createCompiler('\Bkwld\LaravelPug\PugBladeCompiler'));
     }
 
     /**

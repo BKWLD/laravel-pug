@@ -16,10 +16,11 @@ class PugCompiler extends Compiler implements CompilerInterface
      * @param array      $pugTarget
      * @param Filesystem $files
      * @param array      $config
+     * @param string     $defaultCachePath
      */
-    public function __construct(array $pugTarget, Filesystem $files, array $config)
+    public function __construct(array $pugTarget, Filesystem $files, array $config, $defaultCachePath = null)
     {
-        $this->construct($pugTarget, $files, $config);
+        $this->construct($pugTarget, $files, $config, $defaultCachePath);
     }
 
     /**

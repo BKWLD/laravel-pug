@@ -40,7 +40,7 @@ class PugCompilerTest extends TestCase
             'cache'        => true,
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), []);
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
@@ -95,7 +95,7 @@ class PugCompilerTest extends TestCase
             $files->makeDirectory($cache);
         }
         $path = realpath(__DIR__ . '/example.pug');
-        $compiler = new PugCompiler([[$pug], 0], $files, []);
+        $compiler = new PugCompiler([[$pug], 0], $files, [], $cache);
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));
@@ -139,7 +139,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), []);
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->compile($path);
@@ -167,7 +167,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompilerGetAndSetPath([[$pug], 0], new Filesystem(), []);
+        $compiler = new PugCompilerGetAndSetPath([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiledPath = $compiler->getCompiledPath('foo');
 
         try {
@@ -213,7 +213,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), []);
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiler->setCachePath('foo');
 
         self::assertStringStartsWith('foo/', $compiler->getCompiledPath('bar.pug'));
@@ -230,7 +230,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), []);
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiler->compile(null);
     }
 
@@ -244,7 +244,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), []);
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = __DIR__ . '/js-expression.pug';
         $php = $compiler->compile($path);
         $items = ['a', 'b', 'c'];
