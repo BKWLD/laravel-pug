@@ -123,7 +123,6 @@ trait PugHandlerTrait
             if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
                 return true;
             }
-
         }
 
         return false;
