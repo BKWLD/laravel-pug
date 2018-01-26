@@ -308,6 +308,14 @@ class BladeDirectivesTest extends TestCase
         $this->provider = new Laravel4ServiceProvider($this->app);
     }
 
+    /**
+     * @covers ::getCompilerCreator
+     * @covers ::getPugEngine
+     * @covers ::getEngineResolver
+     * @covers ::getDefaultCache
+     * @covers ::getAssetsDirectories
+     * @covers ::getOutputDirectory
+     */
     public function testCustomDirective()
     {
         $laravelVersion = intval(getenv('LARAVEL_VERSION'));

@@ -387,6 +387,11 @@ class ServiceProviderTest extends TestCase
     /**
      * @covers ::register
      * @covers ::setDefaultOption
+     * @covers ::getCompilerCreator
+     * @covers ::getPugEngine
+     * @covers ::getDefaultCache
+     * @covers ::getAssetsDirectories
+     * @covers ::getOutputDirectory
      */
     public function testRegister()
     {
@@ -494,6 +499,7 @@ class ServiceProviderTest extends TestCase
      * @covers ::bootLaravel5
      * @covers ::registerPugCompiler
      * @covers ::registerPugBladeCompiler
+     * @covers ::getEngineResolver
      */
     public function testBoot()
     {
@@ -551,6 +557,7 @@ class ServiceProviderTest extends TestCase
     /**
      * @covers ::register
      * @covers ::setDefaultOption
+     * @covers ::getPugAssets
      */
     public function testView()
     {
