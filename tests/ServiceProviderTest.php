@@ -558,6 +558,7 @@ class ServiceProviderTest extends TestCase
      * @covers ::register
      * @covers ::setDefaultOption
      * @covers ::getPugAssets
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      */
     public function testView()
     {
