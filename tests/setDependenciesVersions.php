@@ -30,6 +30,6 @@ if (empty($newContent) || !file_put_contents($composerFile, $newContent)) {
     exit(1);
 }
 
-echo './composer.json has been updated';
+echo "./composer.json has been updated:\n$newContent";
 
 exit(0);

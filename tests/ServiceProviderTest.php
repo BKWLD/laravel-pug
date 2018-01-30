@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\View\Engines\CompilerEngine;
 use PHPUnit\Framework\TestCase;
 use Pug\Assets;
+use Pug\Pug;
 
 include_once __DIR__ . '/helpers.php';
 
@@ -386,6 +387,11 @@ class ServiceProviderTest extends TestCase
     /**
      * @covers ::register
      * @covers ::setDefaultOption
+     * @covers ::getCompilerCreator
+     * @covers ::getPugEngine
+     * @covers ::getDefaultCache
+     * @covers ::getAssetsDirectories
+     * @covers ::getOutputDirectory
      */
     public function testRegister()
     {
@@ -493,6 +499,7 @@ class ServiceProviderTest extends TestCase
      * @covers ::bootLaravel5
      * @covers ::registerPugCompiler
      * @covers ::registerPugBladeCompiler
+     * @covers ::getEngineResolver
      */
     public function testBoot()
     {
@@ -550,6 +557,8 @@ class ServiceProviderTest extends TestCase
     /**
      * @covers ::register
      * @covers ::setDefaultOption
+     * @covers ::getPugAssets
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      */
     public function testView()
     {
@@ -581,16 +590,20 @@ class ServiceProviderTest extends TestCase
         unlink(sys_get_temp_dir() . '/js/app.min.js');
         unlink($pug->getCompiler()->getCompiledPath($path));
 
+        /** @var Pug $pugEngine */
+        $pugEngine = $this->app['laravel-pug.pug'];
+        $method = method_exists($pugEngine, 'renderFile') ? [$pugEngine, 'renderFile'] : [$pugEngine, 'render'];
+
         /** @var Assets $assets */
-        $assets = $this->app->getSingleton('laravel-pug.pug-assets');
+        $assets = $this->app['laravel-pug.pug-assets'];
         $assets->setEnvironment('dev');
 
         self::assertSame(
             '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
-            preg_replace('/\s{2,}/', '', $pug->get($path))
+            preg_replace('/\s{2,}/', '', call_user_func($method, $path))
         );
 
-        unlink($pug->getCompiler()->getCompiledPath($path));
+        @unlink($pug->getCompiler()->getCompiledPath($path));
 
         $assets->setEnvironment('production');
 
@@ -612,9 +625,9 @@ class ServiceProviderTest extends TestCase
 
         self::assertSame(
             '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
-            preg_replace('/\s{2,}/', '', $pug->get($path))
+            preg_replace('/\s{2,}/', '', call_user_func($method, $path))
         );
 
-        unlink($pug->getCompiler()->getCompiledPath($path));
+        @unlink($pug->getCompiler()->getCompiledPath($path));
     }
 }

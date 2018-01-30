@@ -29,6 +29,7 @@ class PugCompilerTest extends TestCase
 {
     /**
      * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
@@ -39,7 +40,7 @@ class PugCompilerTest extends TestCase
             'cache'        => true,
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler($pug, new Filesystem());
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
@@ -59,7 +60,7 @@ class PugCompilerTest extends TestCase
 
         self::assertFalse($compiler->isExpired($path));
 
-        $pug->setOption('cache', false);
+        $compiler->setCachePath(null);
 
         self::assertTrue($compiler->isExpired($path));
 
@@ -72,6 +73,7 @@ class PugCompilerTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
@@ -93,7 +95,7 @@ class PugCompilerTest extends TestCase
             $files->makeDirectory($cache);
         }
         $path = realpath(__DIR__ . '/example.pug');
-        $compiler = new PugCompiler($pug, $files);
+        $compiler = new PugCompiler([[$pug], 0], $files, [], $cache);
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));
@@ -137,7 +139,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler($pug, new Filesystem());
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->compile($path);
@@ -165,7 +167,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompilerGetAndSetPath($pug, new Filesystem());
+        $compiler = new PugCompilerGetAndSetPath([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiledPath = $compiler->getCompiledPath('foo');
 
         try {
@@ -204,6 +206,50 @@ class PugCompilerTest extends TestCase
 
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
+     */
+    public function testGetCachePath()
+    {
+        $compiler = new PugCompiler([[new Pug()], 0], new Filesystem(), [], sys_get_temp_dir() . '/foo');
+
+        self::assertSame(sys_get_temp_dir() . '/foo', $compiler->getCachePath());
+
+        $compiler = new PugCompiler([[new Pug([
+            'cache'        => sys_get_temp_dir() . '/foo',
+            'defaultCache' => sys_get_temp_dir() . '/bar',
+        ])], 0], new Filesystem(), []);
+
+        self::assertSame(sys_get_temp_dir() . '/foo', $compiler->getCachePath());
+
+        $compiler = new PugCompiler([[new Pug([
+            'cache'        => sys_get_temp_dir() . '/foo',
+            'defaultCache' => sys_get_temp_dir() . '/bar',
+        ])], 0], new Filesystem(), [], sys_get_temp_dir() . '/biz');
+
+        self::assertSame(sys_get_temp_dir() . '/biz', $compiler->getCachePath());
+
+        $compiler = new PugCompiler([[new Pug([
+            'defaultCache' => sys_get_temp_dir() . '/bar',
+        ])], 0], new Filesystem(), []);
+
+        self::assertSame(sys_get_temp_dir() . '/bar', $compiler->getCachePath());
+    }
+
+    /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
+     */
+    public function testGetOption()
+    {
+        $compiler = new PugCompiler([[new Pug([
+            'foo' => 'bar',
+        ])], 0], new Filesystem(), [], 'i');
+
+        self::assertSame('bar', $compiler->getOption('foo', 'bop'));
+        self::assertSame('bidoup', $compiler->getOption('biz', 'bidoup'));
+    }
+
+    /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
      */
     public function testSetCachePath()
@@ -211,7 +257,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler($pug, new Filesystem());
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiler->setCachePath('foo');
 
         self::assertStringStartsWith('foo/', $compiler->getCompiledPath('bar.pug'));
@@ -228,7 +274,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler($pug, new Filesystem());
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiler->compile(null);
     }
 
@@ -242,7 +288,7 @@ class PugCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugCompiler($pug, new Filesystem());
+        $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = __DIR__ . '/js-expression.pug';
         $php = $compiler->compile($path);
         $items = ['a', 'b', 'c'];

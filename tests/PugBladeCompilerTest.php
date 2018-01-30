@@ -29,6 +29,7 @@ class PugBladeCompilerTest extends TestCase
 {
     /**
      * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
@@ -40,7 +41,7 @@ class PugBladeCompilerTest extends TestCase
             'cache'        => true,
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $compiler = new PugBladeCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
@@ -58,7 +59,7 @@ class PugBladeCompilerTest extends TestCase
 
         self::assertFalse($compiler->isExpired($path));
 
-        $pug->setOption('cache', false);
+        $compiler->setCachePath(null);
 
         self::assertTrue($compiler->isExpired($path));
 
@@ -71,6 +72,7 @@ class PugBladeCompilerTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::isExpired
@@ -93,12 +95,11 @@ class PugBladeCompilerTest extends TestCase
             $files->makeDirectory($cache);
         }
         $path = realpath(__DIR__ . '/example.pug');
-        $compiler = new PugBladeCompiler($pug, $files);
+        $compiler = new PugBladeCompiler([[$pug], 0], $files, [], $cache);
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));
 
-        $pug->setOption('cache', true);
         $path = realpath(__DIR__ . '/include.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
@@ -140,7 +141,7 @@ class PugBladeCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $compiler = new PugBladeCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->compile($path);
@@ -170,7 +171,7 @@ class PugBladeCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompilerGetAndSetPath($pug, new Filesystem());
+        $compiler = new PugBladeCompilerGetAndSetPath([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiledPath = $compiler->getCompiledPath('foo');
 
         try {
@@ -232,7 +233,7 @@ class PugBladeCompilerTest extends TestCase
             return;
         }
 
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $compiler = new PugBladeCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $path = realpath(__DIR__ . '/php-directive.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->compile($path);
@@ -260,7 +261,7 @@ class PugBladeCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $compiler = new PugBladeCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiler->setCachePath('foo');
 
         self::assertStringStartsWith('foo/', $compiler->getCompiledPath('bar.pug'));
@@ -277,7 +278,7 @@ class PugBladeCompilerTest extends TestCase
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
-        $compiler = new PugBladeCompiler($pug, new Filesystem());
+        $compiler = new PugBladeCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
         $compiler->compile(null);
     }
 }

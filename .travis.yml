@@ -89,27 +89,27 @@ matrix:
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^3.0.0'
-    - php: 7.2.0RC5
+    - php: 7.2.0
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^2.7.1'
-    - php: 7.2.0RC5
+    - php: 7.2.0
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^3.0.0'
-    - php: 7.2.0RC5
+    - php: 7.2.0
       env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^2.7.1'
-    - php: 7.2.0RC5
+    - php: 7.2.0
       env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^3.0.0'
-    - php: 7.2.0RC5
+    - php: 7.2.0
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='2.7.1'
-    - php: 7.2.0RC5
+    - php: 7.2.0
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^3.0.0'
@@ -141,7 +141,7 @@ matrix:
 install:
   - travis_retry composer self-update
   - travis_retry php tests/setDependenciesVersions.php $LARAVEL_VERSION $PUG_VERSION
-  - travis_retry composer update --no-interaction --prefer-stable
+  - travis_wait 30 travis_retry composer update --no-interaction
 
 script:
   - vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml

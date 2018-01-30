@@ -308,6 +308,19 @@ class BladeDirectivesTest extends TestCase
         $this->provider = new Laravel4ServiceProvider($this->app);
     }
 
+    /**
+     * @covers ::getCompilerCreator
+     * @covers ::getPugEngine
+     * @covers ::getEngineResolver
+     * @covers ::getDefaultCache
+     * @covers ::getAssetsDirectories
+     * @covers ::getOutputDirectory
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getPug
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     */
     public function testCustomDirective()
     {
         $laravelVersion = intval(getenv('LARAVEL_VERSION'));

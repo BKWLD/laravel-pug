@@ -6,7 +6,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Compilers\CompilerInterface;
-use Pug\Pug;
 
 class PugBladeCompiler extends BladeCompiler implements CompilerInterface
 {
@@ -15,12 +14,14 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     /**
      * Create a new compiler instance.
      *
-     * @param Pug        $pug
+     * @param array      $pugTarget
      * @param Filesystem $files
+     * @param array      $config
+     * @param string     $defaultCachePath
      */
-    public function __construct(Pug $pug, Filesystem $files)
+    public function __construct(array $pugTarget, Filesystem $files, array $config, $defaultCachePath = null)
     {
-        parent::__construct($files, $this->getCachePath($pug));
+        $this->construct($pugTarget, $files, $config, $defaultCachePath);
     }
 
     /**

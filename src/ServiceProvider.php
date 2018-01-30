@@ -9,6 +9,11 @@ use Pug\Pug;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
+    /**
+     * @var Assets
+     */
+    protected $assets;
+
     protected function setDefaultOption(Pug $pug, $name, $value)
     {
         if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
@@ -24,6 +29,69 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $pug->setCustomOption($name, call_user_func($value));
         }
         // @codeCoverageIgnoreEnd
+    }
+
+    protected function getDefaultCache()
+    {
+        return storage_path($this->version() >= 5 ? '/framework/views' : '/views');
+    }
+
+    protected function getAssetsDirectories()
+    {
+        return array_map(function ($params) {
+            list($function, $arg) = $params;
+
+            return function_exists($function) ? call_user_func($function, $arg) : null;
+        }, array(
+            array('resource_path', 'assets'),
+            array('app_path', 'views/assets'),
+            array('app_path', 'assets'),
+            array('app_path', 'views'),
+            array('app_path', ''),
+            array('base_path', ''),
+        ));
+    }
+
+    protected function getPugEngine()
+    {
+        $config = $this->getConfig();
+        $pug = new Pug($config);
+        $this->assets = new Assets($pug);
+        $getEnv = array('App', 'environment');
+        $this->assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
+
+        // Determine the cache dir if not configured
+        $this->setDefaultOption($pug, 'defaultCache', array($this, 'getDefaultCache'));
+
+        // Determine assets input directory
+        $this->setDefaultOption($pug, 'assetDirectory', array($this, 'getAssetsDirectories'));
+
+        // Determine assets output directory
+        $this->setDefaultOption($pug, 'outputDirectory', array($this, 'getOutputDirectory'));
+
+        return $pug;
+    }
+
+    protected function getPugAssets()
+    {
+        return $this->app['laravel-pug.pug'] ? $this->assets : null;
+    }
+
+    protected function getOutputDirectory()
+    {
+        return function_exists('public_path') ? public_path() : null;
+    }
+
+    protected function getCompilerCreator($compilerClass)
+    {
+        return function ($app) use ($compilerClass) {
+            return new $compilerClass(
+                array($app, 'laravel-pug.pug'),
+                $app['files'],
+                $this->getConfig(),
+                $this->getDefaultCache()
+            );
+        };
     }
 
     /**
@@ -51,56 +119,27 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->registerLaravel5();
         }
 
-        // Bind the package-configued Pug instance
+        // Bind the pug assets module
+        $this->app->singleton('laravel-pug.pug-assets', function () {
+            return $this->getPugAssets();
+        });
+
+        // Bind the package-configured Pug instance
         $this->app->singleton('laravel-pug.pug', function () {
-            $config = $this->getConfig();
-            $pug = new Pug($config);
-            $assets = new Assets($pug);
-            $getEnv = array('App', 'environment');
-            $assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
-
-            $this->app->singleton('laravel-pug.pug-assets', function () use ($assets) {
-                return $assets;
-            });
-
-            // Determine the cache dir if not configured
-            $this->setDefaultOption($pug, 'defaultCache', function () {
-                return storage_path($this->version() >= 5 ? '/framework/views' : '/views');
-            });
-
-            // Determine assets input directory
-            $this->setDefaultOption($pug, 'assetDirectory', function () {
-                return array_map(function ($params) {
-                    list($function, $arg) = $params;
-
-                    return function_exists($function) ? call_user_func($function, $arg) : null;
-                }, array(
-                    array('resource_path', 'assets'),
-                    array('app_path', 'views/assets'),
-                    array('app_path', 'assets'),
-                    array('app_path', 'views'),
-                    array('app_path', ''),
-                    array('base_path', ''),
-                ));
-            });
-
-            // Determine assets output directory
-            $this->setDefaultOption($pug, 'outputDirectory', function () {
-                return function_exists('public_path') ? public_path() : null;
-            });
-
-            return $pug;
+            return $this->getPugEngine();
         });
 
         // Bind the Pug compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugCompiler', function ($app) {
-            return new PugCompiler($app['laravel-pug.pug'], $app['files']);
-        });
+        $this->app->singleton(
+            'Bkwld\LaravelPug\PugCompiler',
+            $this->getCompilerCreator('\Bkwld\LaravelPug\PugCompiler')
+        );
 
         // Bind the Pug Blade compiler
-        $this->app->singleton('Bkwld\LaravelPug\PugBladeCompiler', function ($app) {
-            return new PugBladeCompiler($app['laravel-pug.pug'], $app['files']);
-        });
+        $this->app->singleton(
+            'Bkwld\LaravelPug\PugBladeCompiler',
+            $this->getCompilerCreator('\Bkwld\LaravelPug\PugBladeCompiler')
+        );
     }
 
     /**

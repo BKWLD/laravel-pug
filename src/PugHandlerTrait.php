@@ -2,26 +2,71 @@
 
 namespace Bkwld\LaravelPug;
 
+use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
 use Pug\Pug;
 
 trait PugHandlerTrait
 {
     /**
+     * @var array
+     */
+    protected $pugTarget;
+
+    /**
      * @var Pug
      */
     protected $pug;
 
     /**
-     * Set pug instance and returns cache path.
+     * Common pug compiler constructor.
      *
-     * @param Pug $pug
+     * @param array      $pugTarget
+     * @param Filesystem $files
+     * @param array      $config
+     */
+    public function construct(array $pugTarget, Filesystem $files, array $config, $defaultCachePath = null)
+    {
+        $this->pugTarget = $pugTarget;
+        $cachePath = null;
+        foreach (array('cache_dir', 'cache', 'defaultCache') as $name) {
+            if (isset($config[$name])) {
+                $cachePath = $config[$name];
+                break;
+            }
+        }
+        if (!$cachePath) {
+            $cachePath = $defaultCachePath ?: $this->getCachePath();
+        }
+
+        parent::__construct($files, $cachePath);
+    }
+
+    /**
+     * Lazy load Pug and return the instance.
+     *
+     * @return Pug
+     */
+    public function getPug()
+    {
+        if (!$this->pug) {
+            $this->pug = $this->pugTarget[0][$this->pugTarget[1]];
+        }
+
+        return $this->pug;
+    }
+
+    /**
+     * Returns cache path.
      *
      * @return string $cachePath
      */
-    public function getCachePath(Pug $pug)
+    public function getCachePath()
     {
-        $this->pug = $pug;
+        if ($this->cachePath) {
+            return $this->cachePath;
+        }
+
         $cachePath = $this->getOption('cache');
 
         return is_string($cachePath) ? $cachePath : $this->getOption('defaultCache');
@@ -37,11 +82,17 @@ trait PugHandlerTrait
      */
     public function getOption($name, $default = null)
     {
-        if (method_exists($this->pug, 'hasOption') && !$this->pug->hasOption($name)) {
+        $pug = $this->getPug();
+
+        try {
+            if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
+                throw new \InvalidArgumentException('invalid option');
+            }
+
+            return $pug->getOption($name);
+        } catch (\InvalidArgumentException $exception) {
             return $default;
         }
-
-        return $this->pug->getOption($name);
     }
 
     /**
@@ -50,7 +101,7 @@ trait PugHandlerTrait
     public function setCachePath($cachePath)
     {
         $this->cachePath = $cachePath;
-        $this->pug->setOption('cache', $cachePath);
+        $this->getPug()->setOption('cache', $cachePath);
     }
 
     /**
@@ -90,11 +141,11 @@ trait PugHandlerTrait
      */
     public function isExpired($path)
     {
-        if (!$this->getOption('cache') || parent::isExpired($path)) {
+        if (!$this->cachePath || parent::isExpired($path)) {
             return true;
         }
 
-        return $this->pug instanceof \Phug\Renderer && $this->hasExpiredImport($path);
+        return is_subclass_of('\Pug\Pug', '\Phug\Renderer') && $this->hasExpiredImport($path);
     }
 
     /**
@@ -135,15 +186,16 @@ trait PugHandlerTrait
     {
         $path = $this->extractPath($path);
         if ($this->cachePath) {
+            $pug = $this->getPug();
             $compiled = $this->getCompiledPath($path);
-            $contents = $this->pug->compile($this->files->get($path), $path);
+            $contents = $pug->compile($this->files->get($path), $path);
             if ($callback) {
                 $contents = call_user_func($callback, $contents);
             }
-            if ($this->pug instanceof \Phug\Renderer) {
+            if ($pug instanceof \Phug\Renderer) {
                 $this->files->put(
                     $compiled . '.imports.serialize.txt',
-                    serialize($this->pug->getCompiler()->getCurrentImportPaths())
+                    serialize($pug->getCompiler()->getCurrentImportPaths())
                 );
             }
             $this->files->put($compiled, $contents);
