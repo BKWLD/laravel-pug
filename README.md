@@ -8,7 +8,7 @@
 [![License](https://poser.pugx.org/bkwld/laravel-pug/license)](https://packagist.org/packages/bkwld/laravel-pug)
 
 A small package that adds support for compiling Pug (Jade) templates
-to Laravel via [Pug.php](https://github.com/pug-php/pug).
+to Laravel via [Pug.php](https://github.com/pug-php/pug) (see [complete documentation](https://www.phug-lang.com/)).
 Both vanilla php and [Blade syntax](https://laravel.com/docs/5.5/blade)
 is supported within the view.
 
