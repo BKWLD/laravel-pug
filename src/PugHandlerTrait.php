@@ -187,6 +187,9 @@ trait PugHandlerTrait
         $path = $this->extractPath($path);
         if ($this->cachePath) {
             $pug = $this->getPug();
+            if (method_exists($pug, 'initCompiler')) {
+                $pug->initCompiler();
+            }
             $compiled = $this->getCompiledPath($path);
             $contents = $pug->compile($this->files->get($path), $path);
             if ($callback) {
