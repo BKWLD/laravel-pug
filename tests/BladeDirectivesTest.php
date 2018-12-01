@@ -165,6 +165,9 @@ class BladeDirectivesTest extends TestCase
         $this->app['view'] = $view;
         $this->provider->register();
         $this->provider->boot();
+        if (version_compare(getenv('LARAVEL_VERSION'), '5.8', '>=')) {
+            Blade::swap(new \Illuminate\View\Compilers\BladeCompiler(new Filesystem(), sys_get_temp_dir()));
+        }
         Blade::directive('greet', function ($person) {
             $person = eval("return $person;");
 

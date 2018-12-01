@@ -29,6 +29,7 @@ class PugBladeCompilerTest extends TestCase
 {
     /**
      * @covers ::__construct
+     * @covers ::enableBladeDirectives
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
@@ -72,6 +73,7 @@ class PugBladeCompilerTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::enableBladeDirectives
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::hasExpiredImport
@@ -135,6 +137,7 @@ class PugBladeCompilerTest extends TestCase
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
+     * @covers ::enableBladeDirectives
      */
     public function testCompile()
     {
@@ -212,6 +215,7 @@ class PugBladeCompilerTest extends TestCase
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
+     * @covers ::enableBladeDirectives
      */
     public function testPhpDirective()
     {
