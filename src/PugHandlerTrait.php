@@ -173,6 +173,21 @@ trait PugHandlerTrait
     }
 
     /**
+     * Returns the object the more appropriate to compile (\Pug\Pug with version < 3), \Phug\Compilser for >= 3.
+     *
+     * @return \Phug\CompilerInterface|Pug
+     */
+    public function getCompiler()
+    {
+        $pug = $this->getPug();
+        if ($pug instanceof \Phug\Renderer) {
+            $pug = clone $pug->getCompiler();
+        }
+
+        return $pug;
+    }
+
+    /**
      * Compile the view at the given path.
      *
      * @param string        $path
@@ -186,10 +201,7 @@ trait PugHandlerTrait
     {
         $path = $this->extractPath($path);
         if ($this->cachePath) {
-            $pug = $this->getPug();
-            if ($pug instanceof \Phug\Renderer) {
-                $pug = clone $pug->getCompiler();
-            }
+            $pug = $this->getCompiler();
             $compiled = $this->getCompiledPath($path);
             $contents = $pug->compile($this->files->get($path), $path);
             if ($callback) {
