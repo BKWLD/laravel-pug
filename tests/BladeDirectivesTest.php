@@ -138,6 +138,7 @@ class BladeDirectivesTest extends TestCase
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::setCachePath
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getPug
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      */

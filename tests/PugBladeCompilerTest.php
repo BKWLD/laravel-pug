@@ -135,6 +135,7 @@ class PugBladeCompilerTest extends TestCase
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      * @covers ::enableBladeDirectives
@@ -166,6 +167,7 @@ class PugBladeCompilerTest extends TestCase
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getOption
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
@@ -213,6 +215,7 @@ class PugBladeCompilerTest extends TestCase
 
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      * @covers ::enableBladeDirectives
