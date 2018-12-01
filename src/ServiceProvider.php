@@ -214,18 +214,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function registerPugCompiler()
+    public function registerPugCompiler($subExtension = '')
     {
         // Add resolver
-        $this->getEngineResolver()->register('pug', function () {
-            return new CompilerEngine($this->app['Bkwld\LaravelPug\PugCompiler']);
+        $this->getEngineResolver()->register('pug' . $subExtension, function () use ($subExtension) {
+            return new CompilerEngine($this->app['Bkwld\LaravelPug\Pug' . ucfirst(ltrim($subExtension, '.')) . 'Compiler']);
         });
 
         // Add extensions
-        $this->app['view']->addExtension('pug', 'pug');
-        $this->app['view']->addExtension('pug.php', 'pug');
-        $this->app['view']->addExtension('jade', 'pug');
-        $this->app['view']->addExtension('jade.php', 'pug');
+        $this->app['view']->addExtension('pug' . $subExtension, 'pug' . $subExtension);
+        $this->app['view']->addExtension('pug' . $subExtension . '.php', 'pug' . $subExtension);
+        $this->app['view']->addExtension('jade' . $subExtension, 'pug' . $subExtension);
+        $this->app['view']->addExtension('jade' . $subExtension . '.php', 'pug' . $subExtension);
     }
 
     /**
@@ -235,16 +235,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function registerPugBladeCompiler()
     {
-        // Add resolver
-        $this->getEngineResolver()->register('pug.blade', function () {
-            return new CompilerEngine($this->app['Bkwld\LaravelPug\PugBladeCompiler']);
-        });
-
-        // Add extensions
-        $this->app['view']->addExtension('pug.blade', 'pug.blade');
-        $this->app['view']->addExtension('pug.blade.php', 'pug.blade');
-        $this->app['view']->addExtension('jade.blade', 'jade.blade');
-        $this->app['view']->addExtension('jade.blade.php', 'jade.blade');
+        $this->registerPugCompiler('.blade');
     }
 
     /**

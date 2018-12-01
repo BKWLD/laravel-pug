@@ -187,18 +187,18 @@ trait PugHandlerTrait
         $path = $this->extractPath($path);
         if ($this->cachePath) {
             $pug = $this->getPug();
-            if (method_exists($pug, 'initCompiler')) {
-                $pug->initCompiler();
+            if ($pug instanceof \Phug\Renderer) {
+                $pug = clone $pug->getCompiler();
             }
             $compiled = $this->getCompiledPath($path);
             $contents = $pug->compile($this->files->get($path), $path);
             if ($callback) {
                 $contents = call_user_func($callback, $contents);
             }
-            if ($pug instanceof \Phug\Renderer) {
+            if ($pug instanceof \Phug\Compiler) {
                 $this->files->put(
                     $compiled . '.imports.serialize.txt',
-                    serialize($pug->getCompiler()->getCurrentImportPaths())
+                    serialize($pug->getCurrentImportPaths())
                 );
             }
             $this->files->put($compiled, $contents);

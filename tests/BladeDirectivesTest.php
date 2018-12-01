@@ -5,8 +5,7 @@ namespace Phug\Test\Blade;
 use ArrayAccess;
 use Bkwld\LaravelPug\PugBladeCompiler;
 use Bkwld\LaravelPug\ServiceProvider;
-use Closure;
-use Illuminate\Contracts\Foundation\Application;
+use Phug\Test\LaravelTestApp;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
@@ -77,195 +76,16 @@ class Config implements ArrayAccess
     }
 }
 
-class LaravelTestApp implements Application, ArrayAccess
-{
-    protected $useSysTempDir = false;
+$file = __DIR__ . '/LaravelTestApp.php';
+$contents = file_get_contents($file);
 
-    protected $singletons = array();
+$contents = version_compare(PHP_VERSION, '5.6.0-dev', '>=')
+    ? str_replace('(/*...$environments*/)', '(...$environments)', $contents)
+    : str_replace('(...$environments)', '(/*...$environments*/)', $contents);
 
-    const VERSION = '4.0.0';
+file_put_contents($file, $contents);
 
-    public function version()
-    {
-        return static::VERSION;
-    }
-
-    public function setUseSysTempDir($useSysTempDir)
-    {
-        $this->useSysTempDir = $useSysTempDir;
-    }
-
-    public function basePath()
-    {
-        return __DIR__;
-    }
-
-    public function environment()
-    {
-        return 'dev';
-    }
-
-    public function runningInConsole()
-    {
-        return false;
-    }
-
-    public function isDownForMaintenance()
-    {
-        return false;
-    }
-
-    public function registerConfiguredProviders()
-    {
-    }
-
-    public function register($provider, $options = [], $force = false)
-    {
-    }
-
-    public function registerDeferredProvider($provider, $service = null)
-    {
-    }
-
-    public function boot()
-    {
-    }
-
-    public function booting($callback)
-    {
-    }
-
-    public function booted($callback)
-    {
-    }
-
-    public function getCachedServicesPath()
-    {
-        return '';
-    }
-
-    public function getCachedPackagesPath()
-    {
-        return '';
-    }
-
-    public function getCachedCompilePath()
-    {
-        return '';
-    }
-
-    public function bound($abstract)
-    {
-    }
-
-    public function alias($abstract, $alias)
-    {
-    }
-
-    public function tag($abstracts, $tags)
-    {
-    }
-
-    public function tagged($tag)
-    {
-    }
-
-    public function bind($abstract, $concrete = null, $shared = false)
-    {
-    }
-
-    public function bindIf($abstract, $concrete = null, $shared = false)
-    {
-    }
-
-    public function singleton($abstract, $concrete = null)
-    {
-        $this->singletons[$abstract] = $concrete;
-    }
-
-    public function getSingleton($abstract)
-    {
-        return isset($this->singletons[$abstract])
-            ? (is_callable($this->singletons[$abstract])
-                ? call_user_func($this->singletons[$abstract], $this)
-                : $this->singletons[$abstract]
-            )
-            : null;
-    }
-
-    public function extend($abstract, Closure $closure)
-    {
-    }
-
-    public function instance($abstract, $instance)
-    {
-    }
-
-    public function when($concrete)
-    {
-    }
-
-    public function factory($abstract)
-    {
-    }
-
-    public function make($abstract, array $parameters = [])
-    {
-        $config = new Config($abstract);
-        $config->setUseSysTempDir($this->useSysTempDir);
-
-        return $config;
-    }
-
-    public function call($callback, array $parameters = [], $defaultMethod = null)
-    {
-    }
-
-    public function resolved($abstract)
-    {
-    }
-
-    public function resolving($abstract, Closure $callback = null)
-    {
-    }
-
-    public function afterResolving($abstract, Closure $callback = null)
-    {
-    }
-
-    public function get($id)
-    {
-    }
-
-    public function has($id)
-    {
-    }
-
-    public function offsetExists($offset)
-    {
-        return $this->getSingleton($offset) !== null;
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->getSingleton($offset);
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->singleton($offset, $value);
-    }
-
-    public function offsetUnset($offset)
-    {
-        $this->singleton($offset, function () {
-        });
-    }
-
-    public function runningUnitTests()
-    {
-    }
-}
+include_once __DIR__ . '/LaravelTestApp.php';
 
 class Laravel4ServiceProvider extends ServiceProvider
 {
@@ -357,8 +177,8 @@ class BladeDirectivesTest extends TestCase
 
         self::assertSame(
             [
-                'jade.blade.php' => 'jade.blade',
-                'jade.blade' => 'jade.blade',
+                'jade.blade.php' => 'pug.blade',
+                'jade.blade' => 'pug.blade',
                 'pug.blade.php' => 'pug.blade',
                 'pug.blade' => 'pug.blade',
                 'jade.php' => 'pug',

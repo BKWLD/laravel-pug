@@ -37,9 +37,12 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     {
         $app = Blade::getFacadeApplication();
         if (isset($app['view'])) {
+            /** @var \Illuminate\View\Compilers\BladeCompiler $blade */
             $blade = Blade::getFacadeRoot();
-            foreach ($blade->getCustomDirectives() as $name => $directive) {
-                $this->directive($name, $directive);
+            if ($blade && method_exists($blade, 'getCustomDirectives')) {
+                foreach ($blade->getCustomDirectives() as $name => $directive) {
+                    $this->directive($name, $directive);
+                }
             }
         }
         $this->footer = array();
