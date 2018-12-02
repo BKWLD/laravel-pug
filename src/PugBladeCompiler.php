@@ -24,6 +24,17 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
         $this->construct($pugTarget, $files, $config, $defaultCachePath);
     }
 
+    protected function enableBladeDirectives()
+    {
+        /** @var \Illuminate\View\Compilers\BladeCompiler $blade */
+        $blade = Blade::getFacadeRoot();
+        if ($blade && method_exists($blade, 'getCustomDirectives')) {
+            foreach ($blade->getCustomDirectives() as $name => $directive) {
+                $this->directive($name, $directive);
+            }
+        }
+    }
+
     /**
      * Compile the view at the given path.
      *
@@ -37,10 +48,7 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     {
         $app = Blade::getFacadeApplication();
         if (isset($app['view'])) {
-            $blade = Blade::getFacadeRoot();
-            foreach ($blade->getCustomDirectives() as $name => $directive) {
-                $this->directive($name, $directive);
-            }
+            $this->enableBladeDirectives();
         }
         $this->footer = array();
         $this->compileWith($path, array($this, 'compileString'));

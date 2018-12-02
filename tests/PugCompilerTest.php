@@ -131,6 +131,7 @@ class PugCompilerTest extends TestCase
 
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
@@ -159,6 +160,7 @@ class PugCompilerTest extends TestCase
 
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
@@ -280,6 +282,7 @@ class PugCompilerTest extends TestCase
 
     /**
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers ::compile
      */
