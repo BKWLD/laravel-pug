@@ -4,8 +4,6 @@ namespace Phug\Test;
 
 use ArrayAccess;
 use Bkwld\LaravelPug\ServiceProvider;
-use Closure;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\View\Engines\CompilerEngine;
@@ -132,6 +130,19 @@ class Laravel5ServiceProvider extends ServiceProvider
     public function publishes(array $pub, $group = null)
     {
         $this->pub = $pub;
+    }
+}
+
+class EmptyConfigServiceProvider extends ServiceProvider
+{
+    public function getConfig()
+    {
+        return array();
+    }
+
+    public function getEngine()
+    {
+        return $this->getPugEngine();
     }
 }
 
@@ -451,5 +462,13 @@ class ServiceProviderTest extends TestCase
         );
 
         @unlink($pug->getCompiler()->getCompiledPath($path));
+    }
+
+    public function testWithEmptyConfig()
+    {
+        $app = new Laravel5TestApp();
+        $provider = new EmptyConfigServiceProvider($app);
+
+        self::assertSame('resource/views', $provider->getEngine()->getOption('basedir'));
     }
 }

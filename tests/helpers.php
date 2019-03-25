@@ -10,8 +10,15 @@ if (!function_exists('config_path')) {
         return $input;
     }
 }
+
 if (!function_exists('storage_path')) {
     function storage_path($input) {
         return $input;
+    }
+}
+
+if (!function_exists('resource_path')) {
+    function resource_path($input) {
+        return "resource/$input";
     }
 }

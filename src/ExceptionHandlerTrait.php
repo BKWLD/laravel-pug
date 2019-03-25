@@ -28,6 +28,7 @@ trait ExceptionHandlerTrait
                 $exception = $caughtException;
             }
         }
+
         if (!$request->expectsJson() && $exception instanceof LocatedException) {
             $className = get_class($exception->getPrevious() ?: $exception);
             $location = $exception->getLocation();
@@ -49,6 +50,7 @@ trait ExceptionHandlerTrait
                 <span\s+class="frame-class">(.+?)<\/span>
             /x', function ($match) use ($className) {
                 $input = trim(strip_tags($match[1]));
+
                 if ($input !== 'Phug\\Util\\Exception\\LocatedException') {
                     return $match[0];
                 }
@@ -64,6 +66,7 @@ trait ExceptionHandlerTrait
                 <\/div>)
             /x', function ($match) use ($line, $offset, $path) {
                 $base = realpath(base_path());
+
                 if (strpos($path, $base) === 0) {
                     $path = '&hellip;' . mb_substr($path, mb_strlen($base));
                 }
@@ -82,15 +85,18 @@ trait ExceptionHandlerTrait
                 $before = 19;
                 $after = 7;
                 $start = max(0, $line - $before);
+
                 for ($i = $start; $i < $line + $after; $i++) {
                     if (isset($source[$i])) {
                         $code[] = $source[$i];
                     }
                 }
+
                 $code = implode("\n", $code);
 
                 return $match[1] . ($start + 1) . $match[3] . $code . $match[5];
             }, $content);
+
             if ($offset) {
                 $content = str_replace('</body>', '<script type="text/javascript">
                     function highlightOffset() {
@@ -113,6 +119,7 @@ trait ExceptionHandlerTrait
                     $(".frame").click(highlightOffset);
                 </script></body>', $content);
             }
+
             $response->setContent($content);
         }
 

@@ -55,6 +55,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function getPugEngine()
     {
         $config = $this->getConfig();
+
+        if (!isset($config['basedir']) && function_exists('resource_path')) {
+            $config['basedir'] = resource_path('views');
+        }
+
         $pug = new Pug($config);
         $this->assets = new Assets($pug);
         $getEnv = array('App', 'environment');

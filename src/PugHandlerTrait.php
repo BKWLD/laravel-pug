@@ -29,12 +29,15 @@ trait PugHandlerTrait
     {
         $this->pugTarget = $pugTarget;
         $cachePath = null;
+
         foreach (array('cache_dir', 'cache', 'defaultCache') as $name) {
             if (isset($config[$name])) {
                 $cachePath = $config[$name];
+
                 break;
             }
         }
+
         if (!$cachePath) {
             $cachePath = $defaultCachePath ?: $this->getCachePath();
         }
@@ -123,6 +126,7 @@ trait PugHandlerTrait
 
         $importPaths = unserialize($files->get($importsMap));
         $time = $files->lastModified($compiled);
+
         foreach ($importPaths as $importPath) {
             if (!$files->exists($importPath) || $files->lastModified($importPath) >= $time) {
                 return true;
@@ -162,9 +166,11 @@ trait PugHandlerTrait
         if ($path && method_exists($this, 'setPath')) {
             $this->setPath($path);
         }
+
         if (!$path && method_exists($this, 'getPath')) {
             $path = $this->getPath();
         }
+
         if (!$path) {
             throw new InvalidArgumentException('Missing path argument.');
         }
@@ -180,6 +186,7 @@ trait PugHandlerTrait
     public function getCompiler()
     {
         $pug = $this->getPug();
+
         if ($pug instanceof \Phug\Renderer) {
             $pug = clone $pug->getCompiler();
         }
@@ -200,19 +207,23 @@ trait PugHandlerTrait
     public function compileWith($path, callable $callback = null)
     {
         $path = $this->extractPath($path);
+
         if ($this->cachePath) {
             $pug = $this->getCompiler();
             $compiled = $this->getCompiledPath($path);
             $contents = $pug->compile($this->files->get($path), $path);
+
             if ($callback) {
                 $contents = call_user_func($callback, $contents);
             }
+
             if ($pug instanceof \Phug\Compiler) {
                 $this->files->put(
                     $compiled . '.imports.serialize.txt',
                     serialize($pug->getCurrentImportPaths())
                 );
             }
+
             $this->files->put($compiled, $contents);
         }
     }

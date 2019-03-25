@@ -18,14 +18,17 @@ class Install
 
         if (file_exists($appFile)) {
             $contents = file_get_contents($appFile);
+
             if (mb_strpos($contents, 'Bkwld\LaravelPug\ServiceProvider') === false) {
                 $newContents = preg_replace_callback(
                     '/(["\']providers["\']\s*=>\s*(?:\[|array\s*\())([\s\S]*?)(\]|\))/',
                     function ($match) use ($laravel4) {
                         $providers = rtrim($match[2]);
+
                         if (mb_substr($providers, -1) !== ',') {
                             $providers .= ',';
                         }
+
                         $provider = $laravel4
                             ? "'Bkwld\\LaravelPug\\ServiceProvider'"
                             : 'Bkwld\\LaravelPug\\ServiceProvider::class';
@@ -38,6 +41,7 @@ class Install
                     },
                     $contents
                 );
+
                 if ($newContents !== $contents) {
                     if (file_put_contents($appFile, $newContents)) {
                         $io->write('Pug service provided added to your app.');

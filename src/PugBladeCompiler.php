@@ -28,6 +28,7 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     {
         /** @var \Illuminate\View\Compilers\BladeCompiler $blade */
         $blade = Blade::getFacadeRoot();
+
         if ($blade && method_exists($blade, 'getCustomDirectives')) {
             foreach ($blade->getCustomDirectives() as $name => $directive) {
                 $this->directive($name, $directive);
@@ -47,9 +48,11 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
     public function compile($path = null)
     {
         $app = Blade::getFacadeApplication();
+
         if (isset($app['view'])) {
             $this->enableBladeDirectives();
         }
+
         $this->footer = array();
         $this->compileWith($path, array($this, 'compileString'));
     }
