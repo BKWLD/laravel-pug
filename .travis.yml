@@ -161,30 +161,6 @@ matrix:
       env:
       - LARAVEL_VERSION='5.8.*'
       - PUG_VERSION='^3.0'
-    - php: hhvm
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-      dist: trusty
-      sudo: required
-    - php: hhvm
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-      dist: trusty
-      sudo: required
-    - php: hhvm
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-      dist: trusty
-      sudo: required
-    - php: hhvm
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
-      dist: trusty
-      sudo: required
 
 install:
   - travis_retry composer self-update
