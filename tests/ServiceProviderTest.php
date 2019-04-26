@@ -150,9 +150,9 @@ class View
 {
     protected $extensions = array();
 
-    public function addExtension($extension)
+    public function addExtension($extension, $engine)
     {
-        $this->extensions[] = $extension;
+        $this->extensions[$extension] = $engine;
     }
 
     public function getExtensions()
@@ -344,8 +344,8 @@ class ServiceProviderTest extends TestCase
         $this->provider->boot();
 
         self::assertArraySubset(
-            ["pug","pug.php","jade","jade.php","pug.blade","pug.blade.php","jade.blade","jade.blade.php"],
-            $view->getExtensions()
+            ['pug', 'pug.php', 'jade', 'jade.php', 'pug.blade', 'pug.blade.php', 'jade.blade', 'jade.blade.php'],
+            array_keys($view->getExtensions())
         );
         self::assertSame('bkwld/laravel-pug', $this->provider->getCurrentPackage());
         self::assertInstanceOf('Illuminate\View\Engines\CompilerEngine', $resolver->get('pug'));
@@ -365,8 +365,8 @@ class ServiceProviderTest extends TestCase
         $provider->boot();
 
         self::assertArraySubset(
-            ["pug","pug.php","jade","jade.php","pug.blade","pug.blade.php","jade.blade","jade.blade.php"],
-            $view->getExtensions()
+            ['pug', 'pug.php', 'jade', 'jade.php', 'pug.blade', 'pug.blade.php', 'jade.blade', 'jade.blade.php'],
+            array_keys($view->getExtensions())
         );
         self::assertCount(1, $provider->getPub());
         self::assertStringEndsWith('config.php', array_keys($provider->getPub())[0]);
@@ -458,6 +458,15 @@ class ServiceProviderTest extends TestCase
 
         self::assertSame(
             '<head><minify>app<script src="foo.js"></script><script src="bar.js"></script></minify></head>',
+            preg_replace('/\s{2,}/', '', call_user_func($method, $path))
+        );
+
+        @unlink($pug->getCompiler()->getCompiledPath($path));
+
+        $path = __DIR__.'/example2.pug.blade.php';
+
+        self::assertSame(
+            '<h1>{{ \'Start\' }}</h1><h1>Pug is there</h1><p>{{ $sentence }}</p>@if (1 === 1)<div>Go</div>@endif',
             preg_replace('/\s{2,}/', '', call_user_func($method, $path))
         );
 

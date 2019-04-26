@@ -60,6 +60,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $config['basedir'] = resource_path('views');
         }
 
+        if (!isset($config['extensions']) && $this->app['view']) {
+            $extensions = array_keys(array_filter($this->app['view']->getExtensions(), function ($engine) {
+                $engines = explode('.', $engine);
+
+                return in_array('pug', $engines) || in_array('jade', $engines);
+            }));
+
+            $config['extensions'] = array_map(function ($extension) {
+                return ".$extension";
+            }, $extensions);
+        }
+
         $pug = new Pug($config);
         $this->assets = new Assets($pug);
         $getEnv = array('App', 'environment');
@@ -252,7 +264,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $key = $this->version() >= 5 ? 'laravel-pug' : 'laravel-pug::config';
 
-        return $this->app->make('config')->get($key);
+        return array_merge(array(
+            'allow_composite_extensions' => true,
+        ), $this->app->make('config')->get($key));
     }
 
     /**
