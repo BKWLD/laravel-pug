@@ -463,6 +463,10 @@ class ServiceProviderTest extends TestCase
 
         @unlink($pug->getCompiler()->getCompiledPath($path));
 
+        if (!method_exists($pugEngine, 'renderFile')) {
+            return; // Skip for Pug-php < 3
+        }
+
         $path = __DIR__.'/example2.pug.blade.php';
 
         self::assertSame(
