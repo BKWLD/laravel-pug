@@ -475,6 +475,15 @@ class ServiceProviderTest extends TestCase
         );
 
         @unlink($pug->getCompiler()->getCompiledPath($path));
+
+        $path = __DIR__.'/composite-extension/welcome.pug.blade.php';
+
+        self::assertSame(
+            '<h2>test from layout block content</h2><h2>test from welcome</h2>',
+            preg_replace('/\s{2,}/', '', call_user_func($method, $path))
+        );
+
+        @unlink($pug->getCompiler()->getCompiledPath($path));
     }
 
     public function testWithEmptyConfig()
