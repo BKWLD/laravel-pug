@@ -177,8 +177,10 @@ class BladeDirectivesTest extends TestCase
             return "Hello $person!";
         });
         $extensions = $view->getExtensions();
-        if (isset($extensions['css'])) {
-            unset($extensions['css']);
+        foreach (['css', 'php', 'html'] as $ignoredExtension) {
+            if (isset($extensions[$ignoredExtension'])) {
+                unset($extensions[$ignoredExtension']);
+            }
         }
 
         self::assertSame(
@@ -192,8 +194,6 @@ class BladeDirectivesTest extends TestCase
                 'pug.php' => 'pug',
                 'pug' => 'pug',
                 'blade.php' => 'blade',
-                'php' => 'php',
-                'html' => 'file',
             ],
             $extensions
         );
