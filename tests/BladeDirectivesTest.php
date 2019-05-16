@@ -178,8 +178,8 @@ class BladeDirectivesTest extends TestCase
         });
         $extensions = $view->getExtensions();
         foreach (['css', 'php', 'html'] as $ignoredExtension) {
-            if (isset($extensions[$ignoredExtension'])) {
-                unset($extensions[$ignoredExtension']);
+            if (isset($extensions[$ignoredExtension])) {
+                unset($extensions[$ignoredExtension]);
             }
         }
 
