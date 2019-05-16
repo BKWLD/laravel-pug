@@ -193,6 +193,7 @@ class BladeDirectivesTest extends TestCase
                 'pug' => 'pug',
                 'blade.php' => 'blade',
                 'php' => 'php',
+                'html' => 'file',
             ],
             $extensions
         );
