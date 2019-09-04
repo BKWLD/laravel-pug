@@ -3,6 +3,11 @@ language: php
 git:
   depth: 5
 
+cache:
+  apt: true
+  directories:
+    - $HOME/.composer/cache
+
 matrix:
   include:
     - php: 5.4
