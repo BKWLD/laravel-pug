@@ -179,7 +179,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Version specific booting
         switch ($this->version()) {
             case 4: $this->bootLaravel4(); break;
-            case 5: $this->bootLaravel5(); break;
+            case 5: $this->bootLaravel5And6(); break;
+            case 6: $this->bootLaravel5And6(); break;
             default: throw new Exception('Unsupported Laravel version.');
         }
 
@@ -200,12 +201,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Boot specific logic for Laravel 5. Registers the config file for publishing
+     * Boot specific logic for Laravel 5 and 6. Registers the config file for publishing
      * to app directory.
      *
      * @return void
      */
-    public function bootLaravel5()
+    public function bootLaravel5And6()
     {
         if (function_exists('config_path')) {
             $this->publishes(array(
