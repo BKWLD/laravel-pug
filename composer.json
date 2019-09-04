@@ -4,8 +4,8 @@
     "type": "composer-plugin",
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4 - 5",
-        "illuminate/view": "4 - 5",
+        "illuminate/support": "4 - 6",
+        "illuminate/view": "4 - 6",
         "pug-php/pug-assets": "^1.0.1",
         "pug/installer": "^0.1.3",
         "composer-plugin-api": "^1.0"
