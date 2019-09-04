@@ -21,7 +21,7 @@ matrix:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^3.0'
     - php: 5.5
-      dist: trustybootLaravel5
+      dist: trusty
       env:
         - LARAVEL_VERSION='5.2.*'
         - PUG_VERSION='^2.7'
