@@ -329,7 +329,7 @@ class ServiceProviderTest extends TestCase
     /**
      * @covers ::boot
      * @covers ::bootLaravel4
-     * @covers ::bootLaravel5
+     * @covers ::bootLaravel5And6
      * @covers ::registerPugCompiler
      * @covers ::registerPugBladeCompiler
      * @covers ::getEngineResolver

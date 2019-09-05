@@ -3,25 +3,35 @@ language: php
 git:
   depth: 5
 
+cache:
+  apt: true
+  directories:
+    - $HOME/.composer/cache
+
 matrix:
   include:
     - php: 5.4
+      dist: trusty
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^2.7'
     - php: 5.5
+      dist: trusty
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^2.7'
     - php: 5.5
+      dist: trusty
       env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^3.0'
     - php: 5.5
+      dist: trusty
       env:
         - LARAVEL_VERSION='5.2.*'
         - PUG_VERSION='^2.7'
     - php: 5.5
+      dist: trusty
       env:
         - LARAVEL_VERSION='5.2.*'
         - PUG_VERSION='^3.0'
@@ -67,23 +77,7 @@ matrix:
         - PUG_VERSION='^3.0'
     - php: 7.1
       env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.1
-      env:
         - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^2.7'
     - php: 7.1
       env:
@@ -95,80 +89,74 @@ matrix:
         - PUG_VERSION='^2.7'
     - php: 7.2
       env:
+        - LARAVEL_VERSION='5.4.*'
+        - PUG_VERSION='^3.0'
+    - php: 7.2
+      env:
+        - LARAVEL_VERSION='5.5.*'
+        - PUG_VERSION='^2.7'
+    - php: 7.3
+      env:
+        - LARAVEL_VERSION='4.2.*'
+        - PUG_VERSION='^2.7'
+    - php: 7.3
+      env:
         - LARAVEL_VERSION='4.2.*'
         - PUG_VERSION='^3.0'
-    - php: 7.2
+    - php: 7.3
       env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^2.7'
-    - php: 7.2
+    - php: 7.3
       env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^3.0'
-    - php: 7.2
+    - php: 7.3
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^2.7'
-    - php: 7.2
+    - php: 7.3
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^3.0'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='4.2.*'
-      - PUG_VERSION='^2.7'
+        - LARAVEL_VERSION='5.6.*'
+        - PUG_VERSION='^2.7'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='4.2.*'
-      - PUG_VERSION='^3.0'
+        - LARAVEL_VERSION='5.6.*'
+        - PUG_VERSION='^3.0'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='5.4.*'
-      - PUG_VERSION='^2.7'
+        - LARAVEL_VERSION='5.7.*'
+        - PUG_VERSION='^2.7'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='5.4.*'
-      - PUG_VERSION='^3.0'
+        - LARAVEL_VERSION='5.7.*'
+        - PUG_VERSION='^3.0'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='5.5.*'
-      - PUG_VERSION='^2.7'
+        - LARAVEL_VERSION='5.8.*'
+        - PUG_VERSION='^2.7'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='5.5.*'
-      - PUG_VERSION='^3.0'
+        - LARAVEL_VERSION='5.8.*'
+        - PUG_VERSION='^3.0'
     - php: 7.3
       env:
-      - LARAVEL_VERSION='5.6.*'
-      - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-      - LARAVEL_VERSION='5.6.*'
-      - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-      - LARAVEL_VERSION='5.7.*'
-      - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-      - LARAVEL_VERSION='5.7.*'
-      - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-      - LARAVEL_VERSION='5.8.*'
-      - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-      - LARAVEL_VERSION='5.8.*'
-      - PUG_VERSION='^3.0'
+        - LARAVEL_VERSION='6.0.*'
+        - PUG_VERSION='^3.0'
 
 install:
+  - if [[ $LARAVEL_VERSION != "5.4.*" || $PUG_VERSION != "^3.0" || ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then phpenv config-rm xdebug.ini || echo 'XDebug already disabled'; fi;
   - travis_retry composer self-update
   - travis_retry php tests/setDependenciesVersions.php $LARAVEL_VERSION $PUG_VERSION
   - travis_wait 30 travis_retry composer update --no-interaction
 
 script:
-  - vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml
+  - if [[ $LARAVEL_VERSION == "5.4.*" && $PUG_VERSION == "^3.0" && ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml; fi;
+  - if [[ $LARAVEL_VERSION != "5.4.*" || $PUG_VERSION != "^3.0" || ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then vendor/bin/phpunit --verbose --no-coverage; fi;
 
 after_script:
   - if [[ $LARAVEL_VERSION == "5.4.*" && $PUG_VERSION == "^3.0" && ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then vendor/bin/test-reporter --coverage-report coverage.xml; fi;

@@ -30,7 +30,7 @@ class LaravelTestApp implements BaseApplication
         $this->useSysTempDir = $useSysTempDir;
     }
 
-    public function basePath()
+    public function basePath($path = '')
     {
         return __DIR__;
     }
@@ -302,6 +302,10 @@ class LaravelTestApp implements BaseApplication
     }
 
     public function flush()
+    {
+    }
+
+    public function singletonIf($abstract, $concrete = null)
     {
     }
 }
