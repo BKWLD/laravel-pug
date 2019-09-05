@@ -77,23 +77,7 @@ matrix:
         - PUG_VERSION='^3.0'
     - php: 7.1
       env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.1
-      env:
         - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^2.7'
     - php: 7.1
       env:
@@ -105,24 +89,12 @@ matrix:
         - PUG_VERSION='^2.7'
     - php: 7.2
       env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.2
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.2
-      env:
         - LARAVEL_VERSION='5.4.*'
         - PUG_VERSION='^3.0'
     - php: 7.2
       env:
         - LARAVEL_VERSION='5.5.*'
         - PUG_VERSION='^2.7'
-    - php: 7.2
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^3.0'
     - php: 7.3
       env:
         - LARAVEL_VERSION='4.2.*'
