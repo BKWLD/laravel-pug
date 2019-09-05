@@ -304,4 +304,8 @@ class LaravelTestApp implements BaseApplication
     public function flush()
     {
     }
+
+    public function singletonIf($abstract, $concrete = null)
+    {
+    }
 }
