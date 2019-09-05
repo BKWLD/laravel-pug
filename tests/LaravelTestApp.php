@@ -30,7 +30,7 @@ class LaravelTestApp implements BaseApplication
         $this->useSysTempDir = $useSysTempDir;
     }
 
-    public function basePath()
+    public function basePath($path = '')
     {
         return __DIR__;
     }
