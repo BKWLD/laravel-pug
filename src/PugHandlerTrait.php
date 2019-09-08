@@ -211,7 +211,15 @@ trait PugHandlerTrait
         if ($this->cachePath) {
             $pug = $this->getCompiler();
             $compiled = $this->getCompiledPath($path);
-            $contents = $pug->compile($this->files->get($path), $path);
+            $engine = $this->getPug();
+            $importCarrier = null;
+
+            if (!method_exists($engine, 'compile')) {
+                $engine = $pug;
+                $importCarrier = $pug;
+            }
+
+            $contents = $engine->compile($this->files->get($path), $path);
 
             if ($callback) {
                 $contents = call_user_func($callback, $contents);
@@ -220,8 +228,13 @@ trait PugHandlerTrait
             if ($pug instanceof \Phug\Compiler) {
                 $this->files->put(
                     $compiled . '.imports.serialize.txt',
-                    serialize($pug->getCurrentImportPaths())
+                    serialize(($importCarrier ?: $engine->getCompiler())->getCurrentImportPaths())
                 );
+            }
+
+            if ($pug->getOption('debug')) {
+                $contents = "<?php try { ?>$contents<?php } ".
+                    "catch (\Throwable \$exception) { throw new \Bkwld\LaravelPug\PugException(\$this, \$exception); }";
             }
 
             $this->files->put($compiled, $contents);

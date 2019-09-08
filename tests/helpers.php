@@ -5,6 +5,10 @@ if (!interface_exists('Illuminate\Contracts\Foundation\Application')) {
     include_once __DIR__ . '/LaravelApplicationInterface.php';
 }
 
+if (!class_exists('Facade\Ignition\Exceptions\ViewException')) {
+    include_once __DIR__ . '/ViewException.php';
+}
+
 if (!function_exists('config_path')) {
     function config_path($input) {
         return $input;

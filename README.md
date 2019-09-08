@@ -24,7 +24,11 @@ create it with: `composer create-project --prefer-dist laravel/laravel my-new-pr
 
 Then run `composer require bkwld/laravel-pug`.
 
-To get a line and offset in pug source files well formatted in standard
+### Laravel 4 and 5
+
+Errors are properly displayed through Ignition since Laravel 6.
+
+In older versions, to get a line and offset in pug source files well formatted in standard
 Laravel error display to debug errors, we recommend
 you to implement the following in your **app/Exceptions/ExceptionHandler**:
 
@@ -76,7 +80,7 @@ In other words, just put your Pug files in the regular views directory
 and name them like `whatever.pug`. You reference them in Laravel like normal:
 
 * **Laravel 4** : `View::make('home.whatever')` for `app/views/home/whatever.pug`
-* **Laravel 5** : `view('home.whatever')` for `resources/views/home/whatever.pug`
+* **Laravel >= 5** : `view('home.whatever')` for `resources/views/home/whatever.pug`
 
 The Pug view files can work side-by-side with regular PHP views. To use Blade
 templating within your Pug, just name the files with `.pug.blade` or
