@@ -236,7 +236,7 @@ trait PugHandlerTrait
                 );
 
                 if ($pug->getOption('debug')) {
-                    $contents = "<?php try { ?>$contents<?php } ".
+                    $contents = "<?php try { ?>$contents<?php } " .
                         "catch (\Throwable \$exception) { throw new \Bkwld\LaravelPug\PugException(\$this, \$exception); }";
                 }
             }
