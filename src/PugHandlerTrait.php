@@ -226,9 +226,13 @@ trait PugHandlerTrait
             }
 
             if ($pug instanceof \Phug\Compiler) {
+                if ($importCarrier === null) {
+                    $importCarrier = $engine->getCompiler();
+                }
+
                 $this->files->put(
                     $compiled . '.imports.serialize.txt',
-                    serialize(($importCarrier ?: $engine->getCompiler())->getCurrentImportPaths())
+                    serialize($importCarrier->getCurrentImportPaths())
                 );
             }
 
