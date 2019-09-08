@@ -234,11 +234,11 @@ trait PugHandlerTrait
                     $compiled . '.imports.serialize.txt',
                     serialize($importCarrier->getCurrentImportPaths())
                 );
-            }
 
-            if ($pug->getOption('debug')) {
-                $contents = "<?php try { ?>$contents<?php } ".
-                    "catch (\Throwable \$exception) { throw new \Bkwld\LaravelPug\PugException(\$this, \$exception); }";
+                if ($pug->getOption('debug')) {
+                    $contents = "<?php try { ?>$contents<?php } ".
+                        "catch (\Throwable \$exception) { throw new \Bkwld\LaravelPug\PugException(\$this, \$exception); }";
+                }
             }
 
             $this->files->put($compiled, $contents);
