@@ -35,18 +35,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "Pug\\Installer\\Installer::onAutoloadDump",
-            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+            "Pug\\Installer\\Installer::onAutoloadDump"
         ],
         "post-update-cmd": [
-            "Pug\\Installer\\Installer::onAutoloadDump",
-            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
-        ],
-        "post-package-install": [
-            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
-        ],
-        "post-package-update": [
-            "Bkwld\\LaravelPug\\UpdateCheck::checkForPugUpgrade"
+            "Pug\\Installer\\Installer::onAutoloadDump"
         ]
     },
     "extra": {
@@ -55,7 +47,6 @@
             "providers": [
                 "Bkwld\\LaravelPug\\ServiceProvider"
             ]
-        },
-        "class": "Bkwld\\LaravelPug\\UpdateCheck"
+        }
     }
 }
