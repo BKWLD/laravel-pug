@@ -121,7 +121,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $app = $this->app;
         $tab = explode('Laravel Components ', $app->version());
 
-        return intval(empty($tab[1]) ? $app::VERSION : $tab[1]);
+        return intval(empty($tab[1]) ? $app::VERSION : trim($tab[1], ' ^~><=*.()'));
     }
 
     /**
