@@ -235,7 +235,7 @@ trait PugHandlerTrait
                     serialize($importCarrier->getCurrentImportPaths())
                 );
 
-                if ($pug->getOption('debug')) {
+                if ($pug->getOption('debug') && class_exists('Facade\\Ignition\\Exceptions\\ViewException')) {
                     $contents = "<?php try { ?>$contents<?php } " .
                         "catch (\Throwable \$exception) { throw new \Bkwld\LaravelPug\PugException(\$this, \$exception); }";
                 }
