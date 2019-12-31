@@ -344,7 +344,7 @@ class ServiceProviderTest extends TestCase
         $this->provider->boot();
 
         self::assertArraySubset(
-            ['pug', 'pug.php', 'jade', 'jade.php', 'pug.blade', 'pug.blade.php', 'jade.blade', 'jade.blade.php'],
+            ['pug', 'pug.php', 'jade', 'jade.php', 'pug.blade', 'pug.blade.php', 'jade.blade', 'jade.blade.php', 'blade.pug', 'blade.pug.php', 'blade.jade', 'blade.jade.php'],
             array_keys($view->getExtensions())
         );
         self::assertSame('bkwld/laravel-pug', $this->provider->getCurrentPackage());

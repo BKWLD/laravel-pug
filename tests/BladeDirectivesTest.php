@@ -185,6 +185,10 @@ class BladeDirectivesTest extends TestCase
 
         self::assertSame(
             [
+                'blade.jade.php' => 'pug.blade',
+                'blade.jade' => 'pug.blade',
+                'blade.pug.php' => 'pug.blade',
+                'blade.pug' => 'pug.blade',
                 'jade.blade.php' => 'pug.blade',
                 'jade.blade' => 'pug.blade',
                 'pug.blade.php' => 'pug.blade',

@@ -239,11 +239,28 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return new CompilerEngine($this->app['Bkwld\LaravelPug\Pug' . ucfirst(ltrim($subExtension, '.')) . 'Compiler']);
         });
 
-        // Add extensions
-        $this->app['view']->addExtension('pug' . $subExtension, 'pug' . $subExtension);
-        $this->app['view']->addExtension('pug' . $subExtension . '.php', 'pug' . $subExtension);
-        $this->app['view']->addExtension('jade' . $subExtension, 'pug' . $subExtension);
-        $this->app['view']->addExtension('jade' . $subExtension . '.php', 'pug' . $subExtension);
+        $mainExtension = 'pug' . $subExtension;
+        $extensions = array(
+            // Pug extensions
+            $mainExtension,
+            $mainExtension . '.php',
+            // Legacy jade extensions
+            'jade' . $subExtension,
+            'jade' . $subExtension . '.php',
+        );
+
+        if ($subExtension !== '') {
+            $subExtensionPrefix = substr($subExtension, 1) . '.';
+
+            $extensions[] = $subExtensionPrefix . 'pug';
+            $extensions[] = $subExtensionPrefix . 'pug.php';
+            $extensions[] = $subExtensionPrefix . 'jade';
+            $extensions[] = $subExtensionPrefix . 'jade.php';
+        }
+
+        foreach ($extensions as $extension) {
+            $this->app['view']->addExtension($extension, $mainExtension);
+        }
     }
 
     /**
@@ -257,7 +274,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Get the configuration, which is keyed differently in L5 vs l4.
+     * Get the configuration, which is keyed differently in L5 vs L4.
      *
      * @return array
      */
