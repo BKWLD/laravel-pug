@@ -163,7 +163,6 @@ trait PugHandlerTrait
      * @throws InvalidArgumentException
      *
      * @return string
-     *
      */
     public function extractPath($path)
     {
@@ -204,9 +203,9 @@ trait PugHandlerTrait
      * @param string        $path
      * @param callable|null $callback
      *
-     * @return void
      * @throws InvalidArgumentException
      *
+     * @return void
      */
     public function compileWith($path, callable $callback = null)
     {
