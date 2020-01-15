@@ -4,6 +4,9 @@ namespace Bkwld\LaravelPug;
 
 use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
+use Phug\Compiler;
+use Phug\CompilerInterface;
+use Phug\Renderer;
 use Pug\Pug;
 
 trait PugHandlerTrait
@@ -89,11 +92,11 @@ trait PugHandlerTrait
 
         try {
             if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
-                throw new \InvalidArgumentException('invalid option');
+                throw new InvalidArgumentException('invalid option');
             }
 
             return $pug->getOption($name);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return $default;
         }
     }
@@ -157,9 +160,10 @@ trait PugHandlerTrait
      *
      * @param string $path
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return string
+     *
      */
     public function extractPath($path)
     {
@@ -181,13 +185,13 @@ trait PugHandlerTrait
     /**
      * Returns the object the more appropriate to compile (\Pug\Pug with version < 3), \Phug\Compilser for >= 3.
      *
-     * @return \Phug\CompilerInterface|Pug
+     * @return CompilerInterface|Pug
      */
     public function getCompiler()
     {
         $pug = $this->getPug();
 
-        if ($pug instanceof \Phug\Renderer) {
+        if ($pug instanceof Renderer) {
             $pug = clone $pug->getCompiler();
         }
 
@@ -200,9 +204,9 @@ trait PugHandlerTrait
      * @param string        $path
      * @param callable|null $callback
      *
-     * @throws \InvalidArgumentException
-     *
      * @return void
+     * @throws InvalidArgumentException
+     *
      */
     public function compileWith($path, callable $callback = null)
     {
@@ -225,7 +229,7 @@ trait PugHandlerTrait
                 $contents = call_user_func($callback, $contents);
             }
 
-            if ($pug instanceof \Phug\Compiler) {
+            if ($pug instanceof Compiler) {
                 if ($importCarrier === null) {
                     $importCarrier = $engine->getCompiler();
                 }

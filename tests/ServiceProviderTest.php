@@ -191,7 +191,7 @@ class ServiceProviderTest extends TestCase
      */
     protected $provider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = new LaravelTestApp();
         $this->app->singleton('files', function () {

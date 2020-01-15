@@ -3,9 +3,8 @@
 namespace Phug\Test;
 
 use Bkwld\LaravelPug\Install;
-use Illuminate\Filesystem\Filesystem;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Pug\Pug;
 
 class Io
 {
@@ -104,7 +103,7 @@ class InstallTest extends TestCase
                 'app/config/laravel-4-app-config.php',
                 'app/config/app.php'
             );
-        } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
+        } catch (ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
         }
 
@@ -212,7 +211,7 @@ class InstallTest extends TestCase
                 'config/laravel-5-app-config.php',
                 'config/app.php'
             );
-        } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
+        } catch (ExpectationFailedException $exception) {
             $diff = $exception->getComparisonFailure()->getDiff();
         }
 

@@ -3,29 +3,29 @@
     "description": "Pug view adapter for Laravel",
     "type": "library",
     "require": {
-        "php": ">=5.4.0",
-        "illuminate/support": "4 - 6",
-        "illuminate/view": "4 - 6",
+        "php": "^7.2",
+        "illuminate/support": "^6.0.0",
+        "illuminate/view": "^6.0.0",
+        "phug/component": "^1.0.0",
+        "pug-php/pug": "^3.3.1",
         "pug-php/pug-assets": "^1.0.1",
-        "pug/installer": "^0.1.3",
+        "pug/installer": "^1.0.0",
         "composer-plugin-api": "^1.0"
     },
     "require-dev": {
         "composer/composer": "^1.2",
-        "phpunit/phpunit": "^4.8.35 || ^5.7",
-        "phpunit/php-code-coverage": "^2.2 || ^4.0 || ^5.2",
-        "codeclimate/php-test-reporter": "^0.4.0"
+        "phpunit/phpunit": "^8.5"
     },
     "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
         {
-            "name": "Robert Reinhard",
-            "email": "info@bukwild.com"
-        },
-        {
             "name": "Kyle Katarn",
             "email": "kylekatarnls@gmail.com"
+        },
+        {
+            "name": "Robert Reinhard",
+            "email": "info@bukwild.com"
         }
     ],
     "autoload": {
@@ -42,6 +42,9 @@
         ]
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        },
         "installer": "Bkwld\\LaravelPug\\Install::publishVendor",
         "laravel": {
             "providers": [
