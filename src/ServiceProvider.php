@@ -148,14 +148,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Bind the Pug compiler
         $this->app->singleton(
-            'Bkwld\LaravelPug\PugCompiler',
-            $this->getCompilerCreator('\Bkwld\LaravelPug\PugCompiler')
+            PugCompiler::class,
+            $this->getCompilerCreator(PugCompiler::class)
         );
 
         // Bind the Pug Blade compiler
         $this->app->singleton(
-            'Bkwld\LaravelPug\PugBladeCompiler',
-            $this->getCompilerCreator('\Bkwld\LaravelPug\PugBladeCompiler')
+            PugBladeCompiler::class,
+            $this->getCompilerCreator(PugBladeCompiler::class)
         );
     }
 
@@ -283,8 +283,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function provides()
     {
         return [
-            'Bkwld\LaravelPug\PugCompiler',
-            'Bkwld\LaravelPug\PugBladeCompiler',
+            PugCompiler::class,
+            PugBladeCompiler::class,
             'laravel-pug.pug',
         ];
     }

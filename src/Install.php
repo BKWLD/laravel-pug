@@ -4,14 +4,6 @@ namespace Bkwld\LaravelPug;
 
 class Install
 {
-    protected static function getVersion()
-    {
-        $version = @shell_exec('php artisan --version');
-        $version = preg_replace('/^([a-z]+\s+)+/i', '', trim($version));
-
-        return empty($version) ? null : $version;
-    }
-
     public static function publishVendor($event)
     {
         $currentDirectory = getcwd();
@@ -20,7 +12,7 @@ class Install
             chdir('..');
         }
 
-        if (file_exists('artisan') && ($version = static::getVersion())) {
+        if (file_exists('artisan')) {
             /** @var \Composer\Script\Event $event */
             $io = $event->getIO();
 

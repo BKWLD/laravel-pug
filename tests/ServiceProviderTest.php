@@ -4,6 +4,8 @@ namespace Phug\Test;
 
 use ArrayAccess;
 use Bkwld\LaravelPug\Exception;
+use Bkwld\LaravelPug\PugBladeCompiler;
+use Bkwld\LaravelPug\PugCompiler;
 use Bkwld\LaravelPug\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
@@ -173,8 +175,8 @@ class ServiceProviderTest extends TestCase
     public function testRegister()
     {
         self::assertNull($this->app->getSingleton('laravel-pug.pug'));
-        self::assertNull($this->app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
-        self::assertNull($this->app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
+        self::assertNull($this->app->getSingleton(PugCompiler::class));
+        self::assertNull($this->app->getSingleton(PugBladeCompiler::class));
 
         $this->provider->register();
         /** @var \Pug\Pug $pug */
@@ -187,14 +189,14 @@ class ServiceProviderTest extends TestCase
             $defaultCache = '/views';
         }
 
-        self::assertInstanceOf('Pug\Pug', $pug);
+        self::assertInstanceOf(Pug::class, $pug);
         self::assertInstanceOf(
-            'Bkwld\LaravelPug\PugCompiler',
-            $this->app->getSingleton('Bkwld\LaravelPug\PugCompiler')
+            PugCompiler::class,
+            $this->app->getSingleton(PugCompiler::class)
         );
         self::assertInstanceOf(
-            'Bkwld\LaravelPug\PugBladeCompiler',
-            $this->app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler')
+            PugBladeCompiler::class,
+            $this->app->getSingleton(PugBladeCompiler::class)
         );
         self::assertStringEndsWith('/views', $defaultCache);
     }
@@ -212,8 +214,8 @@ class ServiceProviderTest extends TestCase
         $provider = new Laravel5ServiceProvider($app);
 
         self::assertNull($app->getSingleton('laravel-pug.pug'));
-        self::assertNull($app->getSingleton('Bkwld\LaravelPug\PugCompiler'));
-        self::assertNull($app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler'));
+        self::assertNull($app->getSingleton(PugCompiler::class));
+        self::assertNull($app->getSingleton(PugBladeCompiler::class));
 
         $provider->register();
         /** @var \Pug\Pug $pug */
@@ -227,14 +229,14 @@ class ServiceProviderTest extends TestCase
         }
         $configs = $provider->getMergedConfig();
 
-        self::assertInstanceOf('Pug\Pug', $pug);
+        self::assertInstanceOf(Pug::class, $pug);
         self::assertInstanceOf(
-            'Bkwld\LaravelPug\PugCompiler',
-            $app->getSingleton('Bkwld\LaravelPug\PugCompiler')
+            PugCompiler::class,
+            $app->getSingleton(PugCompiler::class)
         );
         self::assertInstanceOf(
-            'Bkwld\LaravelPug\PugBladeCompiler',
-            $app->getSingleton('Bkwld\LaravelPug\PugBladeCompiler')
+            PugBladeCompiler::class,
+            $app->getSingleton(PugBladeCompiler::class)
         );
         self::assertStringEndsWith('/framework/views', $defaultCache);
         self::assertCount(2, $configs);
@@ -264,8 +266,8 @@ class ServiceProviderTest extends TestCase
     public function testProvides()
     {
         self::assertSame([
-            'Bkwld\LaravelPug\PugCompiler',
-            'Bkwld\LaravelPug\PugBladeCompiler',
+            PugCompiler::class,
+            PugBladeCompiler::class,
             'laravel-pug.pug',
         ], $this->provider->provides());
     }

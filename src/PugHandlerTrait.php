@@ -217,11 +217,6 @@ trait PugHandlerTrait
             $engine = $this->getPug();
             $importCarrier = null;
 
-            if (!method_exists($engine, 'compile')) {
-                $engine = $pug;
-                $importCarrier = $pug;
-            }
-
             $contents = $engine->compile($this->files->get($path), $path);
 
             if ($callback) {
