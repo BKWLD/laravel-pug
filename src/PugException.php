@@ -19,8 +19,8 @@ class PugException extends ViewException
         $line = $previous->getLine();
 
         if ($compiler instanceof PugCompiler || $compiler instanceof PugBladeCompilerCompiler) {
-            $print = 'error-' . md5_file($file) . '-' . $line . '-' . md5($previous->getTraceAsString());
-            $cachePath = storage_path('framework/views/' . $print . '.txt');
+            $print = 'error-'.md5_file($file).'-'.$line.'-'.md5($previous->getTraceAsString());
+            $cachePath = storage_path('framework/views/'.$print.'.txt');
             $location = null;
 
             if (file_exists($cachePath)) {
