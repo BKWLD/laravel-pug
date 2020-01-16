@@ -61,7 +61,6 @@ class InstallTest extends TestCase
 {
     /**
      * @covers ::getVersion
-     * @covers ::addProvider
      * @covers ::publishVendor
      */
     public function testPublishVendorLaravel4()
@@ -160,7 +159,6 @@ class InstallTest extends TestCase
 
     /**
      * @covers ::getVersion
-     * @covers ::addProvider
      * @covers ::publishVendor
      */
     public function testPublishVendorLaravel54()
@@ -252,7 +250,6 @@ class InstallTest extends TestCase
 
     /**
      * @covers ::getVersion
-     * @covers ::addProvider
      * @covers ::publishVendor
      */
     public function testPublishVendorLaravel55()
