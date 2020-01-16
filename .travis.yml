@@ -22,6 +22,7 @@ matrix:
     - php: 7.4
       env: COVERAGE=true
     - php: nightly
+      env: COMPOSER_FLAGS='--ignore-platform-reqs'
 
 install:
   - if [[ "$COVERAGE" != "true" ]]; then phpenv config-rm xdebug.ini || echo 'XDebug already disabled'; fi;
