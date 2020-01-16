@@ -2,8 +2,9 @@
 
 namespace Phug\Test\Blade;
 
+use Bkwld\LaravelPug\Exception;
 use Bkwld\LaravelPug\PugBladeCompiler;
-use Bkwld\LaravelPug\ServiceProvider;
+use Phug\Test\Laravel5ServiceProvider;
 use Phug\Test\LaravelTestApp;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -17,32 +18,8 @@ use Illuminate\View\FileViewFinder;
 use PHPUnit\Framework\TestCase;
 
 include_once __DIR__ . '/helpers.php';
-
-$file = __DIR__ . '/LaravelTestApp.php';
-$contents = file_get_contents($file);
-
-$contents = version_compare(PHP_VERSION, '5.6.0-dev', '>=')
-    ? str_replace('(/*...$environments*/)', '(...$environments)', $contents)
-    : str_replace('(...$environments)', '(/*...$environments*/)', $contents);
-
-file_put_contents($file, $contents);
-
 include_once __DIR__ . '/LaravelTestApp.php';
-
-class Laravel4ServiceProvider extends ServiceProvider
-{
-    protected $currentPackage;
-
-    public function package($package, $namespace = null, $path = null)
-    {
-        $this->currentPackage = $package;
-    }
-
-    public function getCurrentPackage()
-    {
-        return $this->currentPackage;
-    }
-}
+include_once __DIR__ . '/Laravel5ServiceProvider.php';
 
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\ServiceProvider
@@ -55,7 +32,7 @@ class BladeDirectivesTest extends TestCase
     protected $app;
 
     /**
-     * @var Laravel4ServiceProvider
+     * @var Laravel5ServiceProvider
      */
     protected $provider;
 
@@ -67,7 +44,7 @@ class BladeDirectivesTest extends TestCase
         });
         Facade::setFacadeApplication($this->app);
         Blade::setFacadeApplication($this->app);
-        $this->provider = new Laravel4ServiceProvider($this->app);
+        $this->provider = new Laravel5ServiceProvider($this->app);
     }
 
     /**
@@ -83,6 +60,8 @@ class BladeDirectivesTest extends TestCase
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     *
+     * @throws Exception
      */
     public function testCustomDirective()
     {

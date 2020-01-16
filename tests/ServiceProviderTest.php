@@ -26,58 +26,7 @@ $contents = version_compare(PHP_VERSION, '5.6.0-dev', '>=')
 file_put_contents($file, $contents);
 
 include_once __DIR__ . '/LaravelTestApp.php';
-
-class Laravel5TestApp extends LaravelTestApp
-{
-    const VERSION = '5.0.0';
-}
-
-class Laravel3TestApp extends LaravelTestApp
-{
-    const VERSION = '3.0.0';
-}
-
-class Laravel4ServiceProvider extends ServiceProvider
-{
-    protected $currentPackage;
-
-    public function package($package, $namespace = null, $path = null)
-    {
-        $this->currentPackage = $package;
-    }
-
-    public function getCurrentPackage()
-    {
-        return $this->currentPackage;
-    }
-}
-
-class Laravel5ServiceProvider extends ServiceProvider
-{
-    protected $mergedConfig;
-
-    protected $pub;
-
-    public function mergeConfigFrom($path, $key)
-    {
-        $this->mergedConfig = func_get_args();
-    }
-
-    public function getMergedConfig()
-    {
-        return $this->mergedConfig;
-    }
-
-    public function getPub()
-    {
-        return $this->pub;
-    }
-
-    public function publishes(array $pub, $group = null)
-    {
-        $this->pub = $pub;
-    }
-}
+include_once __DIR__ . '/Laravel5ServiceProvider.php';
 
 class EmptyConfigServiceProvider extends ServiceProvider
 {
@@ -133,7 +82,7 @@ class ServiceProviderTest extends TestCase
     protected $app;
 
     /**
-     * @var Laravel4ServiceProvider
+     * @var Laravel5ServiceProvider
      */
     protected $provider;
 
@@ -144,23 +93,7 @@ class ServiceProviderTest extends TestCase
             return new Filesystem();
         });
         Facade::setFacadeApplication($this->app);
-        $this->provider = new Laravel4ServiceProvider($this->app);
-    }
-
-    /**
-     * @covers ::version
-     */
-    public function testVersion()
-    {
-        self::assertSame(4, $this->provider->version());
-
-        $app = new Laravel5TestApp();
-        $app->singleton('files', function () {
-            return new Filesystem();
-        });
-        $provider = new ServiceProvider($app);
-
-        self::assertSame(5, $provider->version());
+        $this->provider = new Laravel5ServiceProvider($this->app);
     }
 
     /**
@@ -203,11 +136,10 @@ class ServiceProviderTest extends TestCase
 
     /**
      * @covers ::register
-     * @covers ::registerLaravel5
      */
     public function testRegisterLaravel5()
     {
-        $app = new Laravel5TestApp();
+        $app = new LaravelTestApp();
         $app->singleton('files', function () {
             return new Filesystem();
         });
@@ -249,9 +181,7 @@ class ServiceProviderTest extends TestCase
      */
     public function testGetConfig()
     {
-        self::assertSame('laravel-pug::config', $this->provider->getConfig()['input']);
-
-        $app = new Laravel5TestApp();
+        $app = new LaravelTestApp();
         $app->singleton('files', function () {
             return new Filesystem();
         });
@@ -274,8 +204,6 @@ class ServiceProviderTest extends TestCase
 
     /**
      * @covers ::boot
-     * @covers ::bootLaravel4
-     * @covers ::bootLaravel5And6
      * @covers ::registerPugCompiler
      * @covers ::registerPugBladeCompiler
      * @covers ::getEngineResolver
@@ -295,11 +223,10 @@ class ServiceProviderTest extends TestCase
             ['pug', 'pug.blade', 'blade.pug'],
             array_keys($view->getExtensions())
         );
-        self::assertSame('bkwld/laravel-pug', $this->provider->getCurrentPackage());
-        self::assertInstanceOf('Illuminate\View\Engines\CompilerEngine', $resolver->get('pug'));
-        self::assertInstanceOf('Illuminate\View\Engines\CompilerEngine', $resolver->get('pug.blade'));
+        self::assertInstanceOf(CompilerEngine::class, $resolver->get('pug'));
+        self::assertInstanceOf(CompilerEngine::class, $resolver->get('pug.blade'));
 
-        $app = new Laravel5TestApp();
+        $app = new LaravelTestApp();
         $app->singleton('files', function () {
             return new Filesystem();
         });
@@ -321,21 +248,6 @@ class ServiceProviderTest extends TestCase
         self::assertSame('laravel-pug.php', array_values($provider->getPub())[0]);
         self::assertInstanceOf(CompilerEngine::class, $resolver->get('pug'));
         self::assertInstanceOf(CompilerEngine::class, $resolver->get('pug.blade'));
-    }
-
-    /**
-     * @covers ::boot
-     *
-     * @throws Exception
-     */
-    public function testBootUnsupportedLaravel()
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Unsupported Laravel version.');
-
-        $app = new Laravel3TestApp();
-        $provider = new ServiceProvider($app);
-        $provider->boot();
     }
 
     /**
@@ -441,7 +353,7 @@ class ServiceProviderTest extends TestCase
 
     public function testWithEmptyConfig()
     {
-        $app = new Laravel5TestApp();
+        $app = new LaravelTestApp();
         $provider = new EmptyConfigServiceProvider($app);
 
         self::assertSame('resource/views', $provider->getEngine()->getOption('basedir'));

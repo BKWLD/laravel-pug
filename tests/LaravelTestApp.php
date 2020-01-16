@@ -6,19 +6,13 @@ use ArrayAccess;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 
-if (in_array('ArrayAccess', class_implements('Illuminate\Contracts\Foundation\Application'))) {
-    interface BaseApplication extends Application {}
-} else {
-    interface BaseApplication extends Application, ArrayAccess {}
-}
-
-class LaravelTestApp implements BaseApplication
+class LaravelTestApp implements Application, ArrayAccess
 {
     protected $useSysTempDir = false;
 
     protected $singletons = [];
 
-    const VERSION = '4.0.0';
+    const VERSION = '5.0.0';
 
     public function version()
     {

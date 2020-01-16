@@ -29,7 +29,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     protected function getDefaultCache()
     {
-        return storage_path($this->version() >= 5 ? '/framework/views' : '/views');
+        return storage_path('/framework/views');
     }
 
     protected function getAssetsDirectories()
@@ -79,7 +79,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         if ($config['component'] ?? true) {
             ComponentExtension::enable($pug);
 
-            $this->componentExtension = $pug->getModule(static::class);
+            $this->componentExtension = $pug->getModule(ComponentExtension::class);
         }
 
         // Determine the cache dir if not configured
@@ -136,10 +136,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        // Version specific registering
-        if ($this->version() >= 5) {
-            $this->registerLaravel5();
-        }
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-pug');
 
         // Bind the pug assets module
         $this->app->singleton('laravel-pug.pug-assets', function () {
@@ -165,16 +162,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Register specific logic for Laravel 5. Merges package config with user config.
-     *
-     * @return void
-     */
-    public function registerLaravel5()
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-pug');
-    }
-
-    /**
      * Bootstrap the application events.
      *
      * @throws Exception for unsupported Laravel version
@@ -183,43 +170,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        // Version specific booting
-        switch ($this->version()) {
-            case 4: $this->bootLaravel4(); break;
-            case 5: $this->bootLaravel5And6(); break;
-            case 6: $this->bootLaravel5And6(); break;
-            default: throw new Exception('Unsupported Laravel version.');
-        }
-
-        // Register compilers
-        $this->registerPugCompiler();
-        $this->registerPugBladeCompiler();
-    }
-
-    /**
-     * Boot specific logic for Laravel 4. Tells Laravel about the package for auto
-     * namespacing of config files.
-     *
-     * @return void
-     */
-    public function bootLaravel4()
-    {
-        $this->package('bkwld/laravel-pug');
-    }
-
-    /**
-     * Boot specific logic for Laravel 5 and 6. Registers the config file for publishing
-     * to app directory.
-     *
-     * @return void
-     */
-    public function bootLaravel5And6()
-    {
         if (function_exists('config_path')) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('laravel-pug.php'),
             ], 'laravel-pug');
         }
+
+        // Register compilers
+        $this->registerPugCompiler();
+        $this->registerPugBladeCompiler();
     }
 
     /**
