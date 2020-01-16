@@ -120,7 +120,7 @@ trait PugHandlerTrait
     private function hasExpiredImport($path)
     {
         $compiled = $this->getCompiledPath($path);
-        $importsMap = $compiled . '.imports.serialize.txt';
+        $importsMap = $compiled.'.imports.serialize.txt';
         $files = $this->files;
 
         if (!$files->exists($importsMap)) {
@@ -234,12 +234,12 @@ trait PugHandlerTrait
                 }
 
                 $this->files->put(
-                    $compiled . '.imports.serialize.txt',
+                    $compiled.'.imports.serialize.txt',
                     serialize($importCarrier->getCurrentImportPaths())
                 );
 
                 if ($pug->getOption('debug') && class_exists('Facade\\Ignition\\Exceptions\\ViewException')) {
-                    $contents = "<?php try { ?>$contents<?php } " .
+                    $contents = "<?php try { ?>$contents<?php } ".
                         "catch (\Throwable \$exception) { throw new \Bkwld\LaravelPug\PugException(\$this, \$exception); }";
                 }
             }

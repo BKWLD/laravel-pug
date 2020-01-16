@@ -166,7 +166,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function registerLaravel5()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravel-pug');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-pug');
     }
 
     /**
@@ -212,7 +212,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         if (function_exists('config_path')) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('laravel-pug.php'),
+                __DIR__.'/../config/config.php' => config_path('laravel-pug.php'),
             ], 'laravel-pug');
         }
     }
@@ -236,18 +236,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function registerPugCompiler($subExtension = '')
     {
-        $mainExtension = 'pug' . $subExtension;
+        $mainExtension = 'pug'.$subExtension;
 
         // Add resolver
         $this->getEngineResolver()->register($mainExtension, function () use ($subExtension) {
-            return new CompilerEngine($this->app['Bkwld\LaravelPug\Pug' . ucfirst(ltrim($subExtension, '.')) . 'Compiler']);
+            return new CompilerEngine($this->app['Bkwld\LaravelPug\Pug'.ucfirst(ltrim($subExtension, '.')).'Compiler']);
         });
 
         $this->app['view']->addExtension($mainExtension, $mainExtension);
 
         if ($subExtension !== '') {
-            $subExtensionPrefix = substr($subExtension, 1) . '.';
-            $this->app['view']->addExtension($subExtensionPrefix . 'pug', $mainExtension);
+            $subExtensionPrefix = substr($subExtension, 1).'.';
+            $this->app['view']->addExtension($subExtensionPrefix.'pug', $mainExtension);
         }
     }
 

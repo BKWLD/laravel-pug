@@ -43,9 +43,9 @@ trait ExceptionHandlerTrait
                 <div\s+class="exc-title">
                     ([^<]+)<span\s+class="exc-title-primary">LocatedException<\/span>\s*
                 <\/div>
-            /x', '<div class="exc-title">' .
-                mb_substr($className, 0, $posNamespace) .
-                '<span class="exc-title-primary">' . mb_substr($className, $posNamespace) . '</span></div>', $content, 1);
+            /x', '<div class="exc-title">'.
+                mb_substr($className, 0, $posNamespace).
+                '<span class="exc-title-primary">'.mb_substr($className, $posNamespace).'</span></div>', $content, 1);
             $content = preg_replace_callback('/
                 <span\s+class="frame-class">(.+?)<\/span>
             /x', function ($match) use ($className) {
@@ -55,8 +55,8 @@ trait ExceptionHandlerTrait
                     return $match[0];
                 }
 
-                return '<span class="frame-class"><div class="delimiter">' .
-                    implode('</div>\\<div class="delimiter">', explode('\\', $className)) .
+                return '<span class="frame-class"><div class="delimiter">'.
+                    implode('</div>\\<div class="delimiter">', explode('\\', $className)).
                     '</div></span>';
             }, $content, 1);
             $content = preg_replace_callback('/
@@ -68,11 +68,11 @@ trait ExceptionHandlerTrait
                 $base = realpath(base_path());
 
                 if (strpos($path, $base) === 0) {
-                    $path = '&hellip;' . mb_substr($path, mb_strlen($base));
+                    $path = '&hellip;'.mb_substr($path, mb_strlen($base));
                 }
 
-                return $match[1] . $path . $match[3] .
-                    $line . $match[5] . ' offset <strong class="line-offset">' . $offset . ' </strong>' .
+                return $match[1].$path.$match[3].
+                    $line.$match[5].' offset <strong class="line-offset">'.$offset.' </strong>'.
                     $match[6];
             }, $content, 1);
             $content = preg_replace_callback('/
@@ -94,7 +94,7 @@ trait ExceptionHandlerTrait
 
                 $code = implode("\n", $code);
 
-                return $match[1] . ($start + 1) . $match[3] . $code . $match[5];
+                return $match[1].($start + 1).$match[3].$code.$match[5];
             }, $content);
 
             if ($offset) {
@@ -107,11 +107,11 @@ trait ExceptionHandlerTrait
                                 return;
                             }
                             $(".linenums li.current.active").css("position", "relative")
-                                .append("<span class=\\"line-offset-cursor\\" style=\\"position: absolute; top: 0; left: 0; pointer-events: none;\\">' .
-                    str_repeat('&nbsp;', $offset) .
-                    '<span style=\\"border: 1px dotted red;\\">' .
-                    str_repeat('&nbsp;', max(1, $location->getOffsetLength() - 1)) .
-                    '</span>' .
+                                .append("<span class=\\"line-offset-cursor\\" style=\\"position: absolute; top: 0; left: 0; pointer-events: none;\\">'.
+                    str_repeat('&nbsp;', $offset).
+                    '<span style=\\"border: 1px dotted red;\\">'.
+                    str_repeat('&nbsp;', max(1, $location->getOffsetLength() - 1)).
+                    '</span>'.
                     '</span>");
                         }, 1);
                     }
