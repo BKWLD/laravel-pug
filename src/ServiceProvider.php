@@ -4,6 +4,7 @@ namespace Bkwld\LaravelPug;
 
 // Dependencies
 use Illuminate\View\Engines\CompilerEngine;
+use Phug\Component\ComponentExtension;
 use Pug\Assets;
 use Pug\Pug;
 
@@ -14,21 +15,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected $assets;
 
+    /**
+     * @var ComponentExtension
+     */
+    protected $componentExtension;
+
     protected function setDefaultOption(Pug $pug, $name, $value)
     {
-        if (method_exists($pug, 'hasOption') && !$pug->hasOption($name)) {
-            $pug->setCustomOption($name, call_user_func($value));
-
-            return;
+        if (!$pug->hasOption($name)) {
+            $pug->setOption($name, call_user_func($value));
         }
-
-        // @codeCoverageIgnoreStart
-        try {
-            $pug->getOption($name);
-        } catch (\InvalidArgumentException $exception) {
-            $pug->setCustomOption($name, call_user_func($value));
-        }
-        // @codeCoverageIgnoreEnd
     }
 
     protected function getDefaultCache()
@@ -39,7 +35,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function getAssetsDirectories()
     {
         return array_map(function ($params) {
-            list($function, $arg) = $params;
+            [$function, $arg] = $params;
 
             return function_exists($function) ? call_user_func($function, $arg) : null;
         }, [
@@ -73,9 +69,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         }
 
         $pug = new Pug($config);
-        $this->assets = new Assets($pug);
-        $getEnv = ['App', 'environment'];
-        $this->assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
+
+        if ($config['assets'] ?? true) {
+            $this->assets = new Assets($pug);
+            $getEnv = ['App', 'environment'];
+            $this->assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
+        }
+
+        if ($config['component'] ?? true) {
+            ComponentExtension::enable($pug);
+
+            $this->componentExtension = $pug->getModule(static::class);
+        }
 
         // Determine the cache dir if not configured
         $this->setDefaultOption($pug, 'defaultCache', [$this, 'getDefaultCache']);

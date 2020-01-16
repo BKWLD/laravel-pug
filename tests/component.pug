@@ -1,0 +1,11 @@
+component dialog(title)
+  header=title
+  slot
+  slot actions
+    button OK
+
++dialog('Sure?')
+  slot actions
+    button Yes
+
+  | Are you sure?

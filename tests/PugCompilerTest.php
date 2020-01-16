@@ -304,4 +304,15 @@ class PugCompilerTest extends TestCase
 
         self::assertSame('<a href="?item=a">a</a><a href="?item=b">b</a><a href="?item=c">c</a>', $html);
     }
+
+    /**
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
+     * @covers ::compile
+     */
+    public function testRenderComponent()
+    {
+        $this->markTestIncomplete('Implement component test');
+    }
 }
