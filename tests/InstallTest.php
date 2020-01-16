@@ -11,7 +11,7 @@ class Io
     /**
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * @param string $message
@@ -82,7 +82,7 @@ class InstallTest extends TestCase
 
         self::assertSame('artisan config:publish bkwld/laravel-pug', $argv);
 
-        self::assertArraySubset([
+        self::assertSame([
             'app/config/app.php not found, please add Bkwld\LaravelPug\ServiceProvider::class, in it in your providers.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
@@ -104,25 +104,22 @@ class InstallTest extends TestCase
                 'app/config/app.php'
             );
         } catch (ExpectationFailedException $exception) {
-            $diff = $exception->getComparisonFailure()->getDiff();
+            $diff = ltrim(str_replace("\\n", '', $exception->getComparisonFailure()->getDiff()));
         }
 
         unlink('app/config/app.php');
 
-        self::assertArraySubset([
+        self::assertSame([
             'Pug service provided added to your app.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
 
-        self::assertStringStartsWith(implode("\n", [
-            '--- Expected',
-            '+++ Actual',
-            '@@ @@',
+        self::assertStringContainsString(implode("\n", [
             "         'Illuminate\\Workbench\\WorkbenchServiceProvider',",
             "+        'Bkwld\\LaravelPug\\ServiceProvider',",
             ' ',
             '     ),',
-        ]), ltrim($diff));
+        ]), $diff);
 
         $io = new Io();
         $event = new Event();
@@ -140,28 +137,25 @@ class InstallTest extends TestCase
                 'app/config/missing-comma-config.php',
                 'app/config/app.php'
             );
-        } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
-            $diff = $exception->getComparisonFailure()->getDiff();
+        } catch (ExpectationFailedException $exception) {
+            $diff = ltrim(str_replace("\\n", '', $exception->getComparisonFailure()->getDiff()));
         }
 
         unlink('app/config/app.php');
 
-        self::assertArraySubset([
+        self::assertSame([
             'Pug service provided added to your app.',
             '> php artisan config:publish bkwld/laravel-pug' . "\nOK",
         ], $io->getMessages());
 
-        self::assertStringStartsWith(implode("\n", [
-            '--- Expected',
-            '+++ Actual',
-            '@@ @@',
+        self::assertStringContainsString(implode("\n", [
             "         'Illuminate\View\ViewServiceProvider',",
             "-        'Illuminate\Workbench\WorkbenchServiceProvider'",
             "+        'Illuminate\Workbench\WorkbenchServiceProvider',",
             "+        'Bkwld\LaravelPug\ServiceProvider',",
             ' ',
             '     ),',
-        ]), ltrim($diff));
+        ]), $diff);
     }
 
     /**
@@ -190,7 +184,7 @@ class InstallTest extends TestCase
             str_replace('"', '', $argv)
         );
 
-        self::assertArraySubset([
+        self::assertSame([
             'config/app.php not found, please add Bkwld\LaravelPug\ServiceProvider::class, in it in your providers.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' . "\nOK",
         ], $io->getMessages());
@@ -212,25 +206,22 @@ class InstallTest extends TestCase
                 'config/app.php'
             );
         } catch (ExpectationFailedException $exception) {
-            $diff = $exception->getComparisonFailure()->getDiff();
+            $diff = ltrim(str_replace("\\n", '', $exception->getComparisonFailure()->getDiff()));
         }
 
         unlink('config/app.php');
 
-        self::assertArraySubset([
+        self::assertSame([
             'Pug service provided added to your app.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' . "\nOK",
         ], $io->getMessages());
 
-        self::assertStringStartsWith(implode("\n", [
-            '--- Expected',
-            '+++ Actual',
-            '@@ @@',
+        self::assertStringContainsString(implode("\n", [
             '         App\Providers\RouteServiceProvider::class,',
             '+        Bkwld\LaravelPug\ServiceProvider::class,',
             ' ',
             '     ],',
-        ]), ltrim($diff));
+        ]), $diff);
 
         $io = new Io();
         $event = new Event();
@@ -249,7 +240,7 @@ class InstallTest extends TestCase
             str_replace('"', '', $argv)
         );
 
-        self::assertArraySubset([
+        self::assertSame([
             "config/app.php does not contain 'providers' => [], " .
             'please add a providers list with Bkwld\LaravelPug\ServiceProvider::class in it.',
             '> php artisan vendor:publish --provider="Bkwld\LaravelPug\ServiceProvider"' .

@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Bkwld\LaravelPug\PugCompiler;
 use Illuminate\Filesystem\Filesystem;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Pug\Pug;
 
@@ -267,12 +268,13 @@ class PugCompilerTest extends TestCase
     }
 
     /**
-     * @covers                   \Bkwld\LaravelPug\PugHandlerTrait::extractPath
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Missing path argument.
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      */
     public function testCompilePathException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing path argument.');
+
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);

@@ -42,14 +42,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             list($function, $arg) = $params;
 
             return function_exists($function) ? call_user_func($function, $arg) : null;
-        }, array(
-            array('resource_path', 'assets'),
-            array('app_path', 'views/assets'),
-            array('app_path', 'assets'),
-            array('app_path', 'views'),
-            array('app_path', ''),
-            array('base_path', ''),
-        ));
+        }, [
+            ['resource_path', 'assets'],
+            ['app_path', 'views/assets'],
+            ['app_path', 'assets'],
+            ['app_path', 'views'],
+            ['app_path', ''],
+            ['base_path', ''],
+        ]);
     }
 
     protected function getPugEngine()
@@ -64,7 +64,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $extensions = array_keys(array_filter($this->app['view']->getExtensions(), function ($engine) {
                 $engines = explode('.', $engine);
 
-                return in_array('pug', $engines) || in_array('jade', $engines);
+                return in_array('pug', $engines);
             }));
 
             $config['extensions'] = array_map(function ($extension) {
@@ -74,17 +74,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $pug = new Pug($config);
         $this->assets = new Assets($pug);
-        $getEnv = array('App', 'environment');
+        $getEnv = ['App', 'environment'];
         $this->assets->setEnvironment(is_callable($getEnv) ? call_user_func($getEnv) : 'production');
 
         // Determine the cache dir if not configured
-        $this->setDefaultOption($pug, 'defaultCache', array($this, 'getDefaultCache'));
+        $this->setDefaultOption($pug, 'defaultCache', [$this, 'getDefaultCache']);
 
         // Determine assets input directory
-        $this->setDefaultOption($pug, 'assetDirectory', array($this, 'getAssetsDirectories'));
+        $this->setDefaultOption($pug, 'assetDirectory', [$this, 'getAssetsDirectories']);
 
         // Determine assets output directory
-        $this->setDefaultOption($pug, 'outputDirectory', array($this, 'getOutputDirectory'));
+        $this->setDefaultOption($pug, 'outputDirectory', [$this, 'getOutputDirectory']);
 
         return $pug;
     }
@@ -103,7 +103,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         return function ($app) use ($compilerClass) {
             return new $compilerClass(
-                array($app, 'laravel-pug.pug'),
+                [$app, 'laravel-pug.pug'],
                 $app['files'],
                 $this->getConfig(),
                 $this->getDefaultCache()
@@ -172,6 +172,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Bootstrap the application events.
      *
+     * @throws Exception for unsupported Laravel version
+     *
      * @return void
      */
     public function boot()
@@ -209,9 +211,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function bootLaravel5And6()
     {
         if (function_exists('config_path')) {
-            $this->publishes(array(
+            $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('laravel-pug.php'),
-            ), 'laravel-pug');
+            ], 'laravel-pug');
         }
     }
 
@@ -234,32 +236,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function registerPugCompiler($subExtension = '')
     {
+        $mainExtension = 'pug' . $subExtension;
+
         // Add resolver
-        $this->getEngineResolver()->register('pug' . $subExtension, function () use ($subExtension) {
+        $this->getEngineResolver()->register($mainExtension, function () use ($subExtension) {
             return new CompilerEngine($this->app['Bkwld\LaravelPug\Pug' . ucfirst(ltrim($subExtension, '.')) . 'Compiler']);
         });
 
-        $mainExtension = 'pug' . $subExtension;
-        $extensions = array(
-            // Pug extensions
-            $mainExtension,
-            $mainExtension . '.php',
-            // Legacy jade extensions
-            'jade' . $subExtension,
-            'jade' . $subExtension . '.php',
-        );
+        $this->app['view']->addExtension($mainExtension, $mainExtension);
 
         if ($subExtension !== '') {
             $subExtensionPrefix = substr($subExtension, 1) . '.';
-
-            $extensions[] = $subExtensionPrefix . 'pug';
-            $extensions[] = $subExtensionPrefix . 'pug.php';
-            $extensions[] = $subExtensionPrefix . 'jade';
-            $extensions[] = $subExtensionPrefix . 'jade.php';
-        }
-
-        foreach ($extensions as $extension) {
-            $this->app['view']->addExtension($extension, $mainExtension);
+            $this->app['view']->addExtension($subExtensionPrefix . 'pug', $mainExtension);
         }
     }
 
@@ -282,9 +270,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $key = $this->version() >= 5 ? 'laravel-pug' : 'laravel-pug::config';
 
-        return array_merge(array(
+        return array_merge([
             'allow_composite_extensions' => true,
-        ), $this->app->make('config')->get($key));
+        ], $this->app->make('config')->get($key));
     }
 
     /**
@@ -294,10 +282,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function provides()
     {
-        return array(
+        return [
             'Bkwld\LaravelPug\PugCompiler',
             'Bkwld\LaravelPug\PugBladeCompiler',
             'laravel-pug.pug',
-        );
+        ];
     }
 }

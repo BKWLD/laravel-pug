@@ -6,7 +6,7 @@ $composerFile = __DIR__ . '/../composer.json';
 $composer = file_get_contents($composerFile);
 $newContent = $composer;
 
-foreach (array('illuminate/support', 'illuminate/view') as $package) {
+foreach (['illuminate/support', 'illuminate/view'] as $package) {
     $newContent = preg_replace(
         '/"' . preg_quote($package, '/') . '"\s*:\s*"[^"]+"/',
         '"' . $package . '": "' . $laravelVersion . '"',

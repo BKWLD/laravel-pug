@@ -1,4 +1,4 @@
-<?php return array(
+<?php return [
 
 	/**
      * Pug options for Laravel < 5
@@ -13,13 +13,13 @@
     //'allowMixinOverride' => true,
     //'cache'              => null,
     //'classAttribute'     => null,
-    //'customKeywords'     => array(),
+    //'customKeywords'     => [],
     //'expressionLanguage' => 'auto',
-    //'extension'          => array('.pug', '.jade'),
+    //'extension'          => ['.pug'],
     //'filterAutoLoad'     => true,
     //'indentChar'         => ' ',
     //'indentSize'         => 2,
-    //'jsLanguage'         => array(),
+    //'jsLanguage'         => [],
     //'keepBaseName'       => false,
     //'keepNullAttributes' => false,
     //'nodePath'           => null,
@@ -34,4 +34,4 @@
     //'stream'             => null,
     //'upToDateCheck'      => true,
     //'localsJsonFile'     => false,
-);
+];

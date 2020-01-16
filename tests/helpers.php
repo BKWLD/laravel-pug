@@ -1,8 +1,14 @@
 <?php
 
+use Phug\Test\Config;
+
 if (!interface_exists('Illuminate\Contracts\Foundation\Application')) {
     include_once __DIR__ . '/LaravelLegacyApplicationInterface.php';
     include_once __DIR__ . '/LaravelApplicationInterface.php';
+}
+
+if (!class_exists(Config::class)) {
+    include_once __DIR__ . '/config-helper.php';
 }
 
 if (!class_exists('Facade\Ignition\Exceptions\ViewException')) {

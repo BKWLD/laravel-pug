@@ -16,7 +16,7 @@ class LaravelTestApp implements BaseApplication
 {
     protected $useSysTempDir = false;
 
-    protected $singletons = array();
+    protected $singletons = [];
 
     const VERSION = '4.0.0';
 

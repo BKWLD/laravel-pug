@@ -2,7 +2,6 @@
 
 namespace Phug\Test\Blade;
 
-use ArrayAccess;
 use Bkwld\LaravelPug\PugBladeCompiler;
 use Bkwld\LaravelPug\ServiceProvider;
 use Phug\Test\LaravelTestApp;
@@ -18,63 +17,6 @@ use Illuminate\View\FileViewFinder;
 use PHPUnit\Framework\TestCase;
 
 include_once __DIR__ . '/helpers.php';
-
-class Config implements ArrayAccess
-{
-    protected $useSysTempDir = false;
-
-    protected $data = array();
-
-    public function __construct($source = null)
-    {
-        $this->data['source'] = $source;
-    }
-
-    public function setUseSysTempDir($useSysTempDir)
-    {
-        $this->useSysTempDir = $useSysTempDir;
-    }
-
-    public function get($input)
-    {
-        if ($this->useSysTempDir && in_array($input, ['laravel-pug', 'laravel-pug::config'])) {
-            return [
-                'assetDirectory' => __DIR__ . '/assets',
-                'outputDirectory' => sys_get_temp_dir(),
-                'defaultCache' => sys_get_temp_dir(),
-            ];
-        }
-
-        return isset($this->data[$input]) ? $this->data[$input] : array(
-            'input' => $input,
-        );
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->data[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->data[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->data[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->data[$offset]);
-    }
-
-    public function __toString()
-    {
-        return strval($this->data['source']);
-    }
-}
 
 $file = __DIR__ . '/LaravelTestApp.php';
 $contents = file_get_contents($file);
@@ -144,21 +86,13 @@ class BladeDirectivesTest extends TestCase
      */
     public function testCustomDirective()
     {
-        $laravelVersion = intval(getenv('LARAVEL_VERSION'));
-
-        if ($laravelVersion && $laravelVersion < 5) {
-            self::markTestSkipped('Blade::directive only available since Laravel 5.0.');
-
-            return;
-        }
-
         $resolver = new EngineResolver();
         $fileSystem = new Filesystem();
-        $this->app->singleton('Illuminate\View\Compilers\BladeCompiler', function () use ($fileSystem) {
+        $this->app->singleton(BladeCompiler::class, function () use ($fileSystem) {
             return new BladeCompiler($fileSystem, sys_get_temp_dir());
         });
         $resolver->register('blade', function () {
-            return new CompilerEngine($this->app['Illuminate\View\Compilers\BladeCompiler']);
+            return new CompilerEngine($this->app[BladeCompiler::class]);
         });
         $finder = new FileViewFinder($fileSystem, []);
         $view = new Factory($resolver, $finder, new Dispatcher());
@@ -167,9 +101,7 @@ class BladeDirectivesTest extends TestCase
         $this->provider->register();
         $this->provider->boot();
 
-        if (floatval(getenv('LARAVEL_VERSION')) >= 5.8) {
-            Blade::swap(new \Illuminate\View\Compilers\BladeCompiler(new Filesystem(), sys_get_temp_dir()));
-        }
+        Blade::swap(new BladeCompiler(new Filesystem(), sys_get_temp_dir()));
 
         Blade::directive('greet', function ($person) {
             $person = eval("return $person;");
@@ -177,7 +109,8 @@ class BladeDirectivesTest extends TestCase
             return "Hello $person!";
         });
         $extensions = $view->getExtensions();
-        foreach (['css', 'php', 'html'] as $ignoredExtension) {
+
+        foreach (['css', 'php', 'html', 'blade.php'] as $ignoredExtension) {
             if (isset($extensions[$ignoredExtension])) {
                 unset($extensions[$ignoredExtension]);
             }
@@ -185,19 +118,9 @@ class BladeDirectivesTest extends TestCase
 
         self::assertSame(
             [
-                'blade.jade.php' => 'pug.blade',
-                'blade.jade' => 'pug.blade',
-                'blade.pug.php' => 'pug.blade',
                 'blade.pug' => 'pug.blade',
-                'jade.blade.php' => 'pug.blade',
-                'jade.blade' => 'pug.blade',
-                'pug.blade.php' => 'pug.blade',
                 'pug.blade' => 'pug.blade',
-                'jade.php' => 'pug',
-                'jade' => 'pug',
-                'pug.php' => 'pug',
                 'pug' => 'pug',
-                'blade.php' => 'blade',
             ],
             $extensions
         );

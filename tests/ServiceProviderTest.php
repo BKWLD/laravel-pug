@@ -3,6 +3,7 @@
 namespace Phug\Test;
 
 use ArrayAccess;
+use Bkwld\LaravelPug\Exception;
 use Bkwld\LaravelPug\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
@@ -12,63 +13,6 @@ use Pug\Assets;
 use Pug\Pug;
 
 include_once __DIR__ . '/helpers.php';
-
-class Config implements ArrayAccess
-{
-    protected $useSysTempDir = false;
-
-    protected $data = array();
-
-    public function __construct($source = null)
-    {
-        $this->data['source'] = $source;
-    }
-
-    public function setUseSysTempDir($useSysTempDir)
-    {
-        $this->useSysTempDir = $useSysTempDir;
-    }
-
-    public function get($input)
-    {
-        if ($this->useSysTempDir && in_array($input, ['laravel-pug', 'laravel-pug::config'])) {
-            return [
-                'assetDirectory'  => __DIR__ . '/assets',
-                'outputDirectory' => sys_get_temp_dir(),
-                'defaultCache'    => sys_get_temp_dir(),
-            ];
-        }
-
-        return isset($this->data[$input]) ? $this->data[$input] :array(
-            'input' => $input,
-        );
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->data[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->data[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->data[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->data[$offset]);
-    }
-
-    public function __toString()
-    {
-        return strval($this->data['source']);
-    }
-}
 
 $file = __DIR__ . '/LaravelTestApp.php';
 $contents = file_get_contents($file);
@@ -137,7 +81,7 @@ class EmptyConfigServiceProvider extends ServiceProvider
 {
     public function getConfig()
     {
-        return array();
+        return [];
     }
 
     public function getEngine()
@@ -148,7 +92,7 @@ class EmptyConfigServiceProvider extends ServiceProvider
 
 class View
 {
-    protected $extensions = array();
+    protected $extensions = [];
 
     public function addExtension($extension, $engine)
     {
@@ -163,7 +107,7 @@ class View
 
 class Resolver
 {
-    protected $data = array();
+    protected $data = [];
 
     public function register($name, $callback)
     {
@@ -319,7 +263,7 @@ class ServiceProviderTest extends TestCase
      */
     public function testProvides()
     {
-        self::assertArraySubset([
+        self::assertSame([
             'Bkwld\LaravelPug\PugCompiler',
             'Bkwld\LaravelPug\PugBladeCompiler',
             'laravel-pug.pug',
@@ -333,6 +277,8 @@ class ServiceProviderTest extends TestCase
      * @covers ::registerPugCompiler
      * @covers ::registerPugBladeCompiler
      * @covers ::getEngineResolver
+     *
+     * @throws Exception
      */
     public function testBoot()
     {
@@ -343,8 +289,8 @@ class ServiceProviderTest extends TestCase
         $this->provider->register();
         $this->provider->boot();
 
-        self::assertArraySubset(
-            ['pug', 'pug.php', 'jade', 'jade.php', 'pug.blade', 'pug.blade.php', 'jade.blade', 'jade.blade.php', 'blade.pug', 'blade.pug.php', 'blade.jade', 'blade.jade.php'],
+        self::assertSame(
+            ['pug', 'pug.blade', 'blade.pug'],
             array_keys($view->getExtensions())
         );
         self::assertSame('bkwld/laravel-pug', $this->provider->getCurrentPackage());
@@ -364,24 +310,27 @@ class ServiceProviderTest extends TestCase
         $provider->register();
         $provider->boot();
 
-        self::assertArraySubset(
-            ['pug', 'pug.php', 'jade', 'jade.php', 'pug.blade', 'pug.blade.php', 'jade.blade', 'jade.blade.php'],
+        self::assertSame(
+            ['pug', 'pug.blade', 'blade.pug'],
             array_keys($view->getExtensions())
         );
         self::assertCount(1, $provider->getPub());
         self::assertStringEndsWith('config.php', array_keys($provider->getPub())[0]);
         self::assertSame('laravel-pug.php', array_values($provider->getPub())[0]);
-        self::assertInstanceOf('Illuminate\View\Engines\CompilerEngine', $resolver->get('pug'));
-        self::assertInstanceOf('Illuminate\View\Engines\CompilerEngine', $resolver->get('pug.blade'));
+        self::assertInstanceOf(CompilerEngine::class, $resolver->get('pug'));
+        self::assertInstanceOf(CompilerEngine::class, $resolver->get('pug.blade'));
     }
 
     /**
-     * @covers                   ::boot
-     * @expectedException        \Exception
-     * @expectedExceptionMessage Unsupported Laravel version.
+     * @covers ::boot
+     *
+     * @throws Exception
      */
     public function testBootUnsupportedLaravel()
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Unsupported Laravel version.');
+
         $app = new Laravel3TestApp();
         $provider = new ServiceProvider($app);
         $provider->boot();
@@ -392,6 +341,8 @@ class ServiceProviderTest extends TestCase
      * @covers ::setDefaultOption
      * @covers ::getPugAssets
      * @covers \Bkwld\LaravelPug\PugHandlerTrait::construct
+     *
+     * @throws Exception
      */
     public function testView()
     {
@@ -467,7 +418,7 @@ class ServiceProviderTest extends TestCase
             return; // Skip for Pug-php < 3
         }
 
-        $path = __DIR__.'/example2.pug.blade.php';
+        $path = __DIR__.'/example2.pug.blade';
 
         self::assertSame(
             '<h1>{{ \'Start\' }}</h1><h1>Pug is there</h1><p>{{ $sentence }}</p>@if (1 === 1)<div>Go</div>@endif',
@@ -476,7 +427,7 @@ class ServiceProviderTest extends TestCase
 
         @unlink($pug->getCompiler()->getCompiledPath($path));
 
-        $path = __DIR__.'/composite-extension/welcome.pug.blade.php';
+        $path = __DIR__.'/composite-extension/welcome.pug.blade';
 
         self::assertSame(
             '<h2>test from layout block content</h2><h2>test from welcome</h2>',

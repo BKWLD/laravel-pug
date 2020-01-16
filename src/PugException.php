@@ -35,12 +35,12 @@ class PugException extends ViewException
                 );
 
                 if ($error instanceof LocatedException && ($location = $error->getLocation())) {
-                    file_put_contents($cachePath, serialize(array(
+                    file_put_contents($cachePath, serialize([
                         $location->getPath(),
                         $location->getLine(),
                         $location->getOffset(),
                         $location->getOffsetLength(),
-                    )));
+                    ]));
                 }
             }
 

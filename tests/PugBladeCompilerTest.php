@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Bkwld\LaravelPug\PugBladeCompiler;
 use Illuminate\Filesystem\Filesystem;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Pug\Pug;
 
@@ -222,14 +223,6 @@ class PugBladeCompilerTest extends TestCase
      */
     public function testPhpDirective()
     {
-        $laravelVersion = intval(getenv('LARAVEL_VERSION'));
-
-        if ($laravelVersion && $laravelVersion < 5) {
-            self::markTestSkipped('@php directive test need Laravel 5+.');
-
-            return;
-        }
-
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);
@@ -276,12 +269,13 @@ class PugBladeCompilerTest extends TestCase
     }
 
     /**
-     * @covers                   \Bkwld\LaravelPug\PugHandlerTrait::extractPath
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Missing path argument.
+     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
      */
     public function testCompilePathException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing path argument.');
+
         $pug = new Pug([
             'defaultCache' => sys_get_temp_dir(),
         ]);

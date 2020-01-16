@@ -3,6 +3,11 @@ language: php
 git:
   depth: 5
 
+env:
+  global:
+    - COMPOSER_FLAGS=''
+    - CC_TEST_REPORTER_ID=b9dac85e7024fb18994b92d2d92f8026cd9be15ef620b9a9f4095e6754a1b3de
+
 cache:
   apt: true
   directories:
@@ -10,156 +15,33 @@ cache:
 
 matrix:
   include:
-    - php: 5.4
-      dist: trusty
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 5.5
-      dist: trusty
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 5.5
-      dist: trusty
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 5.5
-      dist: trusty
-      env:
-        - LARAVEL_VERSION='5.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 5.5
-      dist: trusty
-      env:
-        - LARAVEL_VERSION='5.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 5.6
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 5.6
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 5.6
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 5.6
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.0
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.0
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.0
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.0
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.0
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.0
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.1
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^3.0'
     - php: 7.2
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
+      env: COMPOSER_FLAGS='--prefer-lowest'
     - php: 7.2
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^2.7'
     - php: 7.3
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='4.2.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.4.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.5.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.6.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.6.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.7.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.7.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.8.*'
-        - PUG_VERSION='^2.7'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='5.8.*'
-        - PUG_VERSION='^3.0'
-    - php: 7.3
-      env:
-        - LARAVEL_VERSION='6.0.*'
-        - PUG_VERSION='^3.0'
+    - php: 7.4
+      env: COVERAGE=true
+    - php: nightly
 
 install:
-  - if [[ $LARAVEL_VERSION != "5.4.*" || $PUG_VERSION != "^3.0" || ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then phpenv config-rm xdebug.ini || echo 'XDebug already disabled'; fi;
+  - if [[ "$COVERAGE" != "true" ]]; then phpenv config-rm xdebug.ini || echo 'XDebug already disabled'; fi;
   - travis_retry composer self-update
-  - travis_retry php tests/setDependenciesVersions.php $LARAVEL_VERSION $PUG_VERSION
-  - COMPOSER_MEMORY_LIMIT=-1 travis_wait 30 travis_retry composer update --no-interaction
+  - COMPOSER_MEMORY_LIMIT=-1 travis_wait 30 travis_retry composer update --no-interaction ${COMPOSER_FLAGS}
+
+before_script:
+  - |
+    if [ "$COVERAGE" = "true" ]; then
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      chmod +x ./cc-test-reporter
+      ./cc-test-reporter before-build
+    fi
 
 script:
-  - if [[ $LARAVEL_VERSION == "5.4.*" && $PUG_VERSION == "^3.0" && ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml; fi;
-  - if [[ $LARAVEL_VERSION != "5.4.*" || $PUG_VERSION != "^3.0" || ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then vendor/bin/phpunit --verbose --no-coverage; fi;
+  - if [[ "$COVERAGE" = "true" ]]; then vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml; fi;
+  - if [[ "$COVERAGE" != "true" ]]; then vendor/bin/phpunit --verbose --no-coverage; fi;
 
 after_script:
-  - if [[ $LARAVEL_VERSION == "5.4.*" && $PUG_VERSION == "^3.0" && ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then vendor/bin/test-reporter --coverage-report coverage.xml; fi;
+  - if [[ "$COVERAGE" = "true" ]]; then vendor/bin/test-reporter --coverage-report coverage.xml; fi;
 
 after_success:
-  - if [[ $LARAVEL_VERSION == "5.4.*" && $PUG_VERSION == "^3.0" && ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then bash <(curl -s https://codecov.io/bash); fi;
-
-addons:
-  code_climate:
-    repo_token: b9dac85e7024fb18994b92d2d92f8026cd9be15ef620b9a9f4095e6754a1b3de
+  - if [[ "$COVERAGE" = "true" ]]; then bash <(curl -s https://codecov.io/bash); fi;

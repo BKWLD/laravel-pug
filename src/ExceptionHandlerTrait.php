@@ -80,7 +80,7 @@ trait ExceptionHandlerTrait
                     ([^<]+)
                 (<\/pre>)
             /x', function ($match) use ($path, $line) {
-                $code = array();
+                $code = [];
                 $source = explode("\n", @file_get_contents($path));
                 $before = 19;
                 $after = 7;
