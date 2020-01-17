@@ -117,19 +117,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Get the major Laravel version number.
-     *
-     * @return int
-     */
-    public function version()
-    {
-        $app = $this->app;
-        $tab = explode('Laravel Components ', $app->version());
-
-        return intval(empty($tab[1]) ? $app::VERSION : trim($tab[1], ' ^~><=*.()'));
-    }
-
-    /**
      * Register the service provider.
      *
      * @return void
