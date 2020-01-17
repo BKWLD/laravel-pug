@@ -219,11 +219,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function getConfig()
     {
-        $key = $this->version() >= 5 ? 'laravel-pug' : 'laravel-pug::config';
-
         return array_merge([
             'allow_composite_extensions' => true,
-        ], $this->app->make('config')->get($key));
+        ], $this->app->make('config')->get('laravel-pug'));
     }
 
     /**

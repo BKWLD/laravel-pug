@@ -15,16 +15,6 @@ use Pug\Assets;
 use Pug\Pug;
 
 include_once __DIR__ . '/helpers.php';
-
-$file = __DIR__ . '/LaravelTestApp.php';
-$contents = file_get_contents($file);
-
-$contents = version_compare(PHP_VERSION, '5.6.0-dev', '>=')
-    ? str_replace('(/*...$environments*/)', '(...$environments)', $contents)
-    : str_replace('(...$environments)', '(/*...$environments*/)', $contents);
-
-file_put_contents($file, $contents);
-
 include_once __DIR__ . '/LaravelTestApp.php';
 include_once __DIR__ . '/Laravel5ServiceProvider.php';
 
