@@ -50,7 +50,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ]);
     }
 
-    protected function getPugEngine(): Pug
+    public function getPugEngine(): Pug
     {
         $config = $this->getConfig();
 

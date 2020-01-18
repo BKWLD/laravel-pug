@@ -20,14 +20,9 @@ include_once __DIR__ . '/Laravel5ServiceProvider.php';
 
 class EmptyConfigServiceProvider extends ServiceProvider
 {
-    public function getConfig()
+    public function getConfig(): array
     {
         return [];
-    }
-
-    public function getEngine()
-    {
-        return $this->getPugEngine();
     }
 }
 

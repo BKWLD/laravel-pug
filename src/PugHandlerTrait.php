@@ -6,7 +6,6 @@ use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
 use Phug\Compiler;
 use Phug\CompilerInterface;
-use Phug\Renderer;
 use Pug\Pug;
 
 trait PugHandlerTrait
