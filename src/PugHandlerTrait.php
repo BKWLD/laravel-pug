@@ -112,12 +112,8 @@ trait PugHandlerTrait
 
     /**
      * Returns true if the path has an expired imports linked.
-     *
-     * @param $path
-     *
-     * @return bool
      */
-    private function hasExpiredImport($path)
+    private function hasExpiredImport($path): bool
     {
         $compiled = $this->getCompiledPath($path);
         $importsMap = $compiled.'.imports.serialize.txt';
@@ -146,7 +142,7 @@ trait PugHandlerTrait
      *
      * @return bool
      */
-    public function isExpired($path)
+    public function isExpired($path): bool
     {
         if (!$this->cachePath || parent::isExpired($path)) {
             return true;
@@ -164,7 +160,7 @@ trait PugHandlerTrait
      *
      * @return string
      */
-    public function extractPath($path)
+    public function extractPath($path): ?string
     {
         if ($path && method_exists($this, 'setPath')) {
             $this->setPath($path);
@@ -182,19 +178,11 @@ trait PugHandlerTrait
     }
 
     /**
-     * Returns the object the more appropriate to compile (\Pug\Pug with version < 3), \Phug\Compilser for >= 3.
-     *
-     * @return CompilerInterface|Pug
+     * Returns the object the more appropriate to compile.
      */
-    public function getCompiler()
+    public function getCompiler(): CompilerInterface
     {
-        $pug = $this->getPug();
-
-        if ($pug instanceof Renderer) {
-            $pug = clone $pug->getCompiler();
-        }
-
-        return $pug;
+        return $this->getPug()->getCompiler();
     }
 
     /**
@@ -207,7 +195,7 @@ trait PugHandlerTrait
      *
      * @return void
      */
-    public function compileWith($path, callable $callback = null)
+    public function compileWith($path, callable $callback = null): void
     {
         $path = $this->extractPath($path);
 

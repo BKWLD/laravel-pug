@@ -32,7 +32,7 @@ class PugCompiler extends Compiler implements CompilerInterface
      *
      * @return void
      */
-    public function compile($path)
+    public function compile($path): void
     {
         $this->compileWith($path);
     }

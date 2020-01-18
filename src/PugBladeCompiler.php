@@ -24,7 +24,10 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
         $this->construct($pugTarget, $files, $config, $defaultCachePath);
     }
 
-    protected function enableBladeDirectives()
+    /**
+     * Copy custom blade directives.
+     */
+    protected function enableBladeDirectives(): void
     {
         /** @var \Illuminate\View\Compilers\BladeCompiler $blade */
         $blade = Blade::getFacadeRoot();
@@ -45,7 +48,7 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
      *
      * @return void
      */
-    public function compile($path = null)
+    public function compile($path = null): void
     {
         $app = Blade::getFacadeApplication();
 
