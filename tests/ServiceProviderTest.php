@@ -15,9 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Pug\Assets;
 use Pug\Pug;
 
-include_once __DIR__ . '/helpers.php';
-include_once __DIR__ . '/LaravelTestApp.php';
-include_once __DIR__ . '/Laravel5ServiceProvider.php';
+include_once __DIR__.'/helpers.php';
+include_once __DIR__.'/LaravelTestApp.php';
+include_once __DIR__.'/Laravel5ServiceProvider.php';
 
 class EmptyConfigServiceProvider extends ServiceProvider
 {
@@ -253,7 +253,7 @@ class ServiceProviderTest extends TestCase
         $this->app['view'] = $view;
         $this->provider->register();
         $this->provider->boot();
-        $path = __DIR__ . '/assets.pug';
+        $path = __DIR__.'/assets.pug';
 
         /** @var CompilerEngine $pug */
         $pug = $resolver->get('pug');
@@ -267,11 +267,11 @@ class ServiceProviderTest extends TestCase
             )
         );
 
-        $contents = file_get_contents(sys_get_temp_dir() . '/js/app.min.js');
+        $contents = file_get_contents(sys_get_temp_dir().'/js/app.min.js');
 
         self::assertSame('a();b();', trim($contents));
 
-        unlink(sys_get_temp_dir() . '/js/app.min.js');
+        unlink(sys_get_temp_dir().'/js/app.min.js');
         unlink($pug->getCompiler()->getCompiledPath($path));
 
         /** @var Pug $pugEngine */
@@ -302,7 +302,7 @@ class ServiceProviderTest extends TestCase
 
         self::assertSame('a();b();', trim($contents));
 
-        unlink(sys_get_temp_dir() . '/js/app.min.js');
+        unlink(sys_get_temp_dir().'/js/app.min.js');
         unlink($pug->getCompiler()->getCompiledPath($path));
 
         $assets->unsetMinify();

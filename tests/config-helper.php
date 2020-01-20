@@ -24,7 +24,7 @@ class Config implements ArrayAccess
     {
         if ($this->useSysTempDir && in_array($input, ['laravel-pug', 'laravel-pug::config'])) {
             return [
-                'assetDirectory'  => __DIR__ . '/assets',
+                'assetDirectory'  => __DIR__.'/assets',
                 'outputDirectory' => sys_get_temp_dir(),
                 'defaultCache'    => sys_get_temp_dir(),
             ];

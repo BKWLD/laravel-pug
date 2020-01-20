@@ -68,7 +68,7 @@ class InstallTest extends TestCase
         $event = new Event();
         $event->setIo($io);
 
-        chdir(__DIR__ . '/app/config');
+        chdir(__DIR__.'/app/config');
         file_put_contents('../command', '5.5.x-dev');
         Install::publishVendor($event);
         unlink('../command');
@@ -80,7 +80,7 @@ class InstallTest extends TestCase
             str_replace('"', '', $argv)
         );
 
-        chdir(__DIR__ . '/app');
+        chdir(__DIR__.'/app');
         file_put_contents('command', '5.5.x-dev');
         Install::publishVendor($event);
         unlink('command');

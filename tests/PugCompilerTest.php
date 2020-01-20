@@ -43,7 +43,7 @@ class PugCompilerTest extends TestCase
             'defaultCache' => sys_get_temp_dir(),
         ]);
         $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
-        $path = realpath(__DIR__ . '/example.pug');
+        $path = realpath(__DIR__.'/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame(sys_get_temp_dir(), dirname($compiledPath));
@@ -57,7 +57,7 @@ class PugCompilerTest extends TestCase
         self::assertTrue($compiler->isExpired($path));
 
         $compiler->compile($path);
-        touch(__DIR__ . '/example.pug', time() - 3600);
+        touch(__DIR__.'/example.pug', time() - 3600);
         clearstatcache();
 
         self::assertFalse($compiler->isExpired($path));
@@ -82,7 +82,7 @@ class PugCompilerTest extends TestCase
      */
     public function testIncludeIsExpired()
     {
-        $cache = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'foo';
+        $cache = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foo';
         $pug = new Pug([
             'cache'        => $cache,
             'defaultCache' => sys_get_temp_dir(),
@@ -96,30 +96,30 @@ class PugCompilerTest extends TestCase
         if (!$files->exists($cache)) {
             $files->makeDirectory($cache);
         }
-        $path = realpath(__DIR__ . '/example.pug');
+        $path = realpath(__DIR__.'/example.pug');
         $compiler = new PugCompiler([[$pug], 0], $files, [], $cache);
         $compiledPath = $compiler->getCompiledPath($path);
 
         self::assertSame($cache, dirname($compiledPath));
 
         $pug->setOption('cache', true);
-        $path = realpath(__DIR__ . '/include.pug');
+        $path = realpath(__DIR__.'/include.pug');
         $compiledPath = $compiler->getCompiledPath($path);
 
-        touch(__DIR__ . '/include.pug', time() - 3600);
-        touch(__DIR__ . '/example.pug', time() - 3600);
+        touch(__DIR__.'/include.pug', time() - 3600);
+        touch(__DIR__.'/example.pug', time() - 3600);
         $compiler->compile($path);
         clearstatcache();
 
         self::assertFalse($compiler->isExpired($path));
 
-        touch(__DIR__ . '/example.pug', time() + 3600);
+        touch(__DIR__.'/example.pug', time() + 3600);
         clearstatcache();
 
         self::assertTrue($compiler->isExpired($path));
 
-        touch(__DIR__ . '/example.pug', time() - 3600);
-        unlink($compiledPath . '.imports.serialize.txt');
+        touch(__DIR__.'/example.pug', time() - 3600);
+        unlink($compiledPath.'.imports.serialize.txt');
         clearstatcache();
 
         self::assertTrue($compiler->isExpired($path));
@@ -143,7 +143,7 @@ class PugCompilerTest extends TestCase
             'defaultCache' => sys_get_temp_dir(),
         ]);
         $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
-        $path = realpath(__DIR__ . '/example.pug');
+        $path = realpath(__DIR__.'/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->compile($path);
         ob_start();
@@ -188,7 +188,7 @@ class PugCompilerTest extends TestCase
 
         self::assertSame('foo', $compiler->getPath());
 
-        $path = realpath(__DIR__ . '/example.pug');
+        $path = realpath(__DIR__.'/example.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->setPath($path);
         $compiler->compile(null);
@@ -214,29 +214,29 @@ class PugCompilerTest extends TestCase
      */
     public function testGetCachePath()
     {
-        $compiler = new PugCompiler([[new Pug()], 0], new Filesystem(), [], sys_get_temp_dir() . '/foo');
+        $compiler = new PugCompiler([[new Pug()], 0], new Filesystem(), [], sys_get_temp_dir().'/foo');
 
-        self::assertSame(sys_get_temp_dir() . '/foo', $compiler->getCachePath());
+        self::assertSame(sys_get_temp_dir().'/foo', $compiler->getCachePath());
 
         $compiler = new PugCompiler([[new Pug([
-            'cache'        => sys_get_temp_dir() . '/foo',
-            'defaultCache' => sys_get_temp_dir() . '/bar',
+            'cache'        => sys_get_temp_dir().'/foo',
+            'defaultCache' => sys_get_temp_dir().'/bar',
         ])], 0], new Filesystem(), []);
 
-        self::assertSame(sys_get_temp_dir() . '/foo', $compiler->getCachePath());
+        self::assertSame(sys_get_temp_dir().'/foo', $compiler->getCachePath());
 
         $compiler = new PugCompiler([[new Pug([
-            'cache'        => sys_get_temp_dir() . '/foo',
-            'defaultCache' => sys_get_temp_dir() . '/bar',
-        ])], 0], new Filesystem(), [], sys_get_temp_dir() . '/biz');
+            'cache'        => sys_get_temp_dir().'/foo',
+            'defaultCache' => sys_get_temp_dir().'/bar',
+        ])], 0], new Filesystem(), [], sys_get_temp_dir().'/biz');
 
-        self::assertSame(sys_get_temp_dir() . '/biz', $compiler->getCachePath());
+        self::assertSame(sys_get_temp_dir().'/biz', $compiler->getCachePath());
 
         $compiler = new PugCompiler([[new Pug([
-            'defaultCache' => sys_get_temp_dir() . '/bar',
+            'defaultCache' => sys_get_temp_dir().'/bar',
         ])], 0], new Filesystem(), []);
 
-        self::assertSame(sys_get_temp_dir() . '/bar', $compiler->getCachePath());
+        self::assertSame(sys_get_temp_dir().'/bar', $compiler->getCachePath());
     }
 
     /**
@@ -295,7 +295,7 @@ class PugCompilerTest extends TestCase
             'defaultCache' => sys_get_temp_dir(),
         ]);
         $compiler = new PugCompiler([[$pug], 0], new Filesystem(), [], sys_get_temp_dir());
-        $path = __DIR__ . '/js-expression.pug';
+        $path = __DIR__.'/js-expression.pug';
         $php = $compiler->compile($path);
         $items = ['a', 'b', 'c'];
         ob_start();
@@ -311,10 +311,15 @@ class PugCompilerTest extends TestCase
      */
     public function testRenderComponent()
     {
+        include_once __DIR__.'/LaravelTestApp.php';
+        include_once __DIR__.'/helpers.php';
+
         $app = new LaravelTestApp();
         $app->singleton('files', function () {
             return new Filesystem();
         });
         $provider = new ServiceProvider($app);
+
+        self::assertSame('--', $provider->getPugEngine()->renderFile(__DIR__.'/component.pug'));
     }
 }
