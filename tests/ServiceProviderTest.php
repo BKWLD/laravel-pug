@@ -10,6 +10,7 @@ use Bkwld\LaravelPug\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\View\Engines\CompilerEngine;
+use Illuminate\View\Engines\EngineResolver;
 use PHPUnit\Framework\TestCase;
 use Pug\Assets;
 use Pug\Pug;
@@ -20,14 +21,9 @@ include_once __DIR__ . '/Laravel5ServiceProvider.php';
 
 class EmptyConfigServiceProvider extends ServiceProvider
 {
-    public function getConfig()
+    public function getConfig(): array
     {
         return [];
-    }
-
-    public function getEngine()
-    {
-        return $this->getPugEngine();
     }
 }
 
@@ -46,7 +42,7 @@ class View
     }
 }
 
-class Resolver
+class Resolver extends EngineResolver
 {
     protected $data = [];
 
@@ -346,6 +342,6 @@ class ServiceProviderTest extends TestCase
         $app = new LaravelTestApp();
         $provider = new EmptyConfigServiceProvider($app);
 
-        self::assertSame('resource/views', $provider->getEngine()->getOption('basedir'));
+        self::assertSame('resource/views', $provider->getPugEngine()->getOption('basedir'));
     }
 }

@@ -4,7 +4,7 @@ namespace Bkwld\LaravelPug;
 
 class Install
 {
-    public static function publishVendor($event)
+    public static function publishVendor($event): void
     {
         $currentDirectory = getcwd();
 
