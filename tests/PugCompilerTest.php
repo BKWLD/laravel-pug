@@ -3,6 +3,7 @@
 namespace Phug\Test;
 
 use Bkwld\LaravelPug\PugCompiler;
+use Bkwld\LaravelPug\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -306,13 +307,14 @@ class PugCompilerTest extends TestCase
     }
 
     /**
-     * @covers \Bkwld\LaravelPug\PugHandlerTrait::extractPath
-     * @covers \Bkwld\LaravelPug\PugHandlerTrait::getCompiler
-     * @covers \Bkwld\LaravelPug\PugHandlerTrait::compileWith
-     * @covers ::compile
+     * @covers ::getPugEngine
      */
     public function testRenderComponent()
     {
-        $this->markTestIncomplete('Implement component test');
+        $app = new LaravelTestApp();
+        $app->singleton('files', function () {
+            return new Filesystem();
+        });
+        $provider = new ServiceProvider($app);
     }
 }
