@@ -64,20 +64,24 @@ class InstallTest extends TestCase
      */
     public function testPublishVendor()
     {
-        $io = new Io();
-        $event = new Event();
-        $event->setIo($io);
+        $argvFile = __DIR__.'/app/argv';
 
-        chdir(__DIR__.'/app');
-        file_put_contents('command', '6.0.x-dev');
-        Install::publishVendor($event);
-        unlink('command');
-        $argv = file_get_contents('argv');
-        unlink('argv');
+        foreach ([__DIR__.'/app', __DIR__.'/app/sub-directory'] as $directory) {
+            $io = new Io();
+            $event = new Event();
+            $event->setIo($io);
 
-        self::assertSame(
-            'artisan vendor:publish --provider=Bkwld\LaravelPug\ServiceProvider',
-            str_replace('"', '', $argv)
-        );
+            chdir($directory);
+            file_put_contents('command', '6.0.x-dev');
+            Install::publishVendor($event);
+            unlink('command');
+            $argv = file_get_contents($argvFile);
+            unlink($argvFile);
+
+            self::assertSame(
+                'artisan vendor:publish --provider=Bkwld\LaravelPug\ServiceProvider',
+                str_replace('"', '', $argv)
+            );
+        }
     }
 }

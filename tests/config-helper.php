@@ -35,6 +35,11 @@ class Config implements ArrayAccess
         ];
     }
 
+    public function set($offset, $value)
+    {
+        $this->offsetSet($offset, $value);
+    }
+
     public function offsetExists($offset)
     {
         return isset($this->data[$offset]);

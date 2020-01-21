@@ -2,7 +2,6 @@
 
 namespace Phug\Test;
 
-use ArrayAccess;
 use Bkwld\LaravelPug\Exception;
 use Bkwld\LaravelPug\PugBladeCompiler;
 use Bkwld\LaravelPug\PugCompiler;
@@ -10,7 +9,6 @@ use Bkwld\LaravelPug\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\View\Engines\CompilerEngine;
-use Illuminate\View\Engines\EngineResolver;
 use PHPUnit\Framework\TestCase;
 use Pug\Assets;
 use Pug\Pug;
@@ -18,42 +16,14 @@ use Pug\Pug;
 include_once __DIR__.'/helpers.php';
 include_once __DIR__.'/LaravelTestApp.php';
 include_once __DIR__.'/Laravel5ServiceProvider.php';
+include_once __DIR__.'/Resolver.php';
+include_once __DIR__.'/View.php';
 
 class EmptyConfigServiceProvider extends ServiceProvider
 {
     public function getConfig(): array
     {
         return [];
-    }
-}
-
-class View
-{
-    protected $extensions = [];
-
-    public function addExtension($extension, $engine)
-    {
-        $this->extensions[$extension] = $engine;
-    }
-
-    public function getExtensions()
-    {
-        return $this->extensions;
-    }
-}
-
-class Resolver extends EngineResolver
-{
-    protected $data = [];
-
-    public function register($name, $callback)
-    {
-        $this->data[$name] = $callback;
-    }
-
-    public function get($name)
-    {
-        return call_user_func($this->data[$name]);
     }
 }
 

@@ -9,5 +9,5 @@
 
     // Required for extending layouts
     'basedir' => resource_path('views'),
-    'debug'   => env('APP_DEBUG', false),
+    'debug'   => false,
 ];
