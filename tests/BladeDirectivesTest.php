@@ -48,7 +48,6 @@ class BladeDirectivesTest extends TestCase
     }
 
     /**
-     * @covers ::version
      * @covers ::getCompilerCreator
      * @covers ::getPugEngine
      * @covers ::getEngineResolver

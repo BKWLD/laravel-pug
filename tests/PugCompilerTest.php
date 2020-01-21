@@ -307,8 +307,7 @@ class PugCompilerTest extends TestCase
     }
 
     /**
-     * @group i
-     * @covers ::getPugEngine
+     * @covers \Bkwld\LaravelPug\ServiceProvider::getPugEngine
      */
     public function testRenderComponent()
     {
