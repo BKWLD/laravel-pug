@@ -62,26 +62,14 @@ class InstallTest extends TestCase
     /**
      * @covers ::publishVendor
      */
-    public function testPublishVendorLaravel55()
+    public function testPublishVendor()
     {
         $io = new Io();
         $event = new Event();
         $event->setIo($io);
 
-        chdir(__DIR__.'/app/config');
-        file_put_contents('../command', '5.5.x-dev');
-        Install::publishVendor($event);
-        unlink('../command');
-        $argv = file_get_contents('../argv');
-        unlink('../argv');
-
-        self::assertSame(
-            'artisan vendor:publish --provider=Bkwld\LaravelPug\ServiceProvider',
-            str_replace('"', '', $argv)
-        );
-
         chdir(__DIR__.'/app');
-        file_put_contents('command', '5.5.x-dev');
+        file_put_contents('command', '6.0.x-dev');
         Install::publishVendor($event);
         unlink('command');
         $argv = file_get_contents('argv');

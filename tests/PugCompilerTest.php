@@ -307,6 +307,7 @@ class PugCompilerTest extends TestCase
     }
 
     /**
+     * @group i
      * @covers ::getPugEngine
      */
     public function testRenderComponent()
@@ -320,6 +321,9 @@ class PugCompilerTest extends TestCase
         });
         $provider = new ServiceProvider($app);
 
-        self::assertSame('--', $provider->getPugEngine()->renderFile(__DIR__.'/component.pug'));
+        self::assertSame(
+            '<header>Sure?</header>Are you sure?<button>Yes</button>',
+            $provider->getPugEngine()->renderFile(__DIR__.'/component.pug')
+        );
     }
 }

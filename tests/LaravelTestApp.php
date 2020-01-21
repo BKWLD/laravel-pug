@@ -12,7 +12,7 @@ class LaravelTestApp implements Application, ArrayAccess
 
     protected $singletons = [];
 
-    const VERSION = '5.0.0';
+    const VERSION = '6.0.0';
 
     public function version()
     {

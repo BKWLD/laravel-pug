@@ -93,6 +93,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Determine assets output directory
         $this->setDefaultOption($pug, 'outputDirectory', [$this, 'getOutputDirectory']);
 
+        // Optimize paths
+        $this->setDefaultOption($pug, 'paths', array_unique($pug->getOption('paths')));
+
+        $pug->getCompiler()->setOption('mixin_keyword', $pug->getOption('mixin_keyword'));
+
         return $pug;
     }
 

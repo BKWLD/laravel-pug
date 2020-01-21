@@ -2,6 +2,8 @@
 
 namespace Bkwld\LaravelPug;
 
+use Composer\Script\Event;
+
 class Install
 {
     public static function publishVendor($event): void
@@ -13,7 +15,7 @@ class Install
         }
 
         if (file_exists('artisan')) {
-            /** @var \Composer\Script\Event $event */
+            /** @var Event $event */
             $io = $event->getIO();
 
             $cmd = 'php artisan vendor:publish --provider="'.ServiceProvider::class.'"';
