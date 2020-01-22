@@ -5,9 +5,8 @@ namespace Bkwld\LaravelPug;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\Compilers\CompilerInterface;
 
-class PugBladeCompiler extends BladeCompiler implements CompilerInterface
+class PugBladeCompiler extends BladeCompiler implements PugHandlerInterface
 {
     use PugHandlerTrait;
 
@@ -24,7 +23,10 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
         $this->construct($pugTarget, $files, $config, $defaultCachePath);
     }
 
-    protected function enableBladeDirectives()
+    /**
+     * Copy custom blade directives.
+     */
+    protected function enableBladeDirectives(): void
     {
         /** @var \Illuminate\View\Compilers\BladeCompiler $blade */
         $blade = Blade::getFacadeRoot();
@@ -45,7 +47,7 @@ class PugBladeCompiler extends BladeCompiler implements CompilerInterface
      *
      * @return void
      */
-    public function compile($path = null)
+    public function compile($path = null): void
     {
         $app = Blade::getFacadeApplication();
 

@@ -3,7 +3,9 @@
 namespace Bkwld\LaravelPug;
 
 // Dependencies
+use Closure;
 use Illuminate\View\Engines\CompilerEngine;
+use Illuminate\View\Engines\EngineResolver;
 use Phug\Component\ComponentExtension;
 use Pug\Assets;
 use Pug\Pug;
@@ -20,19 +22,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected $componentExtension;
 
-    protected function setDefaultOption(Pug $pug, $name, $value)
+    protected function setDefaultOption(Pug $pug, string $name, $value): void
     {
         if (!$pug->hasOption($name)) {
             $pug->setOption($name, call_user_func($value));
         }
     }
 
-    protected function getDefaultCache()
+    protected function getDefaultCache(): string
     {
         return storage_path('/framework/views');
     }
 
-    protected function getAssetsDirectories()
+    protected function getAssetsDirectories(): array
     {
         return array_map(function ($params) {
             [$function, $arg] = $params;
@@ -48,13 +50,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ]);
     }
 
-    protected function getPugEngine()
+    public function getPugEngine(): Pug
     {
         $config = $this->getConfig();
-
-        if (!isset($config['basedir']) && function_exists('resource_path')) {
-            $config['basedir'] = resource_path('views');
-        }
 
         if (!isset($config['extensions']) && $this->app['view']) {
             $extensions = array_keys(array_filter($this->app['view']->getExtensions(), function ($engine) {
@@ -91,20 +89,25 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Determine assets output directory
         $this->setDefaultOption($pug, 'outputDirectory', [$this, 'getOutputDirectory']);
 
+        // Optimize paths
+        $this->setDefaultOption($pug, 'paths', array_unique($pug->getOption('paths')));
+
+        $pug->getCompiler()->setOption('mixin_keyword', $pug->getOption('mixin_keyword'));
+
         return $pug;
     }
 
-    protected function getPugAssets()
+    protected function getPugAssets(): ?Assets
     {
         return $this->app['laravel-pug.pug'] ? $this->assets : null;
     }
 
-    protected function getOutputDirectory()
+    protected function getOutputDirectory(): ?string
     {
         return function_exists('public_path') ? public_path() : null;
     }
 
-    protected function getCompilerCreator($compilerClass)
+    protected function getCompilerCreator($compilerClass): Closure
     {
         return function ($app) use ($compilerClass) {
             return new $compilerClass(
@@ -118,10 +121,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-pug');
 
@@ -152,10 +153,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      * Bootstrap the application events.
      *
      * @throws Exception for unsupported Laravel version
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (function_exists('config_path')) {
             $this->publishes([
@@ -170,10 +169,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Returns the view engine resolver according to current framework (laravel/lumen).
-     *
-     * @return \Illuminate\View\Engines\EngineResolver
      */
-    public function getEngineResolver()
+    public function getEngineResolver(): EngineResolver
     {
         return isset($this->app['view.engine.resolver'])
             ? $this->app['view.engine.resolver']
@@ -182,10 +179,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Register the regular Pug compiler.
-     *
-     * @return void
      */
-    public function registerPugCompiler($subExtension = '')
+    public function registerPugCompiler(string $subExtension = ''): void
     {
         $mainExtension = 'pug'.$subExtension;
 
@@ -204,32 +199,31 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Register the blade compiler compiler.
-     *
-     * @return void
      */
-    public function registerPugBladeCompiler()
+    public function registerPugBladeCompiler(): void
     {
         $this->registerPugCompiler('.blade');
     }
 
     /**
-     * Get the configuration, which is keyed differently in L5 vs L4.
-     *
-     * @return array
+     * Get the configuration from the current app config file.
      */
-    public function getConfig()
+    public function getConfig(): array
     {
+        $config = $this->app->make('config');
+
         return array_merge([
             'allow_composite_extensions' => true,
+        ], [
+            'paths' => $config->get('view.paths'),
+            'debug' => $config->get('app.debug'),
         ], $this->app->make('config')->get('laravel-pug'));
     }
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             PugCompiler::class,

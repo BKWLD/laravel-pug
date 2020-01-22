@@ -25,48 +25,27 @@ create it with: `composer create-project --prefer-dist laravel/laravel my-new-pr
 
 Then run `composer require bkwld/laravel-pug`.
 
-### Laravel 4 and 5
-
-Errors are properly displayed through Ignition since Laravel 6.
-
-In older versions, to get a line and offset in pug source files well formatted in standard
-Laravel error display to debug errors, we recommend
-you to implement the following in your **app/Exceptions/ExceptionHandler**:
+## Usage
 
 ```php
-<?php
-
-namespace App\Exceptions;
-
-use Bkwld\LaravelPug\ExceptionHandlerTrait;
-use Exception;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-
-class Handler extends ExceptionHandler
-{
-    use ExceptionHandlerTrait;
-    
-    /* ... */
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
-    public function render($request, Exception $exception)
-    {
-        return $this->filterErrorResponse($exception, $request, parent::render($request, $exception));
-    }
-    
-}
+Route::get('/', function () {
+    return view('my-page');
+});
 ```
 
-Note: this will works for pure `.pug` file, not `.pug.blade` since the
-error will happen in the blade engine.
+Will now try to load `views/my-page.pug` first, or `views/my-page.blade.pug`
+or fallback to the default blade engine loading `views/my-page.blade.php`.
 
-## Usage
+As with Blade, you can pass variables to your view:
+
+```php
+Route::get('/', function () {
+    return view('my-page', [
+        'user' => Auth::user(),
+        'messages' => ['Hello', 'Bye'],
+    ]);
+});
+```
 
 Any file with the extension `.pug` will be compiled as a pug template.
 Laravel Pug also registers the `.pug.blade` which also compile blade code
@@ -77,16 +56,23 @@ in the same way as Blade templates; the compiled template is put in your
 storage directory. Thus, you don't suffer compile times on every page load.
 
 In other words, just put your Pug files in the regular views directory
-and name them like `whatever.pug`. You reference them in Laravel like normal:
+and name them like `whatever.pug`. You reference them in Laravel like normal
+such as `view('home.whatever')` for `resources/views/home/whatever.pug`.
 
-* **Laravel 4** : `View::make('home.whatever')` for `app/views/home/whatever.pug`
-* **Laravel >= 5** : `view('home.whatever')` for `resources/views/home/whatever.pug`
+The Pug view files can work side-by-side with regular PHP views.
 
-The Pug view files can work side-by-side with regular PHP views. To use Blade
-templating within your Pug, just name the files with `.pug.blade` extensions.
-This feature is designed for transition
-purpose, since every blade features are available in pug, you would not
-need both. And be aware that this mode will first render your template with
+### Use Blade in Pug templates
+
+This feature is designed for transition purpose, since every blade
+features are available in pug, you would not need both.
+
+To use Blade templating within your Pug, just name the files with
+`.blade.pug` extensions.
+
+<details>
+ <summary>Read more</summary>
+
+Be aware that this mode will first render your template with
 pug, then give the output to render to blade, it means your template must
 have a valid pug syntax and must render a valid blade template. This also
 means blade directives are only available through pug text output, see the
@@ -109,6 +95,7 @@ if one === 1
   div $one = 1
 p=two
 ```
+</details>
 
 ### Use in Lumen
 

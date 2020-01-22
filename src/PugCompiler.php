@@ -4,9 +4,8 @@ namespace Bkwld\LaravelPug;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\Compiler;
-use Illuminate\View\Compilers\CompilerInterface;
 
-class PugCompiler extends Compiler implements CompilerInterface
+class PugCompiler extends Compiler implements PugHandlerInterface
 {
     use PugHandlerTrait;
 
@@ -32,7 +31,7 @@ class PugCompiler extends Compiler implements CompilerInterface
      *
      * @return void
      */
-    public function compile($path)
+    public function compile($path): void
     {
         $this->compileWith($path);
     }

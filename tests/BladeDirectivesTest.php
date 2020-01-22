@@ -17,9 +17,9 @@ use Illuminate\View\Factory;
 use Illuminate\View\FileViewFinder;
 use PHPUnit\Framework\TestCase;
 
-include_once __DIR__ . '/helpers.php';
-include_once __DIR__ . '/LaravelTestApp.php';
-include_once __DIR__ . '/Laravel5ServiceProvider.php';
+include_once __DIR__.'/helpers.php';
+include_once __DIR__.'/LaravelTestApp.php';
+include_once __DIR__.'/Laravel5ServiceProvider.php';
 
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\ServiceProvider
@@ -48,7 +48,6 @@ class BladeDirectivesTest extends TestCase
     }
 
     /**
-     * @covers ::version
      * @covers ::getCompilerCreator
      * @covers ::getPugEngine
      * @covers ::getEngineResolver
@@ -100,7 +99,7 @@ class BladeDirectivesTest extends TestCase
             [
                 'blade.pug' => 'pug.blade',
                 'pug.blade' => 'pug.blade',
-                'pug' => 'pug',
+                'pug'       => 'pug',
             ],
             $extensions
         );
@@ -110,7 +109,7 @@ class BladeDirectivesTest extends TestCase
         /** @var PugBladeCompiler $compiler */
         $compiler = $engine->getCompiler();
         $compiler->setCachePath(sys_get_temp_dir());
-        $path = realpath(__DIR__ . '/greeting.pug');
+        $path = realpath(__DIR__.'/greeting.pug');
         $compiledPath = $compiler->getCompiledPath($path);
         $compiler->compile($path);
         ob_start();
