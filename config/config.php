@@ -7,7 +7,4 @@
      * @see https://www.phug-lang.com/#options
      */
 
-    // Required for extending layouts
-    'basedir' => resource_path('views'),
-    'debug'   => false,
 ];

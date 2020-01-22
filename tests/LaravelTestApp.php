@@ -142,6 +142,8 @@ class LaravelTestApp implements Application, ArrayAccess
     {
         $config = new Config($abstract);
         $config->setUseSysTempDir($this->useSysTempDir);
+        $config->set('app.debug', true);
+        $config->set('view.paths', ['resource/views']);
 
         return $config;
     }

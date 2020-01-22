@@ -29,7 +29,6 @@ class PugExceptionTest extends TestCase
      */
     public function testPugException()
     {
-        $exception = null;
         $template = __DIR__.'/lines.pug';
         $cacheDir = sys_get_temp_dir().'/pug'.mt_rand(0, 99999);
         $fs = new Filesystem();
@@ -52,22 +51,25 @@ class PugExceptionTest extends TestCase
         $service->registerPugCompiler();
         $compiler->compile($template);
         $phpPath = $compiler->getCompiledPath($template);
-        $php = strtr(file_get_contents($phpPath), [
-            'Section content' => '<?php throw new \\Exception("Foo Bar"); ?>',
-        ]);
-        file_put_contents($phpPath, $php);
 
         /** @var CompilerEngine $compilerEngine */
         $compilerEngine = $resolver->resolve('pug');
         $closure = function () use ($phpPath) {
-            include $phpPath;
+            $exception = null;
+            ob_start();
+
+            try {
+                include $phpPath;
+            } catch (Throwable $e) {
+                $exception = $e;
+            }
+
+            ob_end_clean();
+
+            return $exception;
         };
 
-        try {
-            $closure->call($compilerEngine);
-        } catch (Throwable $e) {
-            $exception = $e;
-        }
+        $exception = $closure->call($compilerEngine);
 
         $fs->deleteDirectory($cacheDir);
 

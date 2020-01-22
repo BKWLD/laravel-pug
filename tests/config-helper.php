@@ -22,7 +22,7 @@ class Config implements ArrayAccess
 
     public function get($input)
     {
-        if ($this->useSysTempDir && in_array($input, ['laravel-pug', 'laravel-pug::config'])) {
+        if ($this->useSysTempDir && in_array($input, ['laravel-pug'])) {
             return [
                 'assetDirectory'  => __DIR__.'/assets',
                 'outputDirectory' => sys_get_temp_dir(),
@@ -37,7 +37,7 @@ class Config implements ArrayAccess
 
     public function set($offset, $value)
     {
-        $this->offsetSet($offset, $value);
+        $this->data[$offset] = $value;
     }
 
     public function offsetExists($offset)

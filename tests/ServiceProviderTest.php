@@ -19,14 +19,6 @@ include_once __DIR__.'/Laravel5ServiceProvider.php';
 include_once __DIR__.'/Resolver.php';
 include_once __DIR__.'/View.php';
 
-class EmptyConfigServiceProvider extends ServiceProvider
-{
-    public function getConfig(): array
-    {
-        return [];
-    }
-}
-
 /**
  * @coversDefaultClass \Bkwld\LaravelPug\ServiceProvider
  */
@@ -310,8 +302,8 @@ class ServiceProviderTest extends TestCase
     public function testWithEmptyConfig()
     {
         $app = new LaravelTestApp();
-        $provider = new EmptyConfigServiceProvider($app);
+        $provider = new ServiceProvider($app);
 
-        self::assertSame('resource/views', $provider->getPugEngine()->getOption('basedir'));
+        self::assertSame(['resource/views'], $provider->getPugEngine()->getOption('paths'));
     }
 }

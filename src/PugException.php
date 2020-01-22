@@ -10,6 +10,14 @@ use Throwable;
 
 class PugException extends ViewException
 {
+    /**
+     * Wrap a given raw error/exception in a relocated PugException.
+     *
+     * @param CompilerEngine $context  current $this context (the engine that compiled the template)
+     * @param Throwable      $previous the raw error/exception
+     *
+     * @throws Throwable throw $previous if it cannot be located in the template.
+     */
     public function __construct(CompilerEngine $context, Throwable $previous)
     {
         $message = $previous->getMessage();
@@ -24,7 +32,7 @@ class PugException extends ViewException
             $location = null;
 
             if (file_exists($cachePath)) {
-                list($path, $line, $offset, $offsetLength) = unserialize(file_get_contents($cachePath));
+                [$path, $line, $offset, $offsetLength] = unserialize(file_get_contents($cachePath));
                 $location = new SourceLocation($path, $line, $offset, $offsetLength);
             } else {
                 $pug = $compiler->getPug();

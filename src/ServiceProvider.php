@@ -54,10 +54,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $config = $this->getConfig();
 
-        if (!isset($config['basedir']) && function_exists('resource_path')) {
-            $config['basedir'] = resource_path('views');
-        }
-
         if (!isset($config['extensions']) && $this->app['view']) {
             $extensions = array_keys(array_filter($this->app['view']->getExtensions(), function ($engine) {
                 $engines = explode('.', $engine);
@@ -214,8 +210,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function getConfig(): array
     {
+        $config = $this->app->make('config');
+
         return array_merge([
             'allow_composite_extensions' => true,
+        ], [
+            'paths' => $config->get('view.paths'),
+            'debug' => $config->get('app.debug'),
         ], $this->app->make('config')->get('laravel-pug'));
     }
 
