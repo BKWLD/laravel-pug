@@ -29,10 +29,12 @@ class PugExceptionTest extends TestCase
      */
     public function testPugException()
     {
+        $cwd = getcwd();
         $template = __DIR__.'/lines.pug';
         $cacheDir = sys_get_temp_dir().'/pug'.mt_rand(0, 99999);
         $fs = new Filesystem();
-        $fs->makeDirectory($cacheDir, 0777, true);
+        $fs->makeDirectory("$cacheDir/framework/views", 0777, true);
+        chdir($cacheDir);
         $app = new LaravelTestApp();
         $app['config'] = new Config();
         $resolver = new EngineResolver();
@@ -40,20 +42,17 @@ class PugExceptionTest extends TestCase
         $app['files'] = $fs;
         $app['view'] = $view;
         $app['view.engine.resolver'] = $resolver;
-        $compiler = new PugCompiler(
-            [$app, 'laravel-pug.pug'],
-            $fs,
-            [],
-            $cacheDir
-        );
         $service = new ServiceProvider($app);
         $service->register();
         $service->registerPugCompiler();
+        /** @var CompilerEngine $compilerEngine */
+        $compilerEngine = $resolver->resolve('pug');
+        /** @var PugCompiler $compiler */
+        $compiler = $compilerEngine->getCompiler();
+        $compiler->setCachePath($cacheDir);
         $compiler->compile($template);
         $phpPath = $compiler->getCompiledPath($template);
 
-        /** @var CompilerEngine $compilerEngine */
-        $compilerEngine = $resolver->resolve('pug');
         $closure = function () use ($phpPath) {
             $exception = null;
             ob_start();
@@ -69,13 +68,15 @@ class PugExceptionTest extends TestCase
             return $exception;
         };
 
+        /** @var PugException $exception */
         $exception = $closure->call($compilerEngine);
 
         $fs->deleteDirectory($cacheDir);
+        chdir($cwd);
 
         self::assertInstanceOf(PugException::class, $exception);
         self::assertInstanceOf(ViewException::class, $exception);
-        self::assertSame('Foo Bar', $exception->getMessage());
+        self::assertSame('Division by zero', $exception->getMessage());
         self::assertSame(6, $exception->getLine());
     }
 }
