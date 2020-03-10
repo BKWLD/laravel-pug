@@ -23,7 +23,10 @@ create it with: `composer create-project --prefer-dist laravel/laravel my-new-pr
 (replace *my-new-project* with your own project name,
 [see the documentation for further information](https://laravel.com/docs/5.5#installing-laravel))
 
-Then run `composer require bkwld/laravel-pug`.
+Then run:
+```
+composer require bkwld/laravel-pug
+```
 
 ## Usage
 
