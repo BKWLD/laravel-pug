@@ -16,9 +16,9 @@ This is the documentation for the ongoing version 2.0. [Click here to load the d
 
 ## Installation
 
-First you need composer if you have'nt yet: https://getcomposer.org/download/
+First you need composer if you haven't yet: https://getcomposer.org/download/
 
-Now open a terminal at the root of your laravel project. If it's a new project,
+Now open a terminal at the root of your Laravel project. If it's a new project,
 create it with: `composer create-project --prefer-dist laravel/laravel my-new-project`
 (replace *my-new-project* with your own project name,
 [see the documentation for further information](https://laravel.com/docs/5.5#installing-laravel))
