@@ -10,10 +10,10 @@
         "pug-php/pug": "^3.3.1",
         "pug-php/pug-assets": "^1.0.1",
         "pug/installer": "^1.0.0",
-        "composer-plugin-api": "^1.0"
+        "composer-plugin-api": "^1.0 || ^2.0"
     },
     "require-dev": {
-        "composer/composer": "^1.2",
+        "composer/composer": "^1.2 || ^2.0",
         "phpunit/phpunit": "^8.5"
     },
     "minimum-stability": "dev",
