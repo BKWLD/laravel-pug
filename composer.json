@@ -3,7 +3,7 @@
     "description": "Pug view adapter for Laravel",
     "type": "library",
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "illuminate/support": ">=6",
         "illuminate/view": ">=6",
         "phug/component": "^1.1.3",
