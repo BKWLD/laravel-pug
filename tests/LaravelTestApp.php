@@ -304,4 +304,8 @@ class LaravelTestApp implements Application, ArrayAccess
     public function singletonIf($abstract, $concrete = null)
     {
     }
+
+    public function beforeResolving($abstract, Closure $callback = null)
+    {
+    }
 }
