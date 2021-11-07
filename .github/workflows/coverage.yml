@@ -1,0 +1,65 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0']
+        setup: ['stable']
+
+    name: PHP
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        tools: composer:v2
+        coverage: pcov
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-${{ matrix.setup }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.setup }}-php-${{ matrix.php }}-
+
+    - name: Code Climate Test Reporter Preparation
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
+    - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: |
+        ${{ matrix.php >= 8 && 'composer require --no-update phpunit/phpunit:^9.5.10 --no-interaction;' || '' }}
+        composer update --prefer-dist --no-interaction ${{ format('--prefer-{0}', matrix.setup) || '' }}
+
+    - name: Run test suite
+      run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+
+    - name: Code Climate Test Reporter
+      if: ${{ env.CC_TEST_REPORTER_ID != '' }}
+      run: |
+        cp coverage.xml clover.xml
+        bash <(curl -s https://codecov.io/bash)
+        ./cc-test-reporter after-build --coverage-input-type clover --exit-code 0
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
