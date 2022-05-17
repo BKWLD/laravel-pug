@@ -317,4 +317,12 @@ class LaravelTestApp implements Application, ArrayAccess
     public function scopedIf($abstract, $concrete = null)
     {
     }
+
+    public function maintenanceMode()
+    {
+    }
+
+    public function terminating($callback)
+    {
+    }
 }

@@ -218,7 +218,7 @@ class LaravelTestApp implements Application, ArrayAccess
     {
     }
 
-    public function storagePath()
+    public function storagePath($path = '')
     {
     }
 
@@ -315,6 +315,14 @@ class LaravelTestApp implements Application, ArrayAccess
     }
 
     public function scopedIf($abstract, $concrete = null)
+    {
+    }
+
+    public function maintenanceMode()
+    {
+    }
+
+    public function terminating($callback)
     {
     }
 }
