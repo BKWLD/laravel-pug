@@ -325,4 +325,8 @@ class LaravelTestApp implements Application, ArrayAccess
     public function terminating($callback)
     {
     }
+
+    public function langPath($path = '')
+    {
+    }
 }
