@@ -218,7 +218,7 @@ class LaravelTestApp implements Application, ArrayAccess
     {
     }
 
-    public function storagePath()
+    public function storagePath($path = '')
     {
     }
 
