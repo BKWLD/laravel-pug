@@ -329,4 +329,16 @@ class LaravelTestApp implements Application, ArrayAccess
     public function langPath($path = '')
     {
     }
+
+    public function publicPath($path = '')
+    {
+    }
+
+    public function hasDebugModeEnabled()
+    {
+    }
+
+    public function bindMethod($method, $callback)
+    {
+    }
 }
