@@ -156,13 +156,13 @@ class PugBladeCompilerTest extends TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p><div>Go</div>', $contents);
-
         // Cleanup
         if (file_exists($compiledPath)) {
             unlink($compiledPath);
             clearstatcache();
         }
+
+        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p><div>Go</div>', $contents);
     }
 
     /**
@@ -205,13 +205,13 @@ class PugBladeCompilerTest extends TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p><div>Go</div>', $contents);
-
         // Cleanup
         if (file_exists($compiledPath)) {
             unlink($compiledPath);
             clearstatcache();
         }
+
+        self::assertSame('<h1>Pug is there</h1><p>By HTML syntax!</p><div>Go</div>', $contents);
     }
 
     /**
@@ -243,13 +243,13 @@ class PugBladeCompilerTest extends TestCase
         $contents = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('<div><p>12</p><p>24</p></div>', $contents);
-
         // Cleanup
         if (file_exists($compiledPath)) {
             unlink($compiledPath);
             clearstatcache();
         }
+
+        self::assertSame('<div><p>12</p><p>24</p></div>', $contents);
     }
 
     /**
