@@ -3,6 +3,7 @@
 namespace Bkwld\LaravelPug;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Compilers\BladeCompiler;
 use InvalidArgumentException;
 use Phug\Compiler;
 use Phug\CompilerInterface;
@@ -21,15 +22,22 @@ trait PugHandlerTrait
     protected $pug;
 
     /**
-     * Common pug compiler constructor.
-     *
-     * @param array      $pugTarget
-     * @param Filesystem $files
-     * @param array      $config
+     * @var BladeCompiler|mixed
      */
-    public function construct(array $pugTarget, Filesystem $files, array $config, $defaultCachePath = null)
-    {
+    protected $compiler;
+
+    /**
+     * Common pug compiler constructor.
+     */
+    public function construct(
+        array $pugTarget,
+        Filesystem $files,
+        array $config,
+        $defaultCachePath = null,
+        $compiler = null
+    ) {
         $this->pugTarget = $pugTarget;
+        $this->compiler = $compiler;
         $cachePath = null;
 
         foreach (['cache_dir', 'cache', 'defaultCache'] as $name) {

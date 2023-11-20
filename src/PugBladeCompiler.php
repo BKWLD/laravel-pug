@@ -18,9 +18,14 @@ class PugBladeCompiler extends BladeCompiler implements PugHandlerInterface
      * @param array      $config
      * @param string     $defaultCachePath
      */
-    public function __construct(array $pugTarget, Filesystem $files, array $config, $defaultCachePath = null)
-    {
-        $this->construct($pugTarget, $files, $config, $defaultCachePath);
+    public function __construct(
+        array $pugTarget,
+        Filesystem $files,
+        array $config,
+        $defaultCachePath = null,
+        $compiler = null
+    ) {
+        $this->construct($pugTarget, $files, $config, $defaultCachePath, $compiler);
     }
 
     /**
@@ -56,6 +61,7 @@ class PugBladeCompiler extends BladeCompiler implements PugHandlerInterface
         }
 
         $this->footer = [];
-        $this->compileWith($path, [$this, 'compileString']);
+        $compiler = $this->compiler instanceof BladeCompiler ? $this->compiler : $this;
+        $this->compileWith($path, [$compiler, 'compileString']);
     }
 }
