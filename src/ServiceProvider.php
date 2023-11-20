@@ -114,7 +114,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 [$app, 'laravel-pug.pug'],
                 $app['files'],
                 $this->getConfig(),
-                $this->getDefaultCache()
+                $this->getDefaultCache(),
+                $this->app['blade.compiler'] ?? null
             );
         };
     }
@@ -186,14 +187,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Add resolver
         $this->getEngineResolver()->register($mainExtension, function () use ($subExtension) {
-            return new CompilerEngine($this->app['Bkwld\LaravelPug\Pug'.ucfirst(ltrim($subExtension, '.')).'Compiler']);
+            return new CompilerEngine(
+                $this->app['Bkwld\LaravelPug\Pug'.ucfirst(ltrim($subExtension, '.')).'Compiler']
+            );
         });
 
         $this->app['view']->addExtension($mainExtension, $mainExtension);
 
         if ($subExtension !== '') {
-            $subExtensionPrefix = substr($subExtension, 1).'.';
-            $this->app['view']->addExtension($subExtensionPrefix.'pug', $mainExtension);
+            $this->app['view']->addExtension(substr($subExtension, 1).'.pug', $mainExtension);
         }
     }
 

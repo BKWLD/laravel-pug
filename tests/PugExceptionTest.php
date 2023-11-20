@@ -5,7 +5,6 @@ namespace Phug\Test;
 use Bkwld\LaravelPug\PugCompiler;
 use Bkwld\LaravelPug\PugException;
 use Bkwld\LaravelPug\ServiceProvider;
-use Exception;
 use Facade\Ignition\Exceptions\ViewException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Engines\CompilerEngine;
