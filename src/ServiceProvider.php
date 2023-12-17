@@ -55,15 +55,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $config = $this->getConfig();
 
         if (!isset($config['extensions']) && $this->app['view']) {
-            $extensions = array_keys(array_filter($this->app['view']->getExtensions(), function ($engine) {
-                $engines = explode('.', $engine);
+            $extensions = $this->app['view']->getExtensions();
+            $filteredExtensions = [];
 
-                return in_array('pug', $engines);
-            }));
+            foreach ($extensions as $key => $engine) {
+                if (strpos($engine, 'pug') !== false) {
+                    $filteredExtensions[] = ".$key";
+                }
+            }
 
-            $config['extensions'] = array_map(function ($extension) {
-                return ".$extension";
-            }, $extensions);
+            $config['extensions'] = $filteredExtensions;
         }
 
         $pug = new Pug($config);
