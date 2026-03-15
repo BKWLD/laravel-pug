@@ -14,7 +14,8 @@
     },
     "require-dev": {
         "composer/composer": "^1.2 || ^2.0",
-        "phpunit/phpunit": "^8.5.52 || ^9.6.34"
+        "phpunit/phpunit": "^8.5.52 || ^9.6.34",
+        "illuminate/queue": ">=6"
     },
     "minimum-stability": "dev",
     "license": "MIT",
