@@ -6,7 +6,7 @@
         "php": "^7.2 || ^8.0",
         "illuminate/support": ">=6",
         "illuminate/view": ">=6",
-        "phug/component": "^1.1.3",
+        "phug/component": "^1.1.3 || ^2.0.0",
         "pug-php/pug": "^3.3.1",
         "pug-php/pug-assets": "^1.0.1",
         "pug/installer": "^1.0.0",
@@ -14,7 +14,8 @@
     },
     "require-dev": {
         "composer/composer": "^1.2 || ^2.0",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5.52 || ^9.6.34",
+        "illuminate/queue": ">=6"
     },
     "minimum-stability": "dev",
     "license": "MIT",

@@ -83,5 +83,5 @@ interface PugHandlerInterface extends CompilerInterface
      *
      * @return void
      */
-    public function compileWith($path, callable $callback = null): void;
+    public function compileWith($path, ?callable $callback = null): void;
 }
